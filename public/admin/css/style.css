@@ -1,0 +1,133 @@
+/* reset cơ bản */
+
+html {
+    font-size: 110%;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+body {
+    background-color: #f1f1f1;
+    margin: 0;
+    font-family: "Noto Sans", "Montserrat", sans-serif;
+}
+
+/* Navbar */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    z-index: 1060;
+}
+
+.bg-dash {
+    background-color: #3f444c !important;
+}
+
+/* Sidebar */
+
+.sidebar {
+    background-color: #eb3131;
+    position: fixed;
+    top: 56px;
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 56px);
+    z-index: 1050;
+    transition: left 0.3s ease;
+    overflow-y: auto;
+}
+
+.sidebar .sidebar-header {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.sidebar .sidebar-header h5 {
+    margin-bottom: 4px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.sidebar .sidebar-header small {
+    color: #f5f5f5;
+    font-size: 0.85rem;
+}
+
+.sidebar a {
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.3s, border-left 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #870202;
+    border-left: 4px solid #fff;
+}
+
+.sidebar a i {
+    font-size: 1rem;
+    margin-right: 10px;
+}
+
+/* Overlay */
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 1040;
+}
+
+/* Main content */
+
+.content-wrapper {
+    margin-left: 220px;
+    padding-top: 56px;
+    padding: 2rem;
+    transition: margin-left 0.3s ease;
+}
+
+.overview {
+    background-color: #13a5c2;
+    font-weight: bold;
+    padding: 23px;
+    border-radius: 10px;
+    color: #fff;
+}
+
+/* Responsive */
+
+@media (max-width: 991.98px) {
+    .sidebar {
+        left: -220px;
+    }
+    .sidebar.show {
+        left: 0;
+    }
+    .overlay.show {
+        display: block;
+    }
+    .content-wrapper {
+        margin-left: 0 !important;
+    }
+}
