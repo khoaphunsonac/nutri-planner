@@ -37,6 +37,7 @@
     <h5 class="m-0">🍴 Fitfood</h5>
     <small>Fitfood Panel</small>
   </div>
+  {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
   <a href="#"><i class="bi bi-speedometer2"></i> Dashboard</a>
   <a href="#"><i class="bi bi-egg-fried"></i> Meals</a>
   <a href="#"><i class="bi bi-basket"></i> Ingredients</a>
