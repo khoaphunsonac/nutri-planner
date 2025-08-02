@@ -14,8 +14,10 @@ html {
 body {
     background-color: #f1f1f1;
     margin: 0;
+    /* font theo nhóm */
     font-family: "Noto Sans", "Montserrat", sans-serif;
 }
+
 
 /* Navbar */
 
@@ -31,6 +33,7 @@ body {
 .bg-dash {
     background-color: #3f444c !important;
 }
+
 
 /* Sidebar */
 
@@ -85,6 +88,7 @@ body {
     margin-right: 10px;
 }
 
+
 /* Overlay */
 
 .overlay {
@@ -98,12 +102,17 @@ body {
     z-index: 1040;
 }
 
-/* Main content */
+
+/* Main content  
+Main content (áp dụng khi sidebar đang hiện ở desktop)*/
 
 .content-wrapper {
     margin-left: 220px;
-    padding-top: 56px;
-    padding: 2rem;
+    padding-top: 68px;
+    /* test 68px nếu lỗi */
+    padding-right: 2rem;
+    padding-left: 2rem;
+    padding-bottom: 2rem;
     transition: margin-left 0.3s ease;
 }
 
@@ -114,6 +123,7 @@ body {
     border-radius: 10px;
     color: #fff;
 }
+
 
 /* Responsive */
 
