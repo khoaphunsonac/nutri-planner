@@ -76,11 +76,11 @@
                     Không có kết quả nào
                 @endif</small>
         </div>
-        <div class="card-body">
+        <div class="card-body text-center">
             <table class="table table-hover table -bordered align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th width="60">ID</th>
+                        <th width="30">ID</th>
                         <th width="150">Tên Tag</th>
                         {{-- <th width="150">Trạng thái</th> --}}
                         {{-- <th width="150">Số món ăn</th> --}}
@@ -88,12 +88,12 @@
                         <th width="200" class="text-center">Thao tác</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-center">
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
                             <tr>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm sort-order" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}">
+                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}">
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
