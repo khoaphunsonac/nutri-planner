@@ -20,7 +20,7 @@
     @endif
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-4">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$totalTags ?? 0}}</h4>
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$activeTags ?? 0}}</h4>
@@ -36,15 +36,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$deletedTags ?? 0}}</h4>
                     <p class="text-muted mb-0">Đã xóa</p>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
+        </div> --}}
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$usageRate ?? 0}}</h4>
@@ -55,7 +55,7 @@
     </div>
 
     {{-- fillter form --}}
-    <form action="" method="GET" class="row g-2 align-items-center mb-5">
+    <form action="" method="GET" class="row g-2 align-items-center mb-5" >
         <div class="col-md-8"> 
             <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tag..." value="{{$search ?? old($search)}}">
         </div>
@@ -82,10 +82,10 @@
                     <tr>
                         <th width="60">ID</th>
                         <th width="150">Tên Tag</th>
-                        <th width="150">Trạng thái</th>
+                        {{-- <th width="150">Trạng thái</th> --}}
                         {{-- <th width="150">Số món ăn</th> --}}
                         <th width="150">Ngày tạo</th>
-                        <th width="100" class="text-center">Thao tác</th>
+                        <th width="200" class="text-center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,13 +98,13 @@
                                 <td>
                                     {{$phanTu['name']}}
                                 </td>
-                                <td>
+                                {{-- <td>
                                     @if ($phanTu['deleted_at'])
                                         <span class="badge bg-danger">Đã xóa</span>
                                     @else
                                         <span class="badge bg-success">Hoạt động</span>
                                     @endif
-                                </td>
+                                </td> --}}
                                 {{-- <td>
                                     
                                 </td> --}}
@@ -113,8 +113,8 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="{{route('tags.show',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-2" title="chi tiết"><i class="bi bi-eye" ></i></a>
-                                        <a href="{{route('tags.edit',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-2" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
+                                        <a href="{{route('tags.show',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
+                                        <a href="{{route('tags.edit',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
                                         <form action="{{route('tags.destroy',['tag'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')">
                                             @csrf
                                             @method('DELETE')

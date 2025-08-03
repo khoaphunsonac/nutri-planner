@@ -26,7 +26,7 @@ Route::prefix('administrator')->group(function () {
     // Route::resource('recipes', RecipeController::class);
     // Route::resource('allergens', AllergenController::class);
 
-    // Route::resource('tags', TagController::class);
+    Route::resource('tags', TagController::class);
     // Route::resource('users', UserController::class);
     // Route::resource('feedbacks', FeedbackController::class);
     // Route::resource('contacts', ContactController::class);

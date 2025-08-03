@@ -22,8 +22,6 @@ class Tag extends Authenticatable
     const DELETED_AT= 'deleted_at';
 
     public $timestamps = false; 
-    public function meals(){
-        return $this->hasMany(Meal::class,'tag_id');
-    }
+    
     
 }

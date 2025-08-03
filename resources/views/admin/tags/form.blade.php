@@ -13,8 +13,6 @@
     </div>
     @if (session('success'))
         <div class="alert alert-success mt-2" style="width:250px">{{session('success')}}</div>
-    @else
-        <div class="alert alert-success mt-2" style="width:200px">{{session('success')}}</div>
     @endif
     <div class="row">
         <div class="col-m-8">
@@ -26,7 +24,7 @@
                         @method('PUT')
                     @endif
                     <div class=" mb-3">
-                        <label for="name">Tên Tag</label>
+                        <label for="name" class=" my-3">Tên Tag</label>
                         <input type="text" name="name" class="form-control" id="" value="{{$item->name ?? old('name')}}">
                         <div class="mt-4 d-flex gap-2">
                             
