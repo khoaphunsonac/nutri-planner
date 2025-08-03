@@ -62,7 +62,7 @@
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">
                             <i class="bi bi-heart-pulse me-2"></i>Thông tin dinh dưỡng
-                            <small class="opacity-75">(trên 100{{ $ingredient->unit ?: 'g' }})</small>
+                            <small class="opacity-75">(trên {{ $ingredient->unit ?: '100g' }})</small>
                         </h5>
                     </div>
                     <div class="card-body">
@@ -84,7 +84,8 @@
                                         <i class="bi bi-lightning text-success me-2"></i>
                                         <span class="text-muted small">Carbohydrate</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-success">{{ number_format($ingredient->carb ?? 0, 1) }}</div>
+                                    <div class="fw-bold fs-4 text-success">{{ number_format($ingredient->carb ?? 0, 1) }}
+                                    </div>
                                     <small class="text-muted">gram</small>
                                 </div>
                             </div>
@@ -94,7 +95,8 @@
                                         <i class="bi bi-lightning text-danger me-2"></i>
                                         <span class="text-muted small">Chất béo</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-danger">{{ number_format($ingredient->fat ?? 0, 1) }}</div>
+                                    <div class="fw-bold fs-4 text-danger">{{ number_format($ingredient->fat ?? 0, 1) }}
+                                    </div>
                                     <small class="text-muted">gram</small>
                                 </div>
                             </div>
@@ -104,7 +106,8 @@
                                         <i class="bi bi-fire text-primary me-2"></i>
                                         <span class="text-muted small">Tổng Calo</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-primary">{{ number_format($ingredient->calo ?? 0, 0) }}</div>
+                                    <div class="fw-bold fs-4 text-primary">{{ number_format($ingredient->calo ?? 0, 0) }}
+                                    </div>
                                     <small class="text-muted">kcal</small>
                                 </div>
                             </div>
@@ -206,7 +209,7 @@
                                     <strong>{{ number_format(($ingredient->fat ?? 0) * 9, 1) }}</strong></span>
                             </div>
                             <hr class="my-2">
-                            <div class="d-flex justify-content-between fw-bold">                                
+                            <div class="d-flex justify-content-between fw-bold">
                                 <span>Tổng cộng:</span>
                                 <span class="text-primary">{{ number_format($ingredient->calo ?? 0, 1) }} kcal</span>
                             </div>

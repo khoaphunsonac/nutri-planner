@@ -60,13 +60,14 @@
                                 </td>
                                 <td class="fw-medium">{{ $ingredient->name }}</td>
                                 <td class="text-center">
-                                    <span class="badge bg-light text-dark small">{{ $ingredient->unit ?: 'g' }}</span>
+                                    <span class="badge bg-light text-dark small">{{ $ingredient->unit ?: '100g' }}</span>
                                 </td>
                                 <td class="text-center small">{{ number_format($ingredient->protein ?? 0, 1) }}</td>
                                 <td class="text-center small">{{ number_format($ingredient->carb ?? 0, 1) }}</td>
                                 <td class="text-center small">{{ number_format($ingredient->fat ?? 0, 1) }}</td>
                                 <td class="text-center">
-                                    <strong class="text-primary small">{{ number_format($ingredient->calo ?? 0, 0) }}</strong>
+                                    <strong
+                                        class="text-primary small">{{ number_format($ingredient->calo ?? 0, 0) }}</strong>
                                 </td>
                                 <td class="text-center" onclick="event.stopPropagation();">
                                     <div class="btn-group btn-group-sm">
