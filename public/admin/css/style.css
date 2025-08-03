@@ -18,7 +18,6 @@ body {
     font-family: "Noto Sans", "Montserrat", sans-serif;
 }
 
-
 /* Navbar */
 
 .navbar {
@@ -33,7 +32,6 @@ body {
 .bg-dash {
     background-color: #3f444c !important;
 }
-
 
 /* Sidebar */
 
@@ -88,7 +86,6 @@ body {
     margin-right: 10px;
 }
 
-
 /* Overlay */
 
 .overlay {
@@ -101,7 +98,6 @@ body {
     background: rgba(255, 255, 255, 0.5);
     z-index: 1040;
 }
-
 
 /* Main content  
 Main content (áp dụng khi sidebar đang hiện ở desktop)*/
@@ -123,7 +119,6 @@ Main content (áp dụng khi sidebar đang hiện ở desktop)*/
     border-radius: 10px;
     color: #fff;
 }
-
 
 /* Responsive */
 
