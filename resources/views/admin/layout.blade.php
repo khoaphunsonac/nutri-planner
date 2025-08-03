@@ -14,6 +14,7 @@
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+  <link rel="stylesheet" href="{{ asset('admin/css/dashboard.css') }}">
 </head>
 <body>
 
@@ -23,7 +24,7 @@
     <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()">☰</button>
     <a class="navbar-brand text-light" href="#">Fitfood Admin</a>
     <a href="#" class="me-4">
-      <img src="{{ asset('img/avatar/default.jpg') }}" alt="admin" width="30" class="d-block rounded-circle">
+      <img src="{{ asset('images/avatar/default.jpg') }}" alt="admin" width="30" class="d-block rounded-circle">
     </a>
   </div>
 </nav>
