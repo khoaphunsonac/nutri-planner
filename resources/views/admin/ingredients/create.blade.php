@@ -2,37 +2,46 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="page-header">
-            <h2><i class="bi bi-plus-circle me-2"></i>Thêm nguyên liệu mới</h2>
+        {{-- Compact Breadcrumb --}}
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb breadcrumb-compact">
+                <li class="breadcrumb-item">
+                    <a href="#"><i class="bi bi-house-door"></i></a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('ingredients.index') }}">Nguyên liệu</a>
+                </li>
+                <li class="breadcrumb-item active">Thêm mới</li>
+            </ol>
+        </nav>
+
+        {{-- Compact Header --}}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Thêm nguyên liệu mới</h4>
+            <a href="{{ route('ingredients.index') }}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left me-1"></i>Quay lại
+            </a>
         </div>
 
         @if ($errors->any())
-            <div class="alert alert-danger">
-                <div class="d-flex align-items-center mb-2">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    <strong>Có lỗi xảy ra:</strong>
-                </div>
-                <ul class="mb-0 ps-3">
+            <div class="alert alert-danger py-2">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <strong>Có lỗi:</strong>
+                <ul class="mb-0 mt-1 ps-3">
                     @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                        <li><small>{{ $error }}</small></li>
                     @endforeach
                 </ul>
             </div>
         @endif
 
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="ingredients-card card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Thông tin nguyên liệu</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('ingredients.store') }}">
-                            @csrf
-                            @include('admin.ingredients.form', ['ingredient' => null])
-                        </form>
-                    </div>
-                </div>
+        {{-- Compact Form --}}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="POST" action="{{ route('ingredients.store') }}">
+                    @csrf
+                    @include('admin.ingredients.form', ['ingredient' => null])
+                </form>
             </div>
         </div>
     </div>
