@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('admin.layout');
 });
 
 // routes/web.php
@@ -24,6 +25,8 @@ Route::prefix('administrator')->group(function () {
     // Route::resource('ingredients', IngredientController::class
     // Route::resource('recipes', RecipeController::class);
     // Route::resource('allergens', AllergenController::class);
+
+    // Route::resource('tags', TagController::class);
     // Route::resource('users', UserController::class);
     // Route::resource('feedbacks', FeedbackController::class);
     // Route::resource('contacts', ContactController::class);
