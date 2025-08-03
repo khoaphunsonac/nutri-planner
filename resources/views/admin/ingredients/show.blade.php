@@ -73,7 +73,7 @@
                                         <i class="bi bi-lightning text-warning me-2"></i>
                                         <span class="text-muted small">Protein</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-warning">{{ number_format($ingredient->protein, 1) }}
+                                    <div class="fw-bold fs-4 text-warning">{{ number_format($ingredient->protein ?? 0, 1) }}
                                     </div>
                                     <small class="text-muted">gram</small>
                                 </div>
@@ -84,7 +84,7 @@
                                         <i class="bi bi-lightning text-success me-2"></i>
                                         <span class="text-muted small">Carbohydrate</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-success">{{ number_format($ingredient->carb, 1) }}</div>
+                                    <div class="fw-bold fs-4 text-success">{{ number_format($ingredient->carb ?? 0, 1) }}</div>
                                     <small class="text-muted">gram</small>
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                         <i class="bi bi-lightning text-danger me-2"></i>
                                         <span class="text-muted small">Chất béo</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-danger">{{ number_format($ingredient->fat, 1) }}</div>
+                                    <div class="fw-bold fs-4 text-danger">{{ number_format($ingredient->fat ?? 0, 1) }}</div>
                                     <small class="text-muted">gram</small>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                         <i class="bi bi-fire text-primary me-2"></i>
                                         <span class="text-muted small">Tổng Calo</span>
                                     </div>
-                                    <div class="fw-bold fs-4 text-primary">{{ number_format($ingredient->calo, 0) }}</div>
+                                    <div class="fw-bold fs-4 text-primary">{{ number_format($ingredient->calo ?? 0, 0) }}</div>
                                     <small class="text-muted">kcal</small>
                                 </div>
                             </div>
@@ -114,10 +114,13 @@
                         <div class="mt-4">
                             <h6 class="text-muted mb-3">Phân bố dinh dưỡng</h6>
                             @php
-                                $total = $ingredient->protein + $ingredient->carb + $ingredient->fat;
-                                $proteinPercent = $total > 0 ? ($ingredient->protein / $total) * 100 : 0;
-                                $carbPercent = $total > 0 ? ($ingredient->carb / $total) * 100 : 0;
-                                $fatPercent = $total > 0 ? ($ingredient->fat / $total) * 100 : 0;
+                                $protein = $ingredient->protein ?? 0;
+                                $carb = $ingredient->carb ?? 0;
+                                $fat = $ingredient->fat ?? 0;
+                                $total = $protein + $carb + $fat;
+                                $proteinPercent = $total > 0 ? ($protein / $total) * 100 : 0;
+                                $carbPercent = $total > 0 ? ($carb / $total) * 100 : 0;
+                                $fatPercent = $total > 0 ? ($fat / $total) * 100 : 0;
                             @endphp
                             <div class="nutrition-chart">
                                 <div class="d-flex mb-2"
@@ -162,14 +165,14 @@
                         <div class="row g-2 text-center">
                             <div class="col-6">
                                 <div class="border rounded p-2">
-                                    <div class="fw-bold text-primary">{{ number_format($ingredient->calo, 0) }}</div>
+                                    <div class="fw-bold text-primary">{{ number_format($ingredient->calo ?? 0, 0) }}</div>
                                     <small class="text-muted">Calo/100g</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="border rounded p-2">
                                     <div class="fw-bold text-success">
-                                        {{ number_format($ingredient->protein + $ingredient->carb + $ingredient->fat, 1) }}
+                                        {{ number_format(($ingredient->protein ?? 0) + ($ingredient->carb ?? 0) + ($ingredient->fat ?? 0), 1) }}
                                     </div>
                                     <small class="text-muted">Tổng macro</small>
                                 </div>
@@ -189,23 +192,23 @@
                         <div class="small">
                             <div class="d-flex justify-content-between mb-1">
                                 <span>Protein:</span>
-                                <span>{{ number_format($ingredient->protein, 1) }} × 4 =
-                                    <strong>{{ number_format($ingredient->protein * 4, 1) }}</strong></span>
+                                <span>{{ number_format($ingredient->protein ?? 0, 1) }} × 4 =
+                                    <strong>{{ number_format(($ingredient->protein ?? 0) * 4, 1) }}</strong></span>
                             </div>
                             <div class="d-flex justify-content-between mb-1">
                                 <span>Carb:</span>
-                                <span>{{ number_format($ingredient->carb, 1) }} × 4 =
-                                    <strong>{{ number_format($ingredient->carb * 4, 1) }}</strong></span>
+                                <span>{{ number_format($ingredient->carb ?? 0, 1) }} × 4 =
+                                    <strong>{{ number_format(($ingredient->carb ?? 0) * 4, 1) }}</strong></span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span>Fat:</span>
-                                <span>{{ number_format($ingredient->fat, 1) }} × 9 =
-                                    <strong>{{ number_format($ingredient->fat * 9, 1) }}</strong></span>
+                                <span>{{ number_format($ingredient->fat ?? 0, 1) }} × 9 =
+                                    <strong>{{ number_format(($ingredient->fat ?? 0) * 9, 1) }}</strong></span>
                             </div>
                             <hr class="my-2">
-                            <div class="d-flex justify-content-between fw-bold">
+                            <div class="d-flex justify-content-between fw-bold">                                
                                 <span>Tổng cộng:</span>
-                                <span class="text-primary">{{ number_format($ingredient->calo, 1) }} kcal</span>
+                                <span class="text-primary">{{ number_format($ingredient->calo ?? 0, 1) }} kcal</span>
                             </div>
                         </div>
                     </div>
@@ -222,11 +225,11 @@
                         <div class="small">
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Ngày tạo:</span>
-                                <span>{{ $ingredient->created_at->format('d/m/Y H:i') }}</span>
+                                <span>{{ $ingredient->created_at ? $ingredient->created_at->format('d/m/Y H:i') : 'N/A' }}</span>
                             </div>
                             <div class="d-flex justify-content-between mb-2">
                                 <span class="text-muted">Cập nhật:</span>
-                                <span>{{ $ingredient->updated_at->format('d/m/Y H:i') }}</span>
+                                <span>{{ $ingredient->updated_at ? $ingredient->updated_at->format('d/m/Y H:i') : 'N/A' }}</span>
                             </div>
                         </div>
                     </div>

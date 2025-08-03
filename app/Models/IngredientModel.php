@@ -22,7 +22,10 @@ class IngredientModel extends Model
     // Virtual attribute: calo = pro*4 + carb*4 + fat*9
     public function getCaloAttribute()
     {
-        return round(($this->protein * 4) + ($this->carb * 4) + ($this->fat * 9), 2);
+        $protein = $this->protein ?? 0;
+        $carb = $this->carb ?? 0;
+        $fat = $this->fat ?? 0;
+        return round(($protein * 4) + ($carb * 4) + ($fat * 9), 2);
     }
 
     public function meals()
