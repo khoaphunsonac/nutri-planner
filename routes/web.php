@@ -26,10 +26,10 @@ Route::prefix('administrator')->group(function () {
     // Route::resource('ingredients', IngredientController::class
     // Route::resource('recipes', RecipeController::class);
     Route::resource('allergens', AllergenController::class);
-    // Route::get('allergens/mapping', [AllergenController::class,'indexMap'])->name('indexMap');
-    // Route::get('allergens/mapping/create', [AllergenController::class,'createMap'])->name('createMap');
-    // Route::post('allergens/mapping/store', [AllergenController::class,'storeMap'])->name('storeMap');
-    // Route::delete('allergens/mapping/delete/{id}', [AllergenController::class,'destroyMap'])->name('destroyMap');
+    Route::get('allergens/mapping', [AllergenController::class,'indexMap'])->name('indexMap');
+    Route::get('allergens/mapping/create', [AllergenController::class,'createMap'])->name('createMap');
+    Route::post('allergens/mapping/store', [AllergenController::class,'storeMap'])->name('storeMap');
+    Route::delete('allergens/mapping/delete/{id}', [AllergenController::class,'destroyMap'])->name('destroyMap');
 
     Route::resource('tags', TagController::class);
     // Route::resource('users', UserController::class);

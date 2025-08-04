@@ -118,7 +118,7 @@
                         @foreach ($item as $phanTu)
                             <tr>
                                 <td>
-                                    <input type="text" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}">
+                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}" disabled>
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
