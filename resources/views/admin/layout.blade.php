@@ -26,7 +26,7 @@
             <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()">☰</button>
             <a class="navbar-brand text-light" href="#">Fitfood Admin</a>
             <a href="#" class="me-4">
-                <img src="{{ asset('img/avatar/default.jpg') }}" alt="admin" width="30"
+                <img src="{{ asset('assets/admin/img/avatar/default.jpg') }}" alt="admin" width="30"
                     class="d-block rounded-circle">
             </a>
         </div>
