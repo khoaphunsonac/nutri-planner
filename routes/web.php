@@ -19,7 +19,7 @@ Route::get('/', function () {
 });
 
 // routes/web.php
-Route::prefix('administrator')->group(function () {
+Route::prefix('admin')->group(function () {
     // Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Route::resource('meals', MealController::class);
     Route::resource('ingredients', IngredientController::class);
