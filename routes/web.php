@@ -1,7 +1,7 @@
 <?php
 
 // use App\Http\Controllers\Admin\AdminController;
-
+use App\Http\Controllers\Admin\IngredientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,7 +23,7 @@ Route::get('/', function () {
 Route::prefix('administrator')->group(function () {
     // Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Route::resource('meals', MealController::class);
-    // Route::resource('ingredients', IngredientController::class);
+    Route::resource('ingredients', IngredientController::class);
     // Route::resource('recipes', RecipeController::class);
     // Route::resource('allergens', AllergenController::class);
     // Route::resource('users', UserController::class);
