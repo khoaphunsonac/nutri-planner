@@ -26,7 +26,18 @@ Route::prefix('administrator')->group(function () {
     // Route::resource('recipes', RecipeController::class);
     // Route::resource('allergens', AllergenController::class);
 
-    Route::resource('tags', TagController::class);
+    //=================Route Tags======================
+    // Route::resource('tags', TagController::class);
+    Route::prefix('tags')->name('tags.')->group(function () {
+        Route::get('/', [TagController::class, 'index'])->name('index');
+        Route::get('/create', [TagController::class, 'create'])->name('create');
+        Route::post('/', [TagController::class, 'store'])->name('store');
+        Route::get('/{tag}', [TagController::class, 'show'])->name('show');
+        Route::get('/{tag}/edit', [TagController::class, 'edit'])->name('edit');
+        Route::put('/{tag}', [TagController::class, 'update'])->name('update');
+        Route::delete('/{tag}', [TagController::class, 'destroy'])->name('destroy');
+    });
+    
     // Route::resource('users', UserController::class);
     // Route::resource('feedbacks', FeedbackController::class);
     // Route::resource('contacts', ContactController::class);
