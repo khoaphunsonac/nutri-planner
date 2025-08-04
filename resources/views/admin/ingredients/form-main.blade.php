@@ -66,9 +66,18 @@
                                 required>
                         </div>
                         <div class="col-md-4">
-                            <label for="unit" class="form-label fw-medium">Đơn vị</label>
-                            <input type="text" name="unit" id="unit" class="form-control form-control-sm"
-                                value="{{ old('unit', $ingredient->unit ?? 'g') }}" placeholder="g, ml, kg...">
+                            <label for="unit" class="form-label fw-medium">
+                                Đơn vị <span class="text-danger">*</span>
+                            </label>
+                            <select name="unit" id="unit" class="form-select form-select-sm" required>
+                                <option value="">-- Chọn đơn vị --</option>
+                                @foreach ($unitOptions as $value => $label)
+                                    <option value="{{ $value }}"
+                                        {{ old('unit', $ingredient->unit ?? 'g') == $value ? 'selected' : '' }}>
+                                        {{ $label }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         {{-- Nutrition Info Row --}}

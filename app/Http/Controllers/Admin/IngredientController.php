@@ -9,6 +9,25 @@ use Illuminate\Http\Request;
 
 class IngredientController extends Controller
 {
+    /**
+     * Danh sách đơn vị cố định
+     */
+    private function getUnitOptions()
+    {
+        return [
+            'g' => 'Gram (g)',
+            'ml' => 'Milliliter (ml)',
+            'kg' => 'Kilogram (kg)',
+            'l' => 'Liter (l)',
+            'piece' => 'Cái',
+            'tbsp' => 'Muỗng canh',
+            'tsp' => 'Muỗng cà phê',
+            'cup' => 'Cốc',
+            'slice' => 'Lát',
+            'pack' => 'Gói'
+        ];
+    }
+
     public function index()
     {
         $ingredients = IngredientModel::orderBy('created_at', 'desc')->paginate(10);
@@ -20,7 +39,8 @@ class IngredientController extends Controller
     public function create()
     {
         return view('admin.ingredients.form-main', [
-            'ingredient' => null
+            'ingredient' => null,
+            'unitOptions' => $this->getUnitOptions()
         ]);
     }
 
@@ -28,7 +48,8 @@ class IngredientController extends Controller
     {
         $ingredient = IngredientModel::findOrFail($id);
         return view('admin.ingredients.form-main', [
-            'ingredient' => $ingredient
+            'ingredient' => $ingredient,
+            'unitOptions' => $this->getUnitOptions()
         ]);
     }
 
@@ -37,7 +58,7 @@ class IngredientController extends Controller
         // Validate dữ liệu
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'unit' => 'nullable|string|max:50',
+            'unit' => 'required|string|in:' . implode(',', array_keys($this->getUnitOptions())),
             'protein' => 'required|numeric|min:0',
             'carb' => 'required|numeric|min:0',
             'fat' => 'required|numeric|min:0',
@@ -70,17 +91,5 @@ class IngredientController extends Controller
         $ingredient = IngredientModel::findOrFail($id);
         $ingredient->delete();
         return redirect()->route('ingredients.index')->with('success', 'Đã xóa nguyên liệu.');
-    }
-
-    // Các method cũ để tương thích với resource routes (nếu cần)
-    public function store(Request $request)
-    {
-        return $this->save($request);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->merge(['id' => $id]);
-        return $this->save($request);
     }
 }
