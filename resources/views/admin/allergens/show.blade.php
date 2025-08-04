@@ -4,7 +4,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
             <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
-            <li class="breadcrumb-item" aria-current="page"> Xem chi tiết Allergen</li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Allergen</li>
         </ol>
     </nav>
 
@@ -23,7 +23,7 @@
                     <span class="badge bg-success">Hoạt động</span>
                 @endif 
             </p>
-            <a href="{{route('allergens.edit',['allergen'=>$item])}}" class="btn btn-sm btn-warning rounded  me-2" title="Sửa"><i class="bi bi-pencil-square" > Chỉnh sửa</i></a>
+            <a href="{{route('allergens.form',['id'=>$item])}}" class="btn btn-sm btn-warning rounded  me-2" title="Sửa"><i class="bi bi-pencil-square" > Chỉnh sửa</i></a>
             <a href="{{route('allergens.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
         </div>
     </div>

@@ -4,7 +4,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
             <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
-            <li class="breadcrumb-item" aria-current="page"> {{$item ? ' Chỉnh sửa Allergen' : ' Thêm mới Allergen'}}</li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> {{$item ? ' Chỉnh sửa Allergen' : ' Thêm mới Allergen'}}</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
@@ -12,16 +12,16 @@
         <a href="{{route('allergens.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
     </div>
     @if (session('success'))
-        <div class="alert alert-success mt-2" style="width:250px">{{session('success')}}</div>
+        <div class="alert alert-success mt-2" style="width:300px">{{session('success')}}</div>
     @endif
     <div class="row">
         <div class="col-m-8">
             <div class="row">
                 <div class="card shadow-sm border-0 mb-4">
-                    <form action="{{$item ? route('allergens.update',$item->id) : route('allergens.store')}}" method="POST">
+                    <form action="{{ route('allergens.save' )}}" method="POST">
                         @csrf
                         @if ($item)
-                            @method('PUT')
+                            <input type="hidden" name="id" value="{{$item->id}}">
                         @endif
                         <div class=" mb-3">
                             <label for="name" class=" my-3">Tên Allergen</label>

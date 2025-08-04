@@ -1,42 +1,59 @@
 <?php
 
-use App\Http\Controllers\AllergenController;
-use App\Http\Controllers\TagController;
+use App\Http\Controllers\Admin\AllergenController;
+use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+use App\Http\Controllers\Admin\IngredientController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
     return view('home');
 });
 
 // routes/web.php
-Route::prefix('administrator')->group(function () {
-    // Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
-    // Route::resource('meals', MealController::class);
-    // Route::resource('ingredients', IngredientController::class
-    // Route::resource('recipes', RecipeController::class);
-    Route::resource('allergens', AllergenController::class);
-    Route::get('allergens/mapping', [AllergenController::class,'indexMap'])->name('indexMap');
-    Route::get('allergens/mapping/create', [AllergenController::class,'createMap'])->name('createMap');
-    Route::post('allergens/mapping/store', [AllergenController::class,'storeMap'])->name('storeMap');
-    Route::delete('allergens/mapping/delete/{id}', [AllergenController::class,'destroyMap'])->name('destroyMap');
+// Group Admin
+Route::prefix('admin')->group(function () {
+    // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
-    Route::resource('tags', TagController::class);
-    // Route::resource('users', UserController::class);
-    // Route::resource('feedbacks', FeedbackController::class);
-    // Route::resource('contacts', ContactController::class);
+    // INGREDIENT MODULE
+    $controller = IngredientController::class;
+    Route::prefix('ingredients')->as('ingredients.')->group(function () use ($controller): void {
+        Route::get('/', [$controller, 'index'])->name('index');              // Danh sách
+        Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
+        Route::get('/add', [$controller, 'create'])->name('add');             // Trang thêm mới
+        Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
+        Route::get('/form/{id}', [$controller, 'edit'])->name('form');        // Form sửa
+        Route::post('/save', [$controller, 'save'])->name('save');            // Lưu thêm hoặc sửa
+        Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
+    });
+
+    //================Route Allergens================
+    // Route::resource('allergens', AllergenController::class);
+    // Route::get('allergens/mapping', [AllergenController::class,'indexMap'])->name('indexMap');
+    // Route::get('allergens/mapping/create', [AllergenController::class,'createMap'])->name('createMap');
+    // Route::post('allergens/mapping/store', [AllergenController::class,'storeMap'])->name('storeMap');
+    // Route::delete('allergens/mapping/delete/{id}', [AllergenController::class,'destroyMap'])->name('destroyMap');
+    $allergenController = AllergenController::class;
+        Route::prefix('allergens')->as('allergens.')->group(function () use ($allergenController) {
+        Route::get('/', [$allergenController, 'index'])->name('index');                // Danh sách
+        Route::get('/show/{id}', [$allergenController, 'show'])->name('show');        // Xem chi tiết
+        Route::get('/add', [$allergenController, 'form'])->name('add');             // Trang thêm mới
+        Route::get('/form/{id}', [$allergenController, 'form'])->name('form');        // Form sửa
+        Route::post('/save', [$allergenController, 'save'])->name('save');            // Lưu thêm hoặc sửa
+        Route::post('/delete/{id}', [$allergenController, 'destroy'])->name('delete'); // Xoá
+
+        // Mapping meal-allergen
+        Route::get('/mapping', [$allergenController, 'indexMap'])->name('mapping.index');
+        Route::get('/mapping/add', [$allergenController, 'createMap'])->name('mapping.add');
+        Route::post('/mapping/save', [$allergenController, 'storeMap'])->name('mapping.save');
+        Route::post('/mapping/delete/{id}', [$allergenController, 'destroyMap'])->name('mapping.delete');
+    });
+
+    // Các controller khác có thể cấu trúc y hệt như vậy:
+    // Route::prefix('meals')->as('meals.')->group(function () {
+    //     Route::get('/', [...])->name('index');
+    //     ...
+    // });
 });
 
-// Nếu ai làm xong route thì có thể mở route ra, tạm thời bỏ middlleware để test
-
-
+// tạm thời không dùng middleware

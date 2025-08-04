@@ -4,7 +4,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
             <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
-            <li class="breadcrumb-item" aria-current="page"> <a href="">Danh sách</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Danh sách</li>
         </ol>
     </nav>
 
@@ -32,7 +32,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$activeAllergens ?? 0}}</h4>
-                        <p class="text-muted mb-0">Đang hoạt động</p>
+                        <p class="text-muted mb-0">Tổng Allergen đang hoạt động</p>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$usageRate ?? 0}}</h4>
-                        <p class="text-muted mb-0">Sử dụng</p>
+                        <p class="text-muted mb-0">Sử dụng Allergen</p>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
             <div class="col-md-4">
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
-                        <h4>{{$totalMeals ?? 0}}</h4>
+                        <h4>{{$totalMealsModel ?? 0}}</h4>
                         <p class="text-muted mb-0">Tổng Meals</p>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
             <div class="col-md-4">
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
-                        <h4>{{$totalMappings ?? 0}}</h4>
+                        <h4>{{$totalMappings   }}</h4>
                         <p class="text-muted mb-0">Tổng Dị ứng theo món ăn</p> {{--  Mappings --}}
                     </div>
                 </div>
@@ -68,25 +68,33 @@
         </div>
     </div>
     
+    <div class="row mt-5">
+        <div class="col-md-9">
+             <div class=" card mb-1 px-3 py-3 shadow-sm ">
+                {{-- fillter form --}}
+                <form action="" method="GET" class="row g-2 align-items-center" >
+                    <div class="col-md-8"> 
+                        <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm Allergen..." value="{{$search ?? old($search)}}">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary w-100" type="submit">Lọc</button>
+                    </div>
 
-    {{-- fillter form --}}
-    <form action="" method="GET" class="row g-2 align-items-center mb-5" >
-        <div class="col-md-8"> 
-            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm Allergen..." value="{{$search ?? old($search)}}">
+                </form>
+            </div>
         </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary w-100" type="submit">Lọc</button>
+        <div class="col-md-3">
+            {{-- Allergen table --}}
+            
+                <div class=" card shadow-sm mb-1 px-3 py-3 bg-light text-end">
+                    <a href="{{route('allergens.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Add Allergen</a>
+                </div>
+            
         </div>
+    </div> 
 
-    </form>
-    {{-- Allergen table --}}
-    <div class="d-flex  ">
-        <div class=" card rounded bg-light p-3 ms-auto">
-            <a href="{{route('allergens.create')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Add New Allergen</a>
-        </div>
-    </div>
-     
-    <div class="card shadow-sm mb-4">
+
+    <div class="card shadow-sm mb-5">
        
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Danh sách Allergens</h5>
@@ -96,12 +104,9 @@
                     @if ($item->total() > 0)
                     Tổng: {{$item->total()}} mục
                     @else
-                        Không có kết quả nào
+                        0 mục
                     @endif
-                </small>
-            
-            
-            
+                </small> 
         </div>
         <div class="card-body table-reponsive">
             <table class="table table-hover table -bordered align-middle text-center">
@@ -117,8 +122,9 @@
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
                             <tr>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}" disabled>
+                                
+                                <td class="align-middle text-center">
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu['id'] ?? 1}} </span>
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
@@ -128,11 +134,10 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="{{route('allergens.show',['allergen'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
-                                        <a href="{{route('allergens.edit',['allergen'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
-                                        <form action="{{route('allergens.destroy',['allergen'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Allergen này không?')">
+                                        <a href="{{route('allergens.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
+                                        <a href="{{route('allergens.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
+                                        <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Allergen này không?')">
                                             @csrf
-                                            @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
                                     </div>
@@ -155,24 +160,47 @@
         </div>
     </div>
 
+
     {{-- Meal-Allergen table --}}
-    <div class="d-flex  ">
-        <div class=" card rounded bg-light p-3 ms-auto">
-            <a href="{{route('createMap')}}"><i class="bi bi-plus-circle mb-2"></i> Add New Mapping</a>
+    <div class="row mt-5">
+
+        <div class="col-md-9">
+            <div class=" card mb-1 px-3 py-3 shadow-sm ">
+            {{-- Bên trái: tìm kiếm --}}
+                <form action="" method="GET" class="row g-2 align-items-center">
+                    <div class="col-sm-5">
+                        <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo Meal... " value="{{$mealSearch ?? old($mealSearch)}}">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo Allergen... " value="{{$allergenSearch ?? old($allergenSearch)}}">
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i>Tìm
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
+        <div class="col-md-3">
+            {{-- Bên phải: nút thêm --}}
+            <div class=" card shadow-sm mb-1 px-3 py-3 bg-light text-end">
+                <a href="{{route('allergens.mapping.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Add Mapping</a>
+            </div>
+        </div>
+        
     </div>
 
-    <div class="card shadow-sm mb-4">
+    <div class="card shadow-sm mb-5">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5><i class="fas fa-link text-success"></i>Meal-Allergen Mapping</h5>
-            {{-- <small class="text-end">
-                {{--  Tổng số Allergen thỏa query tìm kiếm 
-                @if ($item->total() > 0)
-                Tổng: {{$item->total()}} mục
-                @else
-                    Không có kết quả nào
-                @endif
-            </small> --}}
+             <small class="text-end">
+                    {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                    @if ($item->total() > 0)
+                    Tổng: {{$mappingPaginate->total()}} mục
+                    @else
+                        0 mục
+                    @endif
+                </small> 
         </div>
         <div class="card-body table-reponsive">
             <table class="table table-hover table -bordered align-middle text-center">
@@ -186,23 +214,23 @@
                 </thead>
                 <tbody>
                     
-                        @foreach ($mealAllergens  as $map)
+                        @foreach ($mappingPaginate  as $map)
                             <tr>
-                                <td>
-                                    <input type="text" class="form-control form-control-sm sort-order text-center" value="{{$map->id ?? 1}}" min="1" data-id= "{{$map->id}}">
+                                
+                                <td class="align-middle text-center">
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$map->id ?? 1}} </span>
                                 </td>
                                 <td>
-                                    {{$map->meals->name}}
+                                    {{$map->meal->name}}
                                 </td>
                                 <td>
-                                    {{$map->allergens->name}}
+                                    {{$map->allergen->name}}
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         
-                                        <form action="{{route('destroyMap',['id'=>$map->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Mappings này không?')">
+                                        <form action="{{route('allergens.mapping.delete',['id'=>$map->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Mappings này không?')">
                                             @csrf
-                                            @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
                                     </div>
@@ -211,23 +239,32 @@
                             </tr>
                         @endforeach
                             
-                    @if($mealAllergens ->isEmpty())
+                    @if($mappingPaginate ->isEmpty())
                         <tr>
                             <td class="text-center text-muted" colspan="6">Không có Mappings  nào</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
+             
         </div>
-        <div class="d-flex justify-content-center mt-3">
-            {{$item->links('pagination::bootstrap-5')}}
+       <div class="d-flex justify-content-center mt-3">
+            {{$mappingPaginate->links('pagination::bootstrap-5')}}
         </div>
     </div>
 
     {{-- Overview --}}
-    <div class="card shadow-sm">
-        <div class="card-header bg-white">
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-white  d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="fas fa-eye text-success"></i> Meal-Allergen Overview</h5>
+            <small class="text-end">
+                    {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                    @if ($item->total() > 0)
+                    Tổng: {{$totalMeals }} mục
+                    @else
+                        0 mục
+                    @endif
+                </small>
         </div>
         <div class="card-body">
             @foreach($meals as $meal)

@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Allergen;
-use App\Models\Meal;
-use App\Models\MealAllergen;
-use App\Models\Tag;
+use App\Models\AllergenModel;
+use App\Models\MealModel;
+use App\Models\MealAllergenModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request ;
@@ -22,20 +21,33 @@ class AllergenController extends BaseController
     //================Allergen CRUD================
     public function index(Request $request){
         $id = $request->id;
-        $meals = Meal::with('allergens')->latest()->take(5)->get();
-        $mealAllergens = MealAllergen::with(['meals','allergens'])->get();
-        $allergen = Allergen::all();
+        $meals = MealModel::with('allergens')->latest()->take(5)->get();
+        $mealAllergens = MealAllergenModel::with(['meal','allergen'])->get();
+        $allergen = AllergenModel::all();
         
         $params = $request->all();
         $search = $params['search'] ?? '';
-        $query = Allergen::select('id','name','deleted_at');
+        $query = AllergenModel::select('id','name','deleted_at');
+        $mealSearch = $params['mealSearch'] ?? '';
+        $allergenSearch = $params['allergenSearch'] ?? '';
+        // Truy vấn Mapping có kèm điều kiện lọc
+        $mappingQuery = MealAllergenModel::with(['meal', 'allergen'])->orderBy('id', 'desc');
+
+        $query = AllergenModel::select('id','name','deleted_at');
         $item = null;
        
         if($search){
              $query = $query->where('name','like',"%$search%")->orwhere('id',$id);
         };
-        
-        $totalAllergenWithTrashed = Allergen::withTrashed()->get();
+        if($mealSearch){
+             $mappingQuery = $mappingQuery->whereHas('meal', function ($query) use($mealSearch) { $query->where('name', 'like', "%$mealSearch%");});
+        };
+        if($allergenSearch){
+            $mappingQuery = $mappingQuery->whereHas('allergen', function ($query) use($allergenSearch) { $query->where('name', 'like', "%$allergenSearch%");});
+        };
+
+        $totalMealsModel = MealModel::count();
+        $totalAllergenWithTrashed = AllergenModel::withTrashed()->get();
         // tổng số tag
         $totalAllergens = count($totalAllergenWithTrashed);
         //  return $totalTagsWithTrashed;
@@ -51,13 +63,15 @@ class AllergenController extends BaseController
                 $deletedAllergens++ ;
             }
         }
-
+        // Lấy kết quả phân trang
+        $mappingPaginate = $mappingQuery->paginate(10);
         $totalMeals = count($meals);
-        $totalMappings = count($mealAllergens);
+        // $totalMappings = count($mealAllergens);
         $usageRate =  $totalAllergens > 0 ? round(($activeAllergens/$totalAllergens) *100) . '%' : '0%';
         // $item = $query->orderBy('id','desc')->get();
         $item = $query->orderBy('id','desc')->paginate(10);
-        
+        // Clone để đếm số mục sau lọc
+        $totalMappings = MealAllergenModel::count();
         //  return $item;
         return view($this->pathViewController.'index',[
             'allergen'=> $allergen,
@@ -68,59 +82,52 @@ class AllergenController extends BaseController
             'activeAllergens'=>$activeAllergens,
             'deletedAllergens'=>$deletedAllergens,
             'totalMeals'=>$totalMeals,
+            'totalMealsModel'=>$totalMealsModel,
             'totalMappings'=>$totalMappings,
             'usageRate' =>$usageRate,
             'search'=>$search,
             'item'=>$item,
+            'mappingPaginate'=>$mappingPaginate,
+            'mealSearch'=>$mealSearch,
+            'allergenSearch'=>$allergenSearch,
         ]);
     }
 
-    public function show(Allergen $allergen){
-        
+    public function show($id){
+         $allergen = AllergenModel::findOrFail($id);
         return view($this->pathViewController.'show',[
             
             'item'=>$allergen,
         ]);
     }
 
-    public function create(){
-        
+    public function form($id = null){
+         $item = $id ? AllergenModel::findOrFail($id) : null;
         return view($this->pathViewController.'form',[
             
-            'item'=>null,
+            'item'=>$item,
         ]);
     }
 
-    public function store(Request $request){
-        
+    public function save(Request $request){
         $params = $request->all();
-        $allergen = Allergen::create($params);
-        // return redirect()->route('allergens.index')->with('success','Allergen đã được thêm');
-        return redirect()->route('allergens.edit', $allergen->id)->with('success', 'Allergen đã được thêm');
-    }
-
-    public function edit(Allergen $allergen){
+        if(!empty($params['id'])){
+            // update
+            $allergen = AllergenModel::findOrFail($params['id']);
+            $allergen->update($params);
+            return redirect()->route('allergens.form',['id'=>$allergen->id])->with('success','Cập nhật Allergen thành công');
+        }
+        else{
+            // create
+            $allergen = AllergenModel::create($params);
+            return redirect()->route('allergens.form',['id' => $allergen->id])->with('success', 'Thêm mới Allergen thành công');
+        }
         
-        // $item = Tag::findOrFail($id);
-        return view($this->pathViewController.'form',[
-            
-            'item'=>$allergen,
-        ]);
-        
-    }
-
-    public function update(Request $request, Allergen $allergen){
-        $params = $request->all();
-        $allergen->update($params);
-        
-        
-        // return $item;
-        return redirect()->route('allergens.edit',['allergen' => $allergen->id])->with('success', 'Cập nhật thành công');
         
     }
     
-    public function destroy(Allergen $allergen){
-        
+    public function destroy($id){
+        $allergen = AllergenModel::findOrFail($id);
         $allergen->delete();
         
         // return $item;
@@ -132,22 +139,28 @@ class AllergenController extends BaseController
     //================Meal-Allergens CRUD================
      public function indexMap(){
         
-        $mappings = MealAllergen::with(['meals','allergens'])->orderByDesc('id')->take(10)->get();
-        $meals = Meal::all();
-        $allergens = Allergen::all();
+        $mappings = MealAllergenModel::with(['meals','allergens'])->orderByDesc('id')->take(10)->get();
+        $meals = MealModel::all();
+        $allergens = AllergenModel::all();
+        // tổng sô  mục của mapping và  dị ứng theo món
+        $totalMappings = MealAllergenModel::with(['meal','allergen']);
+        
         // return $allergen;
         return view($this->pathViewController.'indexMap',[
             'mappings'=>$mappings,
             'meals'=>$meals,
             'allergens'=>$allergens,
+            'totalMappings'=>$totalMappings,
+            
         ]);
+
         
     }
 
     public function createMap(Request $request){
         
-         $meals = Meal::all();
-        $allergens = Allergen::all();
+         $meals = MealModel::all();
+        $allergens = AllergenModel::all();
         
         // return $allergen;
         return view($this->pathViewController.'formMap',[
@@ -160,7 +173,7 @@ class AllergenController extends BaseController
     public function storeMap(Request $request){
         
          $params = $request->only(['meal_id','allergen_id']);
-         MealAllergen::create($params);
+         MealAllergenModel::create($params);
         
         // return $allergen;
         return redirect()->route('allergens.index')->with('success', 'Tạo Mapping thành công');
@@ -169,11 +182,11 @@ class AllergenController extends BaseController
 
     public function destroyMap($id){
         
-         $mapping = MealAllergen::findOrFail($id);
+         $mapping = MealAllergenModel::findOrFail($id);
          $mapping->delete();
         
         // return $allergen;
-        return redirect()->route('indexMap')->with('success', 'Xóa Mapping thành công');
+        return redirect()->route('allergens.index')->with('success', 'Xóa Mapping thành công');
         
     }
 }
