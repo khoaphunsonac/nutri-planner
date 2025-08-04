@@ -57,7 +57,7 @@
     {{-- fillter form --}}
     <form action="" method="GET" class="row g-2 align-items-center mb-5" >
         <div class="col-md-8"> 
-            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tag..." value="{{$search ?? old($search)}}">
+            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tag..." value="{{$search ?? old($search)}}"  >
         </div>
         <div class="col-md-4">
             <button class="btn btn-primary w-100" type="submit">Lọc</button>
@@ -93,7 +93,7 @@
                         @foreach ($item as $phanTu)
                             <tr>
                                 <td>
-                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}">
+                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}" readonly>
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
