@@ -16,7 +16,7 @@
     
 
     @if (session('success'))
-        <div class="alert alert-success mt-2" style="width: 250px;">{{session('success')}}</div>
+        <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
     @endif
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-4">
@@ -81,10 +81,10 @@
                 <thead class="table-light">
                     <tr>
                         <th width="30">ID</th>
-                        <th width="150">Tên Tag</th>
+                        <th width="200">Tên Tag</th>
                         {{-- <th width="150">Trạng thái</th> --}}
                         {{-- <th width="150">Số món ăn</th> --}}
-                        <th width="150">Ngày tạo</th>
+                        {{-- <th width="150">Ngày tạo</th> --}}
                         <th width="200" class="text-center">Thao tác</th>
                     </tr>
                 </thead>
@@ -108,9 +108,9 @@
                                 {{-- <td>
                                     
                                 </td> --}}
-                                <td>
+                                {{-- <td>
 
-                                </td>
+                                </td> --}}
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{route('tags.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>

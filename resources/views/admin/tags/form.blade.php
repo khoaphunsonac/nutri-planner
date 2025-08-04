@@ -12,7 +12,7 @@
         <a href="{{route('tags.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
     </div>
     @if (session('success'))
-        <div class="alert alert-success mt-2" style="width:250px">{{session('success')}}</div>
+        <div class="alert alert-success mt-2 text-center" style="width:350px">{{session('success')}}</div>
     @endif
     <div class="row">
         <div class="col-m-8">

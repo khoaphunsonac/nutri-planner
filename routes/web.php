@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\TagController;
+use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -29,15 +29,16 @@ Route::prefix('admin')->group(function () {
 
     //=================Route Tags======================
     // Route::resource('tags', TagController::class);
-    $TagController = TagController::class;
-    Route::prefix('tags')->as('tags.')->group(function () use($TagController) {
-        Route::get('/', [$TagController, 'index'])->name('index');                   // Danh sách
-        Route::get('/show/{id}', [$TagController, 'show'])->name('show');          // Xem chi tiết
-        Route::get('/add', [$TagController, 'form'])->name('add');                // Trang thêm
-        Route::get('/form/{id}', [$TagController, 'form'])->name('form');          // Form sửa
-        Route::post('/save', [$TagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
-        Route::post('/delete/{id}', [$TagController, 'destroy'])->name('delete');  // Xóa
+    $tagController = TagController::class;
+    Route::prefix('tags')->as('tags.')->group(function () use($tagController) {
+        Route::get('/', [$tagController, 'index'])->name('index');                   // Danh sách
+        Route::get('/show/{id}', [$tagController, 'show'])->name('show');          // Xem chi tiết
+        Route::get('/add', [$tagController, 'form'])->name('add');                // Trang thêm
+        Route::get('/form/{id}', [$tagController, 'form'])->name('form');          // Form sửa
+        Route::post('/save', [$tagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
+        Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
     });
+
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');

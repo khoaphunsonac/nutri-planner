@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
-use App\Models\Tag;
+
+use App\Models\TagModel;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request ;
@@ -18,18 +19,18 @@ class TagController extends BaseController
 
     public function index(Request $request){
         $id = $request->id;
-        $tags = Tag::all();
+        $tags = TagModel::all();
         
         $params = $request->all();
         $search = $params['search'] ?? '';
-        $query = Tag::select('id','name','deleted_at');
+        $query = TagModel::select('id','name','deleted_at');
         $item = null;
        
         if($search){
              $query = $query->where('name','like',"%$search%")->orwhere('id',$id);
         };
         
-        $totalTagsWithTrashed = Tag::withTrashed()->get();
+        $totalTagsWithTrashed = TagModel::withTrashed()->get();
         // tổng số tag
         $totalTags = count($totalTagsWithTrashed);
         //  return $totalTagsWithTrashed;
@@ -63,7 +64,7 @@ class TagController extends BaseController
     }
 
     public function show($id){
-        $tag = Tag::findOrFail($id);
+        $tag = TagModel::findOrFail($id);
         return view($this->pathViewController.'show',[
             
             'item'=>$tag,
@@ -71,7 +72,7 @@ class TagController extends BaseController
     }
 
     public function form($id =null){
-        $item = $id ? Tag::findOrFail($id) : null;
+        $item = $id ? TagModel::findOrFail($id) : null;
         return view($this->pathViewController.'form',[
             'item'=>$item,
         ]);
@@ -82,23 +83,24 @@ class TagController extends BaseController
     public function save(Request $request){
         $params = $request->all();
         if(!empty($params['id'])){
-            $tag = Tag::findOrFail($params['id']);
+            $tag = TagModel::findOrFail($params['id']);
             $tag->update($params);
-            return redirect()->route('tags.form',['id'=>$tag->id])->with('success','Cập nhật Tag thành công');
+            return redirect()->route('tags.form',['id'=>$tag->id])->with('success',"Cập nhật Tag '{$tag->name}' thành công");
         }else{
-            Tag::create($params);
-            return redirect()->route('tags.index')->with('success','Thêm Tag thành công');
+            $tag =TagModel::create($params);
+            return redirect()->route('tags.index')->with('success',"Thêm Tag '{$tag->name}' thành công");
         }
         
         
     }
     
     public function destroy($id){
-        $tag = Tag::findOrFail($id);
+        $tag = TagModel::findOrFail($id);
+        $name = $tag->name;// lấy tên trước khi xóa
         $tag->delete();
         
         // return $item;
-        return redirect()->route('tags.index')->with('success', 'Đã xóa Tag thành công');
+        return redirect()->route('tags.index')->with('success', "Đã xóa Tag '{$name}' thành công");
         
     }
 }
