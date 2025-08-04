@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -8,8 +9,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// FORM LOGIN (Hiển thị giao diện)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
+// XỬ LÝ LOGIN
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+// LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 // Group Admin
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('admin')->group(function () {
     // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // INGREDIENT MODULE
@@ -32,4 +42,6 @@ Route::prefix('admin')->group(function () {
     // });
 });
 
-// tạm thời không dùng middleware
+Route::middleware('user')->group(function () {
+    // Route dành riêng cho người dùng thường
+});

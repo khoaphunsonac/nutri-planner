@@ -29,6 +29,26 @@ class AccountModel extends Authenticatable
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
 
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return 'username';
+    }
+
+    /**
+     * Get the password for the user.
+     *
+     * @return string
+     */
+    public function getAuthPassword()
+    {
+        return $this->password;
+    }
+
     // Relationships
     public function allergens()
     {
