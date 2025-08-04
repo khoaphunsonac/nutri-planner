@@ -23,7 +23,7 @@
                     <i class="bi bi-info-circle me-1"></i>Click vào dòng để xem chi tiết
                 </small>
             </div>
-            <a href="{{ route('ingredients.create') }}" class="btn btn-primary btn-sm">
+            <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus me-1"></i>Thêm mới
             </a>
         </div>
@@ -75,7 +75,7 @@
                                             class="btn btn-outline-info btn-sm px-2" title="Xem chi tiết">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="{{ route('ingredients.edit', $ingredient->id) }}"
+                                        <a href="{{ route('ingredients.form', $ingredient->id) }}"
                                             class="btn btn-outline-warning btn-sm px-2" title="Sửa">
                                             <i class="bi bi-pencil"></i>
                                         </a>
@@ -85,9 +85,8 @@
                                         </button>
                                     </div>
                                     <form id="delete-form-{{ $ingredient->id }}" method="POST"
-                                        action="{{ route('ingredients.destroy', $ingredient->id) }}" class="d-none">
+                                        action="{{ route('ingredients.delete', $ingredient->id) }}" class="d-none">
                                         @csrf
-                                        @method('DELETE')
                                     </form>
                                 </td>
                             </tr>
@@ -96,7 +95,7 @@
                                 <td colspan="8" class="text-center py-4 text-muted">
                                     <i class="bi bi-basket3 fs-3 d-block mb-2"></i>
                                     <p class="mb-2 small">Chưa có nguyên liệu nào</p>
-                                    <a href="{{ route('ingredients.create') }}" class="btn btn-primary btn-sm">
+                                    <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm">
                                         <i class="bi bi-plus me-1"></i>Thêm nguyên liệu
                                     </a>
                                 </td>

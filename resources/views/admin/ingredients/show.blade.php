@@ -22,7 +22,7 @@
                 <a href="{{ route('ingredients.index') }}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left me-1"></i>Quay lại
                 </a>
-                <a href="{{ route('ingredients.edit', $ingredient->id) }}" class="btn btn-outline-warning">
+                <a href="{{ route('ingredients.form', $ingredient->id) }}" class="btn btn-outline-warning">
                     <i class="bi bi-pencil me-1"></i>Chỉnh sửa
                 </a>
             </div>
