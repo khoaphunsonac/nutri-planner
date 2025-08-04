@@ -29,14 +29,14 @@ Route::prefix('admin')->group(function () {
 
     //=================Route Tags======================
     // Route::resource('tags', TagController::class);
-    Route::prefix('tags')->name('tags.')->group(function () {
-        Route::get('/', [TagController::class, 'index'])->name('index');
-        Route::get('/create', [TagController::class, 'create'])->name('create');
-        Route::post('/', [TagController::class, 'store'])->name('store');
-        Route::get('/{tag}', [TagController::class, 'show'])->name('show');
-        Route::get('/{tag}/edit', [TagController::class, 'edit'])->name('edit');
-        Route::put('/{tag}', [TagController::class, 'update'])->name('update');
-        Route::delete('/{tag}', [TagController::class, 'destroy'])->name('destroy');
+    $TagController = TagController::class;
+    Route::prefix('tags')->as('tags.')->group(function () use($TagController) {
+        Route::get('/', [$TagController, 'index'])->name('index');                   // Danh sách
+        Route::get('/show/{id}', [$TagController, 'show'])->name('show');          // Xem chi tiết
+        Route::get('/add', [$TagController, 'form'])->name('add');                // Trang thêm
+        Route::get('/form/{id}', [$TagController, 'form'])->name('form');          // Form sửa
+        Route::post('/save', [$TagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
+        Route::post('/delete/{id}', [$TagController, 'destroy'])->name('delete');  // Xóa
     });
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {

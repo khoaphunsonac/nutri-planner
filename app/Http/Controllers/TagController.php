@@ -62,56 +62,43 @@ class TagController extends BaseController
         ]);
     }
 
-    public function show(Tag $tag){
-        
+    public function show($id){
+        $tag = Tag::findOrFail($id);
         return view($this->pathViewController.'show',[
             
             'item'=>$tag,
         ]);
     }
 
-    public function create(){
-        
+    public function form($id =null){
+        $item = $id ? Tag::findOrFail($id) : null;
         return view($this->pathViewController.'form',[
-            
-            'item'=>null,
+            'item'=>$item,
         ]);
     }
 
-    public function store(Request $request){
-        
-        $params = $request->all();
-        Tag::create($params);
-        return redirect()->route('tags.index')->with('success','Tag đã được thêm');
-        
-    }
 
-    public function edit(Tag $tag){
-        
-        // $item = Tag::findOrFail($id);
-        return view($this->pathViewController.'form',[
-            
-            'item'=>$tag,
-        ]);
-        
-    }
 
-    public function update(Request $request, Tag $tag){
+    public function save(Request $request){
         $params = $request->all();
-        $tag->update($params);
+        if(!empty($params['id'])){
+            $tag = Tag::findOrFail($params['id']);
+            $tag->update($params);
+            return redirect()->route('tags.form',['id'=>$tag->id])->with('success','Cập nhật Tag thành công');
+        }else{
+            Tag::create($params);
+            return redirect()->route('tags.index')->with('success','Thêm Tag thành công');
+        }
         
-        
-        // return $item;
-        return redirect()->route('tags.edit',['tag' => $tag->id])->with('success', 'Cập nhật thành công');
         
     }
     
-    public function destroy(Tag $tag){
-        
+    public function destroy($id){
+        $tag = Tag::findOrFail($id);
         $tag->delete();
         
         // return $item;
-        return redirect()->route('tags.index')->with('success', 'Đã xóa tag thành công');
+        return redirect()->route('tags.index')->with('success', 'Đã xóa Tag thành công');
         
     }
 }

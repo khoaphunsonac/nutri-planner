@@ -3,8 +3,8 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="">Tags Management</a></li>
-            <li class="breadcrumb-item" aria-current="page"> {{$item ? ' Chỉnh sửa Tag' : ' Thêm mới Tag'}}</li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Tags Management</a></li>
+            <li class="breadcrumb-item link-primary " aria-current="page">  {{ $item ? 'Chỉnh sửa Tag' : 'Thêm mới Tag' }}</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
@@ -18,13 +18,13 @@
         <div class="col-m-8">
             <div class="row">
                 <div class="card shadow-sm border-0 mb-4">
-                <form action="{{$item ? route('tags.update',$item->id) : route('tags.store')}}" method="POST">
+                <form action="{{ route('tags.save')}}" method="POST">
                     @csrf
                     @if ($item)
-                        @method('PUT')
+                        <input type="hidden" name="id" value="{{$item->id}}">
                     @endif
                     <div class=" mb-3">
-                        <label for="name" class=" my-3">Tên Tag</label>
+                        <label for="name" class=" my-3"><strong>Tên Tag</strong></label>
                         <input type="text" name="name" class="form-control" id="" value="{{$item->name ?? old('name')}}">
                         <div class="mt-4 d-flex gap-2">
                             

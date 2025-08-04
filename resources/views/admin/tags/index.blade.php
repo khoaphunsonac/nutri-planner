@@ -3,20 +3,20 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="">Tags Management</a></li>
-            <li class="breadcrumb-item" aria-current="page"> <a href="">Danh sách</a></li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Tags Management</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Danh sách</li>
         </ol>
     </nav>
 
    
     <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Tags Management</h2>
-        <a href="{{route('tags.create')}}"><i class="bi bi-plus-circle"></i> Add New Tag</a>
+        <a href="{{route('tags.add')}}"><i class="bi bi-plus-circle"></i> Add New Tag</a>
     </div>
     
 
     @if (session('success'))
-        <div class="alert alert-success mt-2">{{session('success')}}</div>
+        <div class="alert alert-success mt-2" style="width: 250px;">{{session('success')}}</div>
     @endif
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-4">
@@ -92,8 +92,8 @@
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
                             <tr>
-                                <td>
-                                    <input type="number" class="form-control form-control-sm sort-order text-center" value="{{$phanTu['id'] ?? 1}}" min="1" data-id= "{{$phanTu['id']}}" readonly>
+                                <td class="align-middle text-center">
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu['id'] ?? 1}} </span>
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
@@ -113,11 +113,11 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
-                                        <a href="{{route('tags.show',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
-                                        <a href="{{route('tags.edit',['tag'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
-                                        <form action="{{route('tags.destroy',['tag'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')">
+                                        <a href="{{route('tags.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
+                                        <a href="{{route('tags.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
+                                        <form action="{{route('tags.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')">
                                             @csrf
-                                            @method('DELETE')
+                                            
                                             <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
                                         {{-- <a href="#" class="btn btn-sm btn-danger" title="Xóa"> <i class="bi bi-trash" ></i></a> --}}
