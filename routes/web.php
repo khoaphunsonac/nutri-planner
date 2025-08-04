@@ -18,6 +18,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/', [$controller, 'index'])->name('index');              // Danh sách
         Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
         Route::get('/add', [$controller, 'create'])->name('add');             // Trang thêm mới
+        Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
         Route::get('/form/{id}', [$controller, 'edit'])->name('form');        // Form sửa
         Route::post('/save', [$controller, 'save'])->name('save');            // Lưu thêm hoặc sửa
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
