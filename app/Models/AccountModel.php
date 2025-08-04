@@ -2,20 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-// use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-// use Illuminate\Notifications\Notifiable;
-// use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
-class AccountModel extends Model
+class AccountModel extends Authenticatable
 {
-    // use HasApiTokens, HasFactory, Notifiable;
-
-    use SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes;
 
     protected $table = 'accounts';
     protected $primaryKey = 'id';
@@ -24,11 +19,25 @@ class AccountModel extends Model
         'username',
         'email',
         'password',
-        'role', 
+        'role',
     ];
-    // date
-    protected $CREATED_AT = 'created_at';
-    protected $UPDATED_AT = 'updated_at';
 
-   
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $dates = ['created_at', 'updated_at', 'deleted_at'];
+
+    // Relationships
+    public function allergens()
+    {
+        return $this->belongsToMany(AllergenModel::class, 'user_allergens', 'user_id', 'allergen_id')
+            ->whereNull('user_allergens.deleted_at');
+    }
+
+    public function feedback()
+    {
+        return $this->hasMany(FeedbackModel::class, 'user_id');
+    }
 }
