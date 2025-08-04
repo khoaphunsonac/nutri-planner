@@ -14,8 +14,8 @@ html {
 body {
     background-color: #f1f1f1;
     margin: 0;
-    /* font theo nhóm */
-    font-family: "Noto Sans", "Montserrat", sans-serif;
+    font-family: "Noto Sans", sans-serif;
+    /* default cho body là Noto Sans */
 }
 
 
@@ -28,6 +28,8 @@ body {
     right: 0;
     height: 56px;
     z-index: 1060;
+    font-family: "Montserrat", sans-serif;
+    /* Navbar = menu => dùng Montserrat */
 }
 
 .bg-dash {
@@ -47,23 +49,20 @@ body {
     z-index: 1050;
     transition: left 0.3s ease;
     overflow-y: auto;
-}
-
-.sidebar .sidebar-header {
-    padding: 20px;
-    text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: "Montserrat", sans-serif;
+    /* Sidebar = menu => dùng Montserrat */
 }
 
 .sidebar .sidebar-header h5 {
-    margin-bottom: 4px;
-    color: #fff;
     font-weight: bold;
+    color: #fff;
 }
 
 .sidebar .sidebar-header small {
     color: #f5f5f5;
     font-size: 0.85rem;
+    font-family: "Noto Sans", sans-serif;
+    /* mô tả nhỏ => dùng Noto Sans */
 }
 
 .sidebar a {
@@ -75,6 +74,8 @@ body {
     font-weight: 500;
     transition: background 0.3s, border-left 0.3s;
     border-left: 4px solid transparent;
+    font-family: "Montserrat", sans-serif;
+    /* menu -> dùng Montserrat */
 }
 
 .sidebar a:hover,
@@ -103,13 +104,12 @@ body {
 }
 
 
-/* Main content  
-Main content (áp dụng khi sidebar đang hiện ở desktop)*/
+/* Main content */
 
 .content-wrapper {
     margin-left: 220px;
     padding-top: 68px;
-    /* test 68px nếu lỗi */
+    /* padding-top: 68px; là then chốt để ko bị đè */
     padding-right: 2rem;
     padding-left: 2rem;
     padding-bottom: 2rem;
@@ -122,6 +122,29 @@ Main content (áp dụng khi sidebar đang hiện ở desktop)*/
     padding: 23px;
     border-radius: 10px;
     color: #fff;
+    font-family: "Montserrat", sans-serif;
+    /* heading => dùng Montserrat */
+}
+
+
+/* Form mô tả, form, feedback */
+
+form,
+textarea,
+input,
+.feedback,
+.form-description {
+    font-family: "Noto Sans", sans-serif;
+}
+
+
+/* Nút lớn */
+
+.btn,
+button,
+.btn-lg {
+    font-family: "Montserrat", sans-serif;
+    /* nút lớn -> dùng Montserrat */
 }
 
 
