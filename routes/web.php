@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminController;
+// use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\IngredientController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,13 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-# routes/web.php
-
-// Route::prefix('administrator')->middleware(['auth', 'is_admin'])->group(function () {
+// routes/web.php
 Route::prefix('administrator')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
     // Route::resource('meals', MealController::class);
-    // Route::resource('ingredients', IngredientController::class);
+    Route::resource('ingredients', IngredientController::class);
     // Route::resource('recipes', RecipeController::class);
     // Route::resource('allergens', AllergenController::class);
     // Route::resource('users', UserController::class);
@@ -34,19 +33,3 @@ Route::prefix('administrator')->group(function () {
 });
 
 // Nếu ai làm xong route thì có thể mở route ra, tạm thời bỏ middlleware để test
-
-
-# test route view
-// Route::get('/', function(){
-//     return view('admin.dashboard');
-// });
-
-#----------------------------------------
-
-// Route::get('/adminstrator', [DashboardController::class, 'index'])->name('admin.dashboard');
-
-// Route::get('/admin', function () {
-//     return 'Admin test OK';
-// });
-
-
