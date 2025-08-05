@@ -9,7 +9,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// routes/web.php
 
 // Group Admin
 Route::prefix('admin')->group(function () {
@@ -39,6 +38,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
     });
 
+
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');
@@ -46,4 +46,6 @@ Route::prefix('admin')->group(function () {
     // });
 });
 
-// tạm thời không dùng middleware
+// tạm thời không dùng middlewarem thời bỏ middlleware để test
+
+
