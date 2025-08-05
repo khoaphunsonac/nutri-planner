@@ -122,7 +122,8 @@
                                     {{$phanTu->meals_count}}
                                 </td>
                                 <td>
-                                    {{ $phanTu->created_at ? \Carbon\Carbon::parse($phanTu->created_at)->format('d/m/Y H:i')  : 0 }}
+                                    
+                                    {{ \Carbon\Carbon::parse($phanTu->created_at)->setTimezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">

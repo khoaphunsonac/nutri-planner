@@ -95,8 +95,7 @@ class TagController extends BaseController
             $tag->update($params);
             return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Tag `{$tag->name}` thành công");
         }else{
-            $params['create_at'] = Carbon::now();
-            TagModel::insert($params);
+            $params = $request->only(['name']);
             $tag =TagModel::create($params);
             return redirect()->route('tags.index')->with('success',"Thêm Tag '{$tag->name}' thành công");
         }

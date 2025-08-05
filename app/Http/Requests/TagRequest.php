@@ -29,7 +29,7 @@ class TagRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:255',
-                'unique:tags,name,' . $id, //k check trung với id chính nó
+                'unique:tags,name,' . $id . ',id', //k check trung với id chính nó
             ],
             
         ];
@@ -52,14 +52,5 @@ class TagRequest extends FormRequest
     /**
      * Get custom attribute names in Vietnamese
      */
-    public function attributes(): array
-    {
-        return [
-            'name' => 'tên nguyên liệu',
-            'unit' => 'đơn vị',
-            'protein' => 'protein',
-            'carb' => 'carbohydrate',
-            'fat' => 'chất béo',
-        ];
-    }
+    
 }
