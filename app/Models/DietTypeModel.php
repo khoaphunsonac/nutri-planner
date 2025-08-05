@@ -12,6 +12,8 @@ class DietTypeModel extends Model
 
     protected $table = 'diet_type';
     protected $primaryKey = 'id';
+    public $incrementing = true;
+    
 
     protected $fillable = [
         'name'

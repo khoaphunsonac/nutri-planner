@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
+use App\Http\Controllers\Admin\DietTypeController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -24,6 +25,17 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
+    // DIET TYPE MODULE
+
+Route::prefix('diettypes')->name('diettypes.')->group(function () {
+    Route::get('/', [DietTypeController::class, 'index'])->name('index');
+    Route::get('/create', [DietTypeController::class, 'create'])->name('create');
+    Route::post('/', [DietTypeController::class, 'store'])->name('store');
+    Route::get('/{id}', [DietTypeController::class, 'show'])->name('show'); // Xem chi tiết
+    Route::get('/{id}/edit', [DietTypeController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [DietTypeController::class, 'update'])->name('update');
+    Route::get('/{id}/delete', [DietTypeController::class, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+});
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
