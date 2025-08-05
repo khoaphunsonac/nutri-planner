@@ -64,8 +64,9 @@
         </div>
 
     </form>
-    {{-- Tag table --}}
-    <div class="table-reponsive">
+
+    
+    <div class="card shadow-sm mb-5">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5>Danh sách Tags</h5>
             <small>
@@ -74,10 +75,11 @@
                 Tổng: {{$item->total()}} mục
                 @else
                     Không có kết quả nào
-                @endif</small>
+                @endif
+            </small>
         </div>
-        <div class="card-body text-center">
-            <table class="table table-bordered table-hover align-middle">
+        <div class="card-body  table-reponsive text-center">
+            <table class="table table-bordered  table-hover align-middle">
                 <thead class="table-light">
                     <tr>
                         <th width="30">ID</th>
@@ -118,13 +120,50 @@
                                         <form action="{{route('tags.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')">
                                             @csrf
                                             
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
+                                            <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash " ></i></button>
                                         </form>
+
+                                        <a href="{{route('tags.showMapping',['id'=>$phanTu->id])}}"   class="btn btn-sm btn-outline-primary rounded  me-3" title="Gán Tag cho Món ăn"><i class="bi bi-link"></i></a>
+                                        {{-- <button type="button"
+                                                class="btn btn-sm btn-outline-primary rounded me-3"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#mealTagModal{{ $phanTu->id }}"
+                                                title="Gán Tag cho Món ăn">
+                                            <i class="bi bi-link"></i>
+                                        </button> --}}
                                         
                                     </div>
                                     
                                 </td>
                             </tr>
+                            {{--  Modal cho từng tag --}}
+                              <div class="modal fade" id="mealTagModal{{ $phanTu->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <form action="{{ route('tags.mapMeals', ['id' => $phanTu->id]) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Gán món ăn cho Tag: {{ $phanTu->name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                @foreach ($meals as $meal)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="meals[]" value="{{ $meal->id }}"
+                                                            {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}>
+                                                        <label class="form-check-label">{{ $meal->name }}</label>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success">Lưu</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                             
                         @endforeach
                             
                     @else
@@ -133,12 +172,59 @@
                         </tr>
                     @endif
                 </tbody>
-        </table>
+             </table>
         </div>
         <div class="d-flex justify-content-center mt-3">
             {{$item->links('pagination::bootstrap-5')}}
         </div>
     </div>
+    
+    {{-- Mapping tag-meal --}}
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center bg-light">
+            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Tag</h5>
+            <small>
+                @if ($tagMeal->total() > 0)
+                    Tổng: {{ $tagMeal->total() }} mục
+                @else
+                    0
+                @endif
+            </small>
+        </div>
+        <div class="card-body  text-center">
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tag</th>
+                        <th>Món Ăn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($tagMeal as $tag)
+                        <tr>
+                            <td><strong>{{ $tag->name }}</strong></td>
+                            <td>
+                                @if($tag->meals->count())
+                                    @foreach($tag->meals as $meal)
+                                        <span class="badge bg-primary me-1">{{ $meal->name }}</span>
+                                    @endforeach
+                                @else
+                                    <span class="text-muted">Chưa gán món ăn</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center mt-3">
+                {{$tagMeal->links('pagination::bootstrap-5')}}
+            </div>
+        </div>
+    </div>
+
+       
+        
+    
 
 
 @endsection

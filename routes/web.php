@@ -31,11 +31,20 @@ Route::prefix('admin')->group(function () {
     $tagController = TagController::class;
     Route::prefix('tags')->as('tags.')->group(function () use($tagController) {
         Route::get('/', [$tagController, 'index'])->name('index');                   // Danh sách
-        Route::get('/show/{id}', [$tagController, 'show'])->name('show');          // Xem chi tiết
+         Route::get('/show/{id}', [$tagController, 'show'])->name('show')->where('id', '[0-9]+');;          // Xem chi tiết
         Route::get('/add', [$tagController, 'form'])->name('add');                // Trang thêm
         Route::get('/form/{id}', [$tagController, 'form'])->name('form');          // Form sửa
         Route::post('/save', [$tagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
         Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
+
+        //===========Mapping Tag-Meal==========
+        Route::get('/{id}/mapmeals', [$tagController, 'showMapping'])->name('showMapping')->where('id', '[0-9]+');; 
+        Route::post('/{id}/mapmeals', [$tagController, 'mapMeals'])->name('mapMeals')->where('id', '[0-9]+');;
+
+
+
+
+       
     });
 
 

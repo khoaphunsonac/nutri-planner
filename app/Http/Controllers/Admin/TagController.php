@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\TagRequest;
+use App\Models\MealModel;
 use App\Models\TagModel;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -21,12 +22,13 @@ class TagController extends BaseController
     public function index(Request $request){
         $id = $request->id;
         $tags = TagModel::all();
-        
+        $tagMeal  = TagModel::with('meals')->paginate(10);
+        $allMeals =  MealModel::select('id','name')->get();
         $params = $request->all();
         $search = $params['search'] ?? '';
         $query = TagModel::withCount('meals')->whereNull('deleted_at');
         $item = null;
-       
+        $meals = MealModel::all();
         if($search){
              $query = $query->where('name','like',"%$search%");
         };
@@ -61,6 +63,9 @@ class TagController extends BaseController
             'usageRate' =>$usageRate,
             'search'=>$search,
             'item'=>$item,
+            'tagMeal'=>$tagMeal,
+            'allMeals'=>$allMeals,
+            'meals'=>$meals,
         ]);
     }
 
@@ -105,5 +110,26 @@ class TagController extends BaseController
         // return $item;
         return redirect()->route('tags.index')->with('success', "Đã xóa Tag '{$name}' thành công");
         
+    }
+
+
+     //===========Mapping============
+    public function showMapping($id){
+        $tag = TagModel::with('meals')->findOrFail($id);
+        $allMeals = MealModel::select('id', 'name')->get();
+
+        return view($this->pathViewController.'showMapping', [
+            'tag' => $tag,
+            'allMeals' => $allMeals,
+        ]);
+    }
+
+    public function mapMeals(Request $request, $id)
+    {
+        $tag = TagModel::findOrFail($id);
+        $mealIds = $request->input('meals', []);
+        $tag->meals()->sync($mealIds);
+
+        return redirect()->route('tags.index')->with('success', "Đã cập nhật mapping món ăn cho tag '{$tag->name}'");
     }
 }

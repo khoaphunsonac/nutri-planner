@@ -164,3 +164,7 @@ button,
         margin-left: 0 !important;
     }
 }
+.table td {
+        white-space: normal !important;
+        word-break: break-word;
+    }
