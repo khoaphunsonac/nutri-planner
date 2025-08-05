@@ -17,8 +17,10 @@ class UserController extends Controller
         View::share('shareUser', $this->myController);
     }
     # sau mở rộng truyền về dashboard
+    
     public function index(){
-        $accounts = AccountModel::withCount('feedback')->get(); # gộp in ra hết, theo kiểu đếm số lượng quan hệ 
+        // $accounts = AccountModel::withCount('feedback')->get(); # gộp in ra hết, theo kiểu đếm số lượng quan hệ 
+        $accounts = AccountModel::withCount('feedback')->paginate(7); // chỉ lấy 7 bản ghi mỗi trang
         $countUser = $accounts->count();
         # hiển thị tài khoản bị khoá
         $lockedUsers = $accounts->where("status", "inactive")->count();

@@ -36,7 +36,6 @@
                     </h5>
                     <small>Tài khoản bị khoá</small>
                 </div>
-
             </div>
         </div>
     </div>
@@ -47,7 +46,7 @@
 <div class="table-responsive shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center bg-light px-4 py-3">
     <h5 class="mb-0">Danh sách người dùng</h5>
-    <small class="text-muted">
+    <small class="text-muted" style="font-size: 20px">
         @if ($accounts->count() > 0)
             Tổng: <span style="color: blue">{{ $accounts->count() }}</span> mục
         @else
@@ -57,15 +56,15 @@
 </div>
     <div class="card-body text-center">
         <table class="table table-bordered table-hover align-middle text-center mb-0">
-            <thead class="bg-info text-white">
+            <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Tên đăng nhập</th>
-                    <th>Ngày tạo</th>
-                    <th>Email</th>
-                    <th>Vai trò</th>
-                    <th>Phản hồi</th>
-                    <th>Trạng thái</th>
+                    <th class="text-primary">#</th>
+                    <th class="text-primary">Tên đăng nhập</th>
+                    <th class="text-primary">Ngày tạo</th>
+                    <th class="text-primary">Email</th>
+                    <th class="text-primary">Vai trò</th>
+                    <th class="text-primary">Phản hồi</th>
+                    <th class="text-primary">Trạng thái</th>
                     <th colspan="2">Thao tác</th>
                 </tr>
             </thead>
@@ -113,9 +112,12 @@
             <td colspan="9" class="text-muted">Không có người dùng nào</td>
         </tr>
     @endforelse
-</tbody>
-
+        </tbody>
         </table>
+        {{-- data trên db phải >= 10 mới phân trang đc --}}
+        <div class="m-3">
+            {{ $accounts->links() }}
+        </div>
     </div>
 </div>
 
