@@ -20,10 +20,13 @@ class UserController extends Controller
     public function index(){
         $accounts = AccountModel::withCount('feedback')->get(); # gộp in ra hết, theo kiểu đếm số lượng quan hệ 
         $countUser = $accounts->count();
+        # hiển thị tài khoản bị khoá
+        $lockedUsers = $accounts->where("status", "inactive")->count();
         return view($this->viewPath.'user', [
             "accounts" => $accounts,
             "countUser" => $countUser,
-            # hiển thị 1 user có nhiều feedback
+            # hiển thị tk bị lock
+            "lockedUsers" => $lockedUsers
         ]);
     }
     public function form(Request $request){
@@ -34,7 +37,7 @@ class UserController extends Controller
             $item = AccountModel::where("id", $id)->first();
             $btn = $item ? 'lưu thay đổi' : '';
         }
-        return view($this->viewPath.'form', [
+        return view($this->viewPath.'detail', [
             "id" => $id,
             "item" => $item,
             "btn" => $btn
@@ -52,9 +55,20 @@ class UserController extends Controller
         }
         return redirect(route('users.index', ['id' => $id]));
     }
-    public function save(){
+    public function save(Request $request, $id = null){
+        $account = $id ? AccountModel::find($id) : new AccountModel();
 
-    }
+        $account->username = $request->username;
+        $account->email = $request->email;
+        if ($request->password) {
+            $account->password = bcrypt($request->password);
+        }
+        $account->status = $request->status ?? 'inactive';
+        $account->save();
+
+        return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
+    }   
+
     # mở khoá tk
     public function status(Request $request){
         $id = $request->id;
