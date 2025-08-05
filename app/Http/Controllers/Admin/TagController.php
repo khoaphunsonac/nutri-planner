@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Http\Requests\TagRequest;
 use App\Models\TagModel;
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request ;
@@ -23,11 +24,11 @@ class TagController extends BaseController
         
         $params = $request->all();
         $search = $params['search'] ?? '';
-        $query = TagModel::select('id','name','deleted_at');
+        $query = TagModel::withCount('meals')->whereNull('deleted_at');
         $item = null;
        
         if($search){
-             $query = $query->where('name','like',"%$search%")->orwhere('id',$id);
+             $query = $query->where('name','like',"%$search%");
         };
         
         $totalTagsWithTrashed = TagModel::withTrashed()->get();
@@ -63,8 +64,8 @@ class TagController extends BaseController
         ]);
     }
 
-    public function show($id){
-        $tag = TagModel::findOrFail($id);
+    public function show($id,Request $request){
+        $tag = TagModel::with('meals')->findOrFail($id);
         return view($this->pathViewController.'show',[
             
             'item'=>$tag,
@@ -80,13 +81,15 @@ class TagController extends BaseController
 
 
 
-    public function save(Request $request){
+    public function save(TagRequest $request){
         $params = $request->all();
         if(!empty($params['id'])){
             $tag = TagModel::findOrFail($params['id']);
             $tag->update($params);
-            return redirect()->route('tags.form',['id'=>$tag->id])->with('success',"Cập nhật Tag '{$tag->name}' thành công");
+            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Tag `{$tag->name}` thành công");
         }else{
+            $params['create_at'] = Carbon::now();
+            TagModel::insert($params);
             $tag =TagModel::create($params);
             return redirect()->route('tags.index')->with('success',"Thêm Tag '{$tag->name}' thành công");
         }

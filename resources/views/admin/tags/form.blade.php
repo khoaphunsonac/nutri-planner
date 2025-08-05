@@ -26,18 +26,36 @@
                     <div class=" mb-3">
                         <label for="name" class=" my-3"><strong>Tên Tag</strong></label>
                         <input type="text" name="name" class="form-control" id="" value="{{$item->name ?? old('name')}}">
+                        @error('name')
+                                <p class="text-danger">{{$message}}</p>
+                            @enderror
                         <div class="mt-4 d-flex gap-2">
                             
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i>{{$item ? 'Cập nhật Tag' : 'Thêm Tag'}}
                                 </button>
-                                <button type="reset" class="btn btn-secondary">
+                                {{-- nút xóa --}}
+                                <button type="button" class="btn btn-secondary" onclick="clearForm()">
                                     <i class="fas fa-undo"></i> Làm lại
                                 </button>
-                                <button type="reset" class="btn btn-outline-secondary">
+                                {{-- nút khôi phục --}}
+                                <button type="reset" class="btn btn-info text-white">Khôi phục</button>
+                                @if ($item)
+                                    {{-- Nếu đang sửa thì hiện thêm nút “Chi tiết” và “Thêm mới” --}}
+                                    {{-- <a href="{{ route('tags.show', ['id' => $item->id, 'redirect'=>url()->current()]) }}" class="btn btn-outline-dark">
+                                        <i class="fas fa-eye"></i> Chi tiết
+                                    </a> --}}
+
+                                    <a href="{{ route('tags.add') }}" class="btn btn-success">
+                                        <i class="fas fa-plus-circle"></i> Thêm mới
+                                    </a>
+                                @endif
+                                
+                                {{-- nút  hủy --}}
+                                {{-- <button type="reset" class="btn btn-outline-secondary ">
                                     <i class="fas fa-times"></i> Hủy
-                                </button>
-                            
+                                </button> --}}
+                                <a href="{{route('tags.index')}}" class="btn btn-outline-secondary"> Hủy</a>
                         </div>
                     </div>
 
@@ -67,5 +85,11 @@
         
         </div>   
     </div>
-    
+
+
+<script>
+    function clearForm() {
+       document.querySelector('input[name=name]').value = '';
+    }
+</script>
 @endsection

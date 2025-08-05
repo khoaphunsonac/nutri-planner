@@ -77,26 +77,26 @@
                 @endif</small>
         </div>
         <div class="card-body text-center">
-            <table class="table table-hover table -bordered align-middle">
+            <table class="table table-bordered table-hover align-middle">
                 <thead class="table-light">
                     <tr>
                         <th width="30">ID</th>
-                        <th width="200">Tên Tag</th>
+                        <th width="150">Tên Tag</th>
                         {{-- <th width="150">Trạng thái</th> --}}
-                        {{-- <th width="150">Số món ăn</th> --}}
-                        {{-- <th width="150">Ngày tạo</th> --}}
-                        <th width="200" class="text-center">Thao tác</th>
+                        <th width="100">Số món ăn</th>
+                        <th width="150">Ngày tạo</th>
+                        <th width="150" class="text-center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody class="text-center">
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
-                            <tr>
+                            <tr onclick="window.location='{{route('tags.show',['id'=>$phanTu->id])}}'" style="cursor: pointer;">
                                 <td class="align-middle text-center">
-                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu['id'] ?? 1}} </span>
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu->id ?? 1}} </span>
                                 </td>
                                 <td>
-                                    {{$phanTu['name']}}
+                                    {{$phanTu->name}}
                                 </td>
                                 {{-- <td>
                                     @if ($phanTu['deleted_at'])
@@ -105,12 +105,12 @@
                                         <span class="badge bg-success">Hoạt động</span>
                                     @endif
                                 </td> --}}
-                                {{-- <td>
-                                    
-                                </td> --}}
-                                {{-- <td>
-
-                                </td> --}}
+                                <td>
+                                    {{$phanTu->meals_count}}
+                                </td>
+                                <td>
+                                    {{ $phanTu->created_at ? \Carbon\Carbon::parse($phanTu->created_at)->format('d/m/Y H:i')  : 0 }}
+                                </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{route('tags.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
@@ -120,7 +120,7 @@
                                             
                                             <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
-                                        {{-- <a href="#" class="btn btn-sm btn-danger" title="Xóa"> <i class="bi bi-trash" ></i></a> --}}
+                                        
                                     </div>
                                     
                                 </td>
@@ -140,17 +140,5 @@
         </div>
     </div>
 
-    {{-- Pagination --}}
-    
-        {{-- <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center mb-0">
-                <li class="page-item"><a href="#" class="page-link">Trước</a></li>
-                <li class="page-item active" ><a href="#" class="page-link">1</a></li>
-                <li class="page-item " ><a href="#" class="page-link">2</a></li>
-                <li class="page-item " ><a href="#" class="page-link">3</a></li>
-                <li class="page-item"><a href="#" class="page-link">Sau</a></li>
-            </ul>
-        </nav> --}}
-        
 
 @endsection
