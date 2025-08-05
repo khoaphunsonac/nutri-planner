@@ -178,30 +178,58 @@
             font-size: 0.95rem;
         }
     }
+    /* Thêm style cho hàng có thể click */
+    .table tbody tr {
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .table tbody tr:hover {
+        background: #e3f2fd !important;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    /* Đảm bảo các nút hành động vẫn có thể click mà không kích hoạt sự kiện hàng */
+    .table tbody tr td:last-child {
+        cursor: default;
+    }
+    .table tbody tr td:last-child * {
+        pointer-events: auto;
+    }
 </style>
 <div class="container py-4">
     <h2 class="mb-4 fw-bold">Quản lý phản hồi người dùng</h2>
 
-    {{-- Bộ lọc --}}
+        {{-- Bộ lọc --}}
     <div class="card mb-4 shadow-sm">
         <div class="card-body">
             <form method="GET" action="{{ route('feedbacks.index') }}" class="row g-3 align-items-end">
-                <div class="col-md-5">
+                <div class="col-md-4">
                     <label class="form-label fw-semibold">Tìm nội dung</label>
                     <input type="text" name="search" placeholder="Tìm kiếm..." class="form-control" value="{{ request('search') }}">
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold">Trạng thái</label>
-                    <select name="status" class="form-select">
+                
+                <div class="col-md-2">
+                    <label class="form-label fw-semibold">Rating</label>
+                    <select name="rating" class="form-select">
                         <option value="">Tất cả</option>
-                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Chưa xử lý</option>
-                        <option value="resolved" {{ request('status') == 'resolved' ? 'selected' : '' }}>Đã xử lý</option>
+                        <option value="5" {{ request('rating') == '5' ? 'selected' : '' }}>★★★★★</option>
+                        <option value="4" {{ request('rating') == '4' ? 'selected' : '' }}>★★★★☆</option>
+                        <option value="3" {{ request('rating') == '3' ? 'selected' : '' }}>★★★☆☆</option>
+                        <option value="2" {{ request('rating') == '2' ? 'selected' : '' }}>★★☆☆☆</option>
+                        <option value="1" {{ request('rating') == '1' ? 'selected' : '' }}>★☆☆☆☆</option>
                     </select>
                 </div>
+                
+                <div class="col-md-3">
+                    <label class="form-label fw-semibold">Ngày gửi</label>
+                    <input type="date" name="date" class="form-control" value="{{ request('date') }}">
+                </div>
+                
                 <div class="col-md-3 d-grid">
-                    <button class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary">
                         <i class="bi bi-funnel-fill"></i> Lọc
                     </button>
+                    <a href="{{ route('feedbacks.index') }}" class="btn btn-secondary mt-2">Reset</a>
                 </div>
             </form>
         </div>
@@ -222,10 +250,9 @@
             </thead>
             <tbody>
             @forelse($feedbacks as $index => $feedback)
-                <tr>
+                <tr onclick="window.location='{{ route('feedbacks.show', $feedback->id) }}'">
                     <td class="text-center">{{ $index + 1 }}</td>
-                    {{-- <td>{{ $feedback->user->username ?? 'Khách' }}</td> --}}
-                   <td>{{ $feedback->account->username ?? 'Không có user' }}</td>
+                    <td>{{ $feedback->account->username ?? 'Không có user' }}</td>
 
                     <td class="text-center text-warning">
                         {!! str_repeat('★', $feedback->rating) . str_repeat('☆', 5 - $feedback->rating) !!}
@@ -234,15 +261,14 @@
                     <td class="text-center">{{ $feedback->created_at->format('d/m/Y H:i') }}</td>
                     
                     <td class="text-center">
-                        <a href="{{ route('feedbacks.show', $feedback->id) }}" class="btn btn-sm btn-info me-1">Xem</a>
                         @if($feedback->status == 'pending')
                         <form action="{{ route('feedbacks.updateStatus', $feedback->id) }}" method="POST" class="d-inline-block">
                             @csrf
                             <button class="btn btn-sm btn-success">✓</button>
                         </form>
                         @endif
-                        <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Xác nhận xóa?')">
-                            @csrf @method('DELETE')
+                        <form action="{{ route('feedbacks.destroy', $feedback->id) }}" method="GET" class="d-inline-block" onsubmit="return confirm('Xác nhận xóa?')">
+                            @csrf @method('GET')
                             <button class="btn btn-sm btn-danger">🗑️</button>
                         </form>
                     </td>
@@ -256,4 +282,13 @@
         </table>
     </div>
 </div>
+
+<script>
+    // Bổ sung để ngăn sự kiện click khi click vào các nút hành động
+    document.querySelectorAll('table tbody tr td:last-child *').forEach(element => {
+        element.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    });
+</script>
 @endsection

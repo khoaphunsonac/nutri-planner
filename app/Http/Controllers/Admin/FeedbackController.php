@@ -33,7 +33,7 @@ class FeedbackController extends Controller
     public function show($id)
     {
         $feedback = FeedbackModel::with('account')->findOrFail($id);
-        return view('admin.feedbacks.show',[
+        return view('Admin.feedbacks.show',[
             'feedback' => $feedback,
         ]); 
       
@@ -48,7 +48,7 @@ class FeedbackController extends Controller
         $feedback = FeedbackModel::findOrFail($id);
         $feedback->delete();
 
-        return redirect()->route('admin.feedbacks.index')->with('success', 'Đã xóa phản hồi.');
+        return redirect()->route('feedbacks.index')->with('success', 'Đã xóa phản hồi.');
     }
     
 }
