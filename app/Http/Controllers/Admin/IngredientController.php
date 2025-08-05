@@ -28,11 +28,36 @@ class IngredientController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $ingredients = IngredientModel::orderBy('created_at', 'desc')->paginate(10);
+        // Get search parameter
+        $search = $request->get('search');
+
+        // Build query
+        $query = IngredientModel::query();
+
+        if ($search) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('id', $search);
+        }
+
+        // Get paginated results
+        $ingredients = $query->orderBy('id', 'desc')->paginate(10);
+
+        // Preserve search in pagination links
+        $ingredients->appends(['search' => $search]);
+
+        // Calculate statistics
+        $totalIngredients = IngredientModel::count();
+        $activeIngredients = IngredientModel::whereNull('deleted_at')->count();
+        $usageRate = $totalIngredients > 0 ? round(($activeIngredients / $totalIngredients) * 100) : 0;
+
         return view('admin.ingredients.index', [
-            'ingredients' => $ingredients
+            'ingredients' => $ingredients,
+            'search' => $search,
+            'totalIngredients' => $totalIngredients,
+            'activeIngredients' => $activeIngredients,
+            'usageRate' => $usageRate . '%'
         ]);
     }
 
