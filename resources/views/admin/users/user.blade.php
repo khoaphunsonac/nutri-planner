@@ -89,7 +89,7 @@
                 </span>
             </td>
             <td>
-                <span class="badge bg-white border border-info text-info rounded-pill shadow-sm">
+                <span class="badge bg-success text-white rounded-circle shadow-sm">
                     {{ $item->feedback_count }}
                 </span>
             </td>
