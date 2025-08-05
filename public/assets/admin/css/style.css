@@ -164,3 +164,12 @@ button,
         margin-left: 0 !important;
     }
 }
+
+.meal-item {
+    transition: background-color 0.2s ease-in-out, transform 0.1s;
+    cursor: pointer;
+}
+.meal-item:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+}

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\AllergenController;
-use App\Http\Controllers\Admin\TagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -43,11 +42,12 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$allergenController, 'destroy'])->name('delete'); // Xoá
 
         // Mapping meal-allergen
-        Route::get('/mapping', [$allergenController, 'indexMap'])->name('mapping.index');
-        Route::get('/mapping/add', [$allergenController, 'createMap'])->name('mapping.add');
-        Route::post('/mapping/save', [$allergenController, 'storeMap'])->name('mapping.save');
-        Route::post('/mapping/delete/{id}', [$allergenController, 'destroyMap'])->name('mapping.delete');
+        Route::post('/{id}/mapping', [$allergenController, 'mapMeals'])->name('mapMeals');
+        // Route::get('/mapping/add', [$allergenController, 'createMap'])->name('mapping.add');
+        // Route::post('/mapping/save', [$allergenController, 'storeMap'])->name('mapping.save');
+        // Route::post('/mapping/delete/{id}', [$allergenController, 'destroyMap'])->name('mapping.delete');
     });
+
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
@@ -56,4 +56,6 @@ Route::prefix('admin')->group(function () {
     // });
 });
 
-// tạm thời không dùng middleware
+// tạm thời không dùng middlewarem thời bỏ middlleware để test
+
+

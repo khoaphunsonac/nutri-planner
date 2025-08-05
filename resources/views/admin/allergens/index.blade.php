@@ -15,7 +15,9 @@
     
 
     @if (session('success'))
-        <div class="alert alert-success my-4" style="max-width: 300px; margin: 0 auto;">{{session('success')}}</div>
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-success my-4 text-center" style="max-width: 300px; margin: 0 auto;">{{session('success')}}</div>
+        </div>
     @endif
     {{-- Dashboard summary --}}
     <div>
@@ -72,7 +74,7 @@
         <div class="col-md-9">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
                 {{-- fillter form --}}
-                <form action="" method="GET" class="row g-2 align-items-center" >
+                {{-- <form action="" method="GET" class="row g-2 align-items-center" >
                     <div class="col-md-8"> 
                         <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm Allergen..." value="{{$search ?? old($search)}}">
                     </div>
@@ -80,7 +82,22 @@
                         <button class="btn btn-primary w-100" type="submit">Lọc</button>
                     </div>
 
-                </form>
+                </form> --}}
+                    
+                        <form action="" method="GET" class="row g-2 align-items-center">
+                            
+                            <div class="col-sm-5">
+                                <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo Allergen... " value="{{$allergenSearch ?? old($allergenSearch)}}">
+                            </div>
+                            <div class="col-sm-5">
+                                <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo Meal... " value="{{$mealSearch ?? old($mealSearch)}}">
+                            </div>
+                            <div class="col-sm-2">
+                                <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i> Tìm
+                                </button>
+                            </div>
+                        </form>
+                   
             </div>
         </div>
         <div class="col-md-3">
@@ -108,12 +125,14 @@
                     @endif
                 </small> 
         </div>
-        <div class="card-body table-reponsive">
-            <table class="table table-hover table -bordered align-middle text-center">
+        <div class="card-body table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="table-light ">
                     <tr>
                         <th width="30">ID</th>
                         <th width="150">Tên Allergen</th>
+                        <th width="150">Meal</th>
+                        <th width="100">Số món ăn</th>
                         <th width="150">Ngày tạo</th>
                         <th width="200" class="text-center">Thao tác</th>
                     </tr>
@@ -121,7 +140,7 @@
                 <tbody>
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
-                            <tr>
+                            <tr onclick="window.location='{{ route('allergens.show', $phanTu->id) }}'" style="cursor: pointer;">
                                 
                                 <td class="align-middle text-center">
                                     <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu['id'] ?? 1}} </span>
@@ -130,7 +149,20 @@
                                     {{$phanTu['name']}}
                                 </td>
                                 <td>
-
+                                    @if ($phanTu->meals->count()>0)
+                                        @foreach ($phanTu->meals as $meal)
+                                            <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
+                                        @endforeach
+                                    @else
+                                        0
+                                    @endif
+                                </td>
+                                <td>
+                                    {{ $phanTu->meals_count ?? 0 }}
+                                </td>
+                                <td>
+                                    {{ optional($phanTu->created_at)->setTimezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i')  ?? '0' }}
+                                </td>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
@@ -138,17 +170,68 @@
                                         <a href="{{route('allergens.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
                                         <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Allergen này không?')">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash" ></i></button>
+                                            <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
+
+                                        <!-- Nút mở modal -->
+                                        <button 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#mapMealModal{{ $phanTu->id }}" 
+                                            class="btn btn-sm btn-outline-primary rounded me-3"
+                                            onclick="event.stopPropagation()"
+                                            title="gắn mapping"
+                                        >
+                                            <i class="bi bi-link-45deg"></i>
+                                        </button>
                                     </div>
                                     
                                 </td>
                             </tr>
                         @endforeach
-                            
+                        @foreach ($item as $phanTu)
+                            <div class="modal fade" id="mapMealModal{{ $phanTu->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <form action="{{ route('allergens.mapMeals', ['id' => $phanTu->id]) }}" method="POST">
+                                        @csrf
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Gán món ăn bị dị ứng cho: {{ $phanTu->name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body text-start">
+                                                <div class="row">
+                                                    @foreach ($meals as $meal)
+                                                        <div class="col-md-4 mb-2">
+                                                            <div class="form-check">
+                                                                <input 
+                                                                    class="form-check-input" 
+                                                                    type="checkbox" 
+                                                                    name="meals[]" 
+                                                                    id="meal_{{ $phanTu->id }}_{{ $meal->id }}" 
+                                                                    value="{{ $meal->id }}"
+                                                                    {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}
+                                                                >
+                                                                <label class="form-check-label" for="meal_{{ $phanTu->id }}_{{ $meal->id }}">
+                                                                    {{ $meal->name }}
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-success">Lưu</button>
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+
                     @else
                         <tr>
-                            <td class="text-center text-muted" colspan="6">Không có Allergen nào</td>
+                            <td class="text-center text-muted" colspan="6">Không có kết quả nào</td>
                         </tr>
                     @endif
                 </tbody>
@@ -161,12 +244,12 @@
     </div>
 
 
-    {{-- Meal-Allergen table --}}
+    {{-- Meal-Allergen table 
     <div class="row mt-5">
 
         <div class="col-md-9">
             <div class=" card mb-1 px-3 py-3 shadow-sm ">
-            {{-- Bên trái: tìm kiếm --}}
+            {{-- Bên trái: tìm kiếm
                 <form action="" method="GET" class="row g-2 align-items-center">
                     <div class="col-sm-5">
                         <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo Meal... " value="{{$mealSearch ?? old($mealSearch)}}">
@@ -175,14 +258,14 @@
                         <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo Allergen... " value="{{$allergenSearch ?? old($allergenSearch)}}">
                     </div>
                     <div class="col-sm-2">
-                        <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i>Tìm
+                        <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i> Tìm
                         </button>
                     </div>
                 </form>
             </div>
         </div>
         <div class="col-md-3">
-            {{-- Bên phải: nút thêm --}}
+            {{-- Bên phải: nút thêm 
             <div class=" card shadow-sm mb-1 px-3 py-3 bg-light text-end">
                 <a href="{{route('allergens.mapping.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Add Mapping</a>
             </div>
@@ -194,7 +277,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5><i class="fas fa-link text-success"></i>Meal-Allergen Mapping</h5>
              <small class="text-end">
-                    {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                    {{--  Tổng số Allergen thỏa query tìm kiếm 
                     @if ($item->total() > 0)
                     Tổng: {{$mappingPaginate->total()}} mục
                     @else
@@ -202,8 +285,8 @@
                     @endif
                 </small> 
         </div>
-        <div class="card-body table-reponsive">
-            <table class="table table-hover table -bordered align-middle text-center">
+        <div class="card-body table-responsive">
+            <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="table-success ">
                     <tr>
                         <th width="30">ID</th>
@@ -249,9 +332,9 @@
              
         </div>
        <div class="d-flex justify-content-center mt-3">
-            {{$mappingPaginate->links('pagination::bootstrap-5')}}
+            {{$mappingPaginate->appends(['allergens_page' => request('allergens_page')])->links('pagination::bootstrap-5')}}
         </div>
-    </div>
+    </div> --}}
 
     {{-- Overview --}}
     <div class="card shadow-sm mt-5">
