@@ -34,7 +34,7 @@
             <p><strong>Tổng số món ăn được gán:</strong> {{ $item->meals->count() }}</p>
 
             <hr>
-
+{{-- 
             @if ($item->meals->count())
                 <h6><i class="bi bi-list-ul"></i> Danh sách món ăn:</h6>
                 <ul class="list-group list-group-flush mt-2">
@@ -47,8 +47,33 @@
                 </ul>
             @else
                 <p class="text-muted fst-italic">Chưa gán với món ăn nào.</p>
-            @endif
-        </div>
+            @endif --}}
+
+            {{-- Nếu có meal được gán --}}
+            <div class="container mt-4">
+                @if($item->meals->count() > 0)
+                
+                    <div class="row  mt-4">
+                        <h5 class="">Các món ăn được gán với tag này: </h5>
+                        <ul class="list-group w-100" style="max-width: 1000px;">
+                            @foreach($item->meals as $meal)
+                                <div class="col-md-6 mb-3">
+                                    <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded  ">
+                                        <span class="text-truncate">{{ $meal->name }}</span>
+                                        <span class="badge bg-info">{{ $meal->mealType->name ?? 'Không rõ loại' }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </ul>
+                    </div>
+                
+                @else
+                    <div class="text-muted mt-3">
+                        Tag này hiện chưa được gán với món ăn nào.
+                    </div>
+                @endif
+            </div>
     </div>
+</div>
 
 @endsection

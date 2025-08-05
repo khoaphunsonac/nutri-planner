@@ -16,11 +16,14 @@
     
 
     @if (session('success'))
+    <div class="d-flex justify-content-center">
         <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
+    </div>
+        
     @endif
     {{-- Dashboard summary --}}
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
+    <div class="row g-3 mb-3">
+        <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$totalTags ?? 0}}</h4>
@@ -28,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$activeTags ?? 0}}</h4>
@@ -44,11 +47,19 @@
                 </div>
             </div>
         </div> --}}
-        <div class="col-md-4">
+        <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$usageRate ?? 0}}</h4>
                     <p class="text-muted mb-0">Sử dụng</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center -shadow-sm">
+                <div class="card-body">
+                    <h4>Coming soon</h4>
+                    <p class="text-muted mb-0">Tags phổ biến</p>
                 </div>
             </div>
         </div>
@@ -78,8 +89,8 @@
                 @endif
             </small>
         </div>
-        <div class="card-body  table-reponsive text-center">
-            <table class="table table-bordered  table-hover align-middle">
+        <div class="card-body   text-center">
+            <table class="table  table-bordered  table-hover align-middle">
                 <thead class="table-light">
                     <tr>
                         <th width="30">ID</th>
@@ -93,7 +104,7 @@
                 <tbody class="text-center">
                     @if (count($item)>0)
                         @foreach ($item as $phanTu)
-                            <tr onclick="window.location='{{route('tags.show',['id'=>$phanTu->id])}}'" style="cursor: pointer;">
+                            <tr onclick="window.location='{{route('tags.show',$phanTu->id)}}'" style="cursor: pointer;">
                                 <td class="align-middle text-center">
                                     <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu->id ?? 1}} </span>
                                 </td>
@@ -123,49 +134,54 @@
                                             <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash " ></i></button>
                                         </form>
 
-                                        <a href="{{route('tags.showMapping',['id'=>$phanTu->id])}}"   class="btn btn-sm btn-outline-primary rounded  me-3" title="Gán Tag cho Món ăn"><i class="bi bi-link"></i></a>
-                                        {{-- <button type="button"
-                                                class="btn btn-sm btn-outline-primary rounded me-3"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#mealTagModal{{ $phanTu->id }}"
-                                                title="Gán Tag cho Món ăn">
-                                            <i class="bi bi-link"></i>
-                                        </button> --}}
-                                        
+                                        <button 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#mapMealModal{{ $phanTu->id }}" 
+                                            class="btn btn-sm btn-outline-primary rounded  me-3"
+                                             onclick="event.stopPropagation()"
+                                        >
+                                            <i class="bi bi-link-45deg"></i>
+                                        </button>
                                     </div>
                                     
                                 </td>
                             </tr>
-                            {{--  Modal cho từng tag --}}
-                              <div class="modal fade" id="mealTagModal{{ $phanTu->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-lg">
-                                    <form action="{{ route('tags.mapMeals', ['id' => $phanTu->id]) }}" method="POST">
-                                        @csrf
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Gán món ăn cho Tag: {{ $phanTu->name }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                @foreach ($meals as $meal)
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="meals[]" value="{{ $meal->id }}"
-                                                            {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}>
-                                                        <label class="form-check-label">{{ $meal->name }}</label>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="submit" class="btn btn-success">Lưu</button>
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                             
-                        @endforeach
                             
+                            
+                        @endforeach
+                            <!-- Tất cả các modal đặt sau bảng -->
+                            @foreach ($itemMeal as $phanTu)
+                                <div class="modal fade" id="mapMealModal{{ $phanTu->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                        <form action="{{ route('tags.mapMeals', ['id' => $phanTu->id]) }}" method="POST">
+                                            @csrf
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Gán món ăn cho Tag: {{ $phanTu->name }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body text-start">
+                                                    <div class="row">
+                                                        @foreach ($allMeals as $meal)
+                                                            <div class="col-md-4">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input" type="checkbox" name="meals[]" id="meal_{{ $phanTu->id }}_{{ $meal->id }}" value="{{ $meal->id }}"
+                                                                        {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}>
+                                                                    <label class="form-check-label" for="meal_{{ $phanTu->id }}_{{ $meal->id }}">{{ $meal->name }}</label>
+                                                                </div>
+                                                            </div>
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-success">Lưu</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endforeach
                     @else
                         <tr>
                             <td class="text-center text-muted" colspan="6">Không có tag nào</td>
@@ -223,8 +239,7 @@
     </div>
 
        
-        
-    
+
 
 
 @endsection

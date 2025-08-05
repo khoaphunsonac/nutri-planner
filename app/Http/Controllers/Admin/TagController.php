@@ -23,6 +23,7 @@ class TagController extends BaseController
         $id = $request->id;
         $tags = TagModel::all();
         $tagMeal  = TagModel::with('meals')->paginate(10);
+        $itemMeal = TagModel::with('meals')->get();
         $allMeals =  MealModel::select('id','name')->get();
         $params = $request->all();
         $search = $params['search'] ?? '';
@@ -66,6 +67,7 @@ class TagController extends BaseController
             'tagMeal'=>$tagMeal,
             'allMeals'=>$allMeals,
             'meals'=>$meals,
+            'itemMeal' =>$itemMeal,
         ]);
     }
 
@@ -114,16 +116,6 @@ class TagController extends BaseController
 
 
      //===========Mapping============
-    public function showMapping($id){
-        $tag = TagModel::with('meals')->findOrFail($id);
-        $allMeals = MealModel::select('id', 'name')->get();
-
-        return view($this->pathViewController.'showMapping', [
-            'tag' => $tag,
-            'allMeals' => $allMeals,
-        ]);
-    }
-
     public function mapMeals(Request $request, $id)
     {
         $tag = TagModel::findOrFail($id);
