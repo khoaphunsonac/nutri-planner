@@ -41,6 +41,7 @@
                     </td>
                     <td>
                         <span class="badge bg-white border border-info text-info rounded-pill shadow-sm">
+                            {{-- do controller dùng quan hệ 1 nhiều với withCount nên đc đặt tên như _count --}}
                             {{ $item->feedback_count }}
                         </span>
                     </td>

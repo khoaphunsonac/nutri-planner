@@ -32,7 +32,7 @@ class UserController extends Controller
         $btn = '';
         if($id){
             $item = AccountModel::where("id", $id)->first();
-            $btn = $item ? 'lưu' : '';
+            $btn = $item ? 'lưu thay đổi' : '';
         }
         return view($this->viewPath.'form', [
             "id" => $id,
@@ -51,5 +51,22 @@ class UserController extends Controller
             }
         }
         return redirect(route('users.index', ['id' => $id]));
+    }
+    public function save(){
+
+    }
+    # mở khoá tk
+    public function status(Request $request){
+        $id = $request->id;
+        $accountStatus = '';
+        if($id){
+            $accountStatus = AccountModel::where('id', $id)->first();
+            if($accountStatus){
+                $accountStatus->status = $accountStatus->status === 'active' ? 'inactive' : 'active';
+                $accountStatus->save();
+            }
+        }
+        # redirect về trang trước
+        return redirect()->back()->with('success', 'Đã cập nhật trạng thái tài khoản');
     }
 }

@@ -32,6 +32,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/form/{id?}', [$controller, 'form'])->name('form');
         Route::get('/delete/{id?}', [$controller, 'delete'])->name('delete');
         Route::post('/save/{id?}', [$controller, 'save'])->name('save');
+        # mở & khoá tk
+        Route::patch('status', [$controller, 'status'])->name('status');
     });
 
 
