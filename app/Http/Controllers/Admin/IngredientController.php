@@ -78,16 +78,10 @@ class IngredientController extends Controller
         ]);
     }
 
-    public function save(Request $request)
+    public function save(IngredientRequest $request)
     {
-        // Validate dữ liệu
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'unit' => 'required|string|in:' . implode(',', array_keys($this->getUnitOptions())),
-            'protein' => 'required|numeric|min:0',
-            'carb' => 'required|numeric|min:0',
-            'fat' => 'required|numeric|min:0',
-        ]);
+        // Dữ liệu đã được validate tự động bởi IngredientRequest
+        $validatedData = $request->validated();
 
         $id = $request->input('id');
 
@@ -95,11 +89,11 @@ class IngredientController extends Controller
             // Cập nhật ingredient có sẵn
             $ingredient = IngredientModel::findOrFail($id);
             $ingredient->update($validatedData);
-            return redirect()->route('ingredients.index')->with('success', 'Đã cập nhật nguyên liệu.');
+            return redirect()->route('ingredients.index')->with('success', 'Đã cập nhật nguyên liệu thành công.');
         } else {
             // Tạo ingredient mới
             IngredientModel::create($validatedData);
-            return redirect()->route('ingredients.index')->with('success', 'Nguyên liệu đã được thêm.');
+            return redirect()->route('ingredients.index')->with('success', 'Thêm nguyên liệu mới thành công.');
         }
     }
 
