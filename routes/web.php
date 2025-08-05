@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -25,6 +24,7 @@ Route::prefix('admin')->group(function () {
     });
 
 
+
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');
@@ -32,4 +32,6 @@ Route::prefix('admin')->group(function () {
     // });
 });
 
-// tạm thời không dùng middleware
+// tạm thời không dùng middlewarem thời bỏ middlleware để test
+
+
