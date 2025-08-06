@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
 use App\Http\Controllers\Admin\DietTypeController;
+use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -26,7 +27,20 @@ Route::prefix('admin')->group(function () {
         Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
         Route::get('/form/{id}', [$controller, 'edit'])->name('form');        // Form sửa
         Route::post('/save', [$controller, 'save'])->name('save');            // Lưu thêm hoặc sửa
-        Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
+        Route::post('/save/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
+    });
+
+    # USER MODULE
+    $controller = UserController::class;
+    Route::prefix('users')->as('users.')->group(function () use($controller){
+        Route::get('/', [$controller, 'index'])->name('index');
+        Route::get('/form/{id?}', [$controller, 'form'])->name('form');
+        Route::get('/edit/{id?}', [$controller, 'edit'])->name('edit'); # sửa tk admin
+        Route::post('/edit/{id?}', [$controller, 'update'])->name('update'); # bấm lưu
+        Route::get('/delete/{id?}', [$controller, 'delete'])->name('delete');
+        Route::post('/save/{id?}', [$controller, 'save'])->name('save');
+        # mở & khoá tk
+        Route::patch('/status/{id?}', [$controller, 'status'])->name('status');
     });
 
     Route::prefix('feedbacks')->as('feedbacks.')->group(function () {
