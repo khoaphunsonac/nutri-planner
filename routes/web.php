@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Admin\FeedbackController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 // Group Admin
 Route::prefix('admin')->group(function () {
-    // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // INGREDIENT MODULE
     $controller = IngredientController::class;
@@ -34,6 +34,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
+    
     // MEAL MODULE
     $controller = MealController::class;
     Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {
