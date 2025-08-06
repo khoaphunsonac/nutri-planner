@@ -28,6 +28,24 @@ class RecipeIngredientModel extends Model
         'total_calo' => 'float',
     ];
 
+    // Boot method to automatically calculate total_calo
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($recipeIngredient) {
+            if (!$recipeIngredient->total_calo) {
+                $recipeIngredient->total_calo = 0; // Set default value
+            }
+        });
+
+        static::created(function ($recipeIngredient) {
+            // Calculate and update total_calo after creation
+            $totalCalo = $recipeIngredient->calculateTotalCalo();
+            $recipeIngredient->update(['total_calo' => $totalCalo]);
+        });
+    }
+
     // Relationships
     public function meal()
     {
