@@ -24,7 +24,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/save/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
-    # Đạt code user(account)
+    # USER MODULE
     $controller = UserController::class;
     Route::prefix('users')->as('users.')->group(function () use($controller){
         Route::get('/', [$controller, 'index'])->name('index');
