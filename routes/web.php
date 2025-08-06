@@ -1,6 +1,7 @@
 <?php
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
+use App\Http\Controllers\ContactController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -22,7 +23,14 @@ Route::prefix('admin')->group(function () {
         Route::post('/save', [$controller, 'save'])->name('save');            // Lưu thêm hoặc sửa
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
-
+    # A.Khoa code
+        Route::prefix('contacts')->group(function(){
+        Route::get('', [ContactController::class, 'index'])->name('contact.index');
+        Route::get('/{id}', [ContactController::class, 'detail'])->name('contact.show');
+        Route::get('/{id}/delete', [ContactController::class, 'delete'])->name('contact.delete');
+    });
+       
+});
 
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
@@ -30,7 +38,7 @@ Route::prefix('admin')->group(function () {
     //     Route::get('/', [...])->name('index');
     //     ...
     // });
-});
+
 
 // tạm thời không dùng middlewarem thời bỏ middlleware để test
 
