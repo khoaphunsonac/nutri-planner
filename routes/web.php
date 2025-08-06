@@ -58,8 +58,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/api/diet-types', [$controller, 'getDietTypes'])->name('api.diet-types');
     });
 
-
-
+    
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');
