@@ -24,6 +24,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
+    Route::prefix('feedbacks')->as('feedbacks.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\FeedbackController::class, 'index'])->name('index');              // Danh sách
+        Route::get('/show/{id}', [App\Http\Controllers\Admin\FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
+        Route::post('/delete/{id}', [App\Http\Controllers\Admin\FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
+    });
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
