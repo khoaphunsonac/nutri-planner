@@ -16,17 +16,17 @@ class ContactController extends Controller
         View::share('controller', $this->controllerName);
     }
 
-
     public function index()
     {
         $items = ContactModel::orderBy('id', 'desc')->get();
 
         return view($this->pathViewController . "index", [
-            'items' => $items
+            'items' => $items,
+            'selectedItem' => null
         ]);
     }
 
-    public function detail($id)
+    public function show($id)
     {
         $selectedItem = ContactModel::find($id);
         $items = ContactModel::orderBy('id', 'desc')->get();
