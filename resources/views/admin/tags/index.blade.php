@@ -68,7 +68,7 @@
     {{-- fillter form --}}
     <form action="" method="GET" class="row g-2 align-items-center mb-5" >
         <div class="col-md-8"> 
-            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tag..." value="{{$search ?? old($search)}}"  >
+            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tên Thẻ..." value="{{$search ?? old($search)}}"  >
         </div>
         <div class="col-md-4">
             <button class="btn btn-primary w-100" type="submit">Lọc</button>
