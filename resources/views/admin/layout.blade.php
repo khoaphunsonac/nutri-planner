@@ -47,10 +47,12 @@
         <a href=""><i class="bi bi-speedometer2"></i> Dashboard</a>
         <a href="#"><i class="bi bi-egg-fried"></i> Meals</a>
         <a href="#"><i class="bi bi-basket"></i> Ingredients</a>
-        <a href="{{ route($shareUser.'index') }}"><i class="bi bi-people"></i> Users</a>
+        <a href="{{ route('users.index') }}"><i class="bi bi-people"></i> Users</a>
         <a href="#"><i class="bi bi-tags"></i> Tags</a> <!-- Đã thêm mục này -->
         <a href="#"><i class="bi bi-envelope"></i> Contacts</a>
         <a href="#"><i class="bi bi-chat-dots"></i> Feedbacks</a>
+        <a href="#"><i class="bi bi-grid-1x2"></i> Meal type</a>
+        <a href="#"><i class="bi bi-heart-pulse"></i> Diet type</a>
     </aside>
 
     <!-- Main content mọi content kế thừa của anh em sẽ vô đây -->
