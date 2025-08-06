@@ -51,6 +51,8 @@ class AllergenController extends BaseController
 
         $totalMealsModel = MealModel::count();
         $totalAllergenWithTrashed = AllergenModel::withTrashed()->get();
+        $totalAllergenWithTrashedCount = AllergenModel::withTrashed()->count();
+       
         // tổng số tag
         $totalAllergens = count($totalAllergenWithTrashed);
         //  return $totalTagsWithTrashed;
