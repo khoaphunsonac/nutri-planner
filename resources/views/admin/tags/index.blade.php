@@ -3,15 +3,15 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Tags Management</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Danh sách</li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Quản lý Thẻ</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page">Danh sách</li>
         </ol>
     </nav>
 
    
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Tags Management</h2>
-        <a href="{{route('tags.add')}}"><i class="bi bi-plus-circle"></i> Add New Tag</a>
+            <h2>Quản lý Thẻ</h2>
+        <a href="{{route('tags.add')}}"><i class="bi bi-plus-circle"></i>Thêm Thẻ</a>
     </div>
     
 
@@ -27,7 +27,7 @@
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$totalTags ?? 0}}</h4>
-                    <p class="text-muted mb-0">Tổng Tag</p>
+                    <p class="text-muted mb-0">Tổng Thẻ</p>
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>Coming soon</h4>
-                    <p class="text-muted mb-0">Tags phổ biến</p>
+                    <p class="text-muted mb-0">Thẻ phổ biến</p>
                 </div>
             </div>
         </div>
@@ -79,7 +79,7 @@
     
     <div class="card shadow-sm mb-5">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5>Danh sách Tags</h5>
+            <h5>Danh sách Thẻ</h5>
             <small>
                 {{--  Tổng số tag thỏa query tìm kiếm --}}
                 @if ($item->total() > 0)
@@ -94,7 +94,7 @@
                 <thead class="table-light">
                     <tr>
                         <th width="30">ID</th>
-                        <th width="150">Tên Tag</th>
+                        <th width="150">Tên Thẻ</th>
                         {{-- <th width="150">Trạng thái</th> --}}
                         <th width="100">Số món ăn</th>
                         <th width="150">Ngày tạo</th>
@@ -158,7 +158,7 @@
                                             @csrf
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Gán món ăn cho Tag: {{ $phanTu->name }}</h5>
+                                                    <h5 class="modal-title">Gán món ăn cho Thẻ: {{ $phanTu->name }}</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body text-start">
@@ -185,7 +185,7 @@
                             @endforeach
                     @else
                         <tr>
-                            <td class="text-center text-muted" colspan="6">Không có tag nào</td>
+                            <td class="text-center text-muted" colspan="6">Không có thẻ nào</td>
                         </tr>
                     @endif
                 </tbody>
@@ -199,7 +199,7 @@
     {{-- Mapping tag-meal --}}
     <div class="card mt-4">
         <div class="card-header d-flex justify-content-between align-items-center bg-light">
-            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Tag</h5>
+            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Thẻ</h5>
             <small>
                 @if ($tagMeal->total() > 0)
                     Tổng: {{ $tagMeal->total() }} mục
@@ -212,7 +212,7 @@
             <table class="table table-bordered table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th>Tag</th>
+                        <th>Thẻ</th>
                         <th>Món Ăn</th>
                     </tr>
                 </thead>

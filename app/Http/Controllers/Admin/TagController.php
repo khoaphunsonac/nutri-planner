@@ -93,11 +93,11 @@ class TagController extends BaseController
         if(!empty($params['id'])){
             $tag = TagModel::findOrFail($params['id']);
             $tag->update($params);
-            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Tag `{$tag->name}` thành công");
+            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Thẻ `{$tag->name}` thành công");
         }else{
             $params = $request->only(['name']);
             $tag =TagModel::create($params);
-            return redirect()->route('tags.index')->with('success',"Thêm Tag '{$tag->name}' thành công");
+            return redirect()->route('tags.index')->with('success',"Thêm Thẻ '{$tag->name}' thành công");
         }
         
         
@@ -109,7 +109,7 @@ class TagController extends BaseController
         $tag->delete();
         
         // return $item;
-        return redirect()->route('tags.index')->with('success', "Đã xóa Tag '{$name}' thành công");
+        return redirect()->route('tags.index')->with('success', "Đã xóa Thẻ '{$name}' thành công");
         
     }
 
@@ -121,6 +121,6 @@ class TagController extends BaseController
         $mealIds = $request->input('meals', []);
         $tag->meals()->sync($mealIds);
 
-        return redirect()->route('tags.index')->with('success', "Đã cập nhật mapping món ăn cho tag '{$tag->name}'");
+        return redirect()->route('tags.index')->with('success', "Đã cập nhật liên kết món ăn cho Thẻ '{$tag->name}'");
     }
 }

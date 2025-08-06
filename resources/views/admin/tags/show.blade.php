@@ -3,14 +3,14 @@
      <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Tags Management</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Tag</li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Quản lý Thẻ</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Thẻ</li>
         </ol>
     </nav>
 
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">📝 Thông tin chi tiết Tag</h5>
+            <h5 class="mb-0">📝 Thông tin chi tiết Thẻ</h5>
             <div>
                 <a href="{{ route('tags.form', ['id' => $item->id]) }}" class="btn btn-sm btn-warning me-2">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
@@ -23,7 +23,7 @@
 
         <div class="card-body">
             <p><strong>ID:</strong> {{ $item->id }}</p>
-            <p><strong>Tên Tag:</strong> {{ $item->name }}</p>
+            <p><strong>Tên Thẻ:</strong> {{ $item->name }}</p>
             <p><strong>Trạng thái:</strong>
                 @if ($item->deleted_at)
                     <span class="badge bg-danger">Đã xóa</span>
@@ -54,7 +54,7 @@
                 @if($item->meals->count() > 0)
                 
                     <div class="row  mt-4">
-                        <h5 class="">Các món ăn được gán với tag này: </h5>
+                        <h5 class="">Các món ăn được gán với Thẻ này: </h5>
                         <ul class="list-group w-100" style="max-width: 1000px;">
                             @foreach($item->meals as $meal)
                                 <div class="col-md-6 mb-3">
@@ -69,7 +69,7 @@
                 
                 @else
                     <div class="text-muted mt-3">
-                        Tag này hiện chưa được gán với món ăn nào.
+                    Thẻ này hiện chưa được gán với món ăn nào.
                     </div>
                 @endif
             </div>
