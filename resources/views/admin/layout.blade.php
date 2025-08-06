@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Noto+Sans&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('admin/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/ingredients.css') }}">
 </head>
 
 <body>
@@ -25,7 +26,7 @@
             <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()">☰</button>
             <a class="navbar-brand text-light" href="#">Fitfood Admin</a>
             <a href="#" class="me-4">
-                <img src="{{ asset('img/avatar/default.jpg') }}" alt="admin" width="30"
+                <img src="{{ asset('assets/admin/img/avatar/default.jpg') }}" alt="admin" width="30"
                     class="d-block rounded-circle">
             </a>
         </div>
@@ -45,7 +46,7 @@
         {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
         <a href=""><i class="bi bi-speedometer2"></i> Dashboard</a>
         <a href="#"><i class="bi bi-egg-fried"></i> Meals</a>
-        <a href="#"><i class="bi bi-basket"></i> Ingredients</a>
+        <a href="{{route('ingredients.index')}}"><i class="bi bi-basket"></i> Ingredients</a>
         <a href="#"><i class="bi bi-people"></i> Users</a>
         <a href="#"><i class="bi bi-tags"></i> Tags</a> <!-- Đã thêm mục này -->
         <a href="#"><i class="bi bi-envelope"></i> Contacts</a>
@@ -59,6 +60,8 @@
         @yield('content')
     </div>
 
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
