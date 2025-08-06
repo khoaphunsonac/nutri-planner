@@ -61,7 +61,13 @@ class MealController extends Controller
 
     public function edit($id)
     {
-        $meal = MealModel::with(['tags', 'allergens', 'recipeIngredients.ingredient'])->findOrFail($id);
+        $meal = MealModel::with([
+            'dietType',
+            'mealType',
+            'tags',
+            'allergens',
+            'recipeIngredients.ingredient'
+        ])->findOrFail($id);
 
         return view('admin.meals.form-main', [
             'meal' => $meal,

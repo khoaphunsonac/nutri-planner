@@ -179,51 +179,184 @@
                         <div class="col-12">
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                                 <h6 class="mb-0">Nguyên liệu công thức</h6>
-                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addIngredient()">
-                                    <i class="bi bi-plus"></i> Thêm nguyên liệu
-                                </button>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-success btn-sm"
+                                        onclick="toggleIngredientPanel()">
+                                        <i class="bi bi-plus-circle"></i> Thêm nguyên liệu
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                        onclick="clearAllIngredients()">
+                                        <i class="bi bi-trash"></i> Xóa tất cả
+                                    </button>
+                                </div>
                             </div>
 
-                            <div id="ingredients-container">
-                                @if (isset($meal) && $meal->recipeIngredients->count() > 0)
-                                    @foreach ($meal->recipeIngredients as $index => $recipeIngredient)
-                                        <div class="ingredient-row row mb-2" data-index="{{ $index }}">
-                                            <div class="col-md-6">
-                                                <select class="form-select ingredient-select"
-                                                    name="ingredients[{{ $index }}][ingredient_id]">
-                                                    <option value="">Chọn nguyên liệu</option>
-                                                    @foreach ($ingredients as $ingredient)
-                                                        <option value="{{ $ingredient->id }}"
-                                                            {{ $recipeIngredient->ingredient_id == $ingredient->id ? 'selected' : '' }}>
-                                                            {{ $ingredient->name }} ({{ $ingredient->unit }})
-                                                        </option>
-                                                    @endforeach
+                            <div class="row">
+                                {{-- Ingredients Library Panel --}}
+                                <div class="col-md-4" id="ingredients-panel" style="display: none;">
+                                    <div class="card border-success">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0"><i class="bi bi-basket"></i> Thư viện nguyên liệu</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            {{-- Search and Filter --}}
+                                            <div class="mb-3">
+                                                <div class="input-group mb-2">
+                                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                                    <input type="text" class="form-control" id="ingredient-search"
+                                                        placeholder="Tìm kiếm nguyên liệu...">
+                                                </div>
+                                                <select class="form-select form-select-sm" id="ingredient-filter">
+                                                    <option value="">Tất cả loại</option>
+                                                    <option value="protein">Nhiều Protein</option>
+                                                    <option value="carb">Nhiều Carb</option>
+                                                    <option value="fat">Nhiều Fat</option>
+                                                    <option value="vegetable">Rau củ</option>
+                                                    <option value="spice">Gia vị</option>
                                                 </select>
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="number" class="form-control quantity-input"
-                                                    name="ingredients[{{ $index }}][quantity]"
-                                                    value="{{ $recipeIngredient->quantity }}" placeholder="Số lượng"
-                                                    step="0.1" min="0">
+
+                                            {{-- Ingredients List --}}
+                                            <div class="ingredients-list" style="max-height: 400px; overflow-y: auto;">
+                                                @foreach ($ingredients as $ingredient)
+                                                    <div class="ingredient-item mb-2 p-2 border rounded cursor-pointer"
+                                                        draggable="true" data-id="{{ $ingredient->id }}"
+                                                        data-name="{{ $ingredient->name }}"
+                                                        data-unit="{{ $ingredient->unit }}"
+                                                        data-protein="{{ $ingredient->protein }}"
+                                                        data-carb="{{ $ingredient->carb }}"
+                                                        data-fat="{{ $ingredient->fat }}"
+                                                        data-calories="{{ $ingredient->calo }}">
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <div>
+                                                                <strong
+                                                                    class="ingredient-name">{{ $ingredient->name }}</strong>
+                                                                <small
+                                                                    class="text-muted d-block">{{ $ingredient->unit }}</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <small
+                                                                    class="d-block text-primary">{{ $ingredient->calo }}
+                                                                    kcal</small>
+                                                                <small class="text-muted">P:{{ $ingredient->protein }}g
+                                                                    C:{{ $ingredient->carb }}g
+                                                                    F:{{ $ingredient->fat }}g</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-outline-danger btn-sm w-100"
-                                                    onclick="removeIngredient(this)">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+
+                                            <div class="text-center mt-3">
+                                                <small class="text-muted">
+                                                    <i class="bi bi-info-circle"></i> Kéo thả hoặc double-click để thêm
+                                                </small>
                                             </div>
                                         </div>
-                                    @endforeach
-                                @else
-                                    <div class="text-muted text-center py-3">
-                                        <i class="bi bi-basket3 fs-3 d-block mb-2"></i>
-                                        <p class="mb-0">Chưa có nguyên liệu nào. Click "Thêm nguyên liệu" để bắt đầu.</p>
                                     </div>
-                                @endif
+                                </div>
+
+                                {{-- Recipe Drop Zone --}}
+                                <div id="recipe-column" class="col-md-12">
+                                    <div class="card border-primary" id="recipe-drop-zone" ondrop="drop(event)"
+                                        ondragover="allowDrop(event)">
+                                        <div class="card-header bg-primary text-white">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <h6 class="mb-0"><i class="bi bi-list-ul"></i> Nguyên liệu trong công
+                                                    thức</h6>
+                                                <div class="nutrition-summary">
+                                                    <small>
+                                                        <span id="total-calories">0</span> kcal |
+                                                        P: <span id="total-protein">0</span>g |
+                                                        C: <span id="total-carb">0</span>g |
+                                                        F: <span id="total-fat">0</span>g
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" style="min-height: 200px;">
+                                            <div id="ingredients-container">
+                                                @if (isset($meal) && $meal->recipeIngredients->count() > 0)
+                                                    @foreach ($meal->recipeIngredients as $index => $recipeIngredient)
+                                                        <div class="recipe-ingredient-row mb-3 p-3 border rounded bg-light"
+                                                            data-index="{{ $index }}">
+                                                            <div class="row align-items-center">
+                                                                <div class="col-md-5">
+                                                                    <strong>{{ $recipeIngredient->ingredient->name }}</strong>
+                                                                    <small
+                                                                        class="text-muted d-block">{{ $recipeIngredient->ingredient->unit }}</small>
+                                                                    <input type="hidden"
+                                                                        name="ingredients[{{ $index }}][ingredient_id]"
+                                                                        value="{{ $recipeIngredient->ingredient_id }}">
+                                                                    <input type="hidden" class="base-protein"
+                                                                        value="{{ $recipeIngredient->ingredient->protein }}">
+                                                                    <input type="hidden" class="base-carb"
+                                                                        value="{{ $recipeIngredient->ingredient->carb }}">
+                                                                    <input type="hidden" class="base-fat"
+                                                                        value="{{ $recipeIngredient->ingredient->fat }}">
+                                                                    <input type="hidden" class="base-calories"
+                                                                        value="{{ $recipeIngredient->ingredient->calo }}">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <input type="number"
+                                                                        class="form-control quantity-input"
+                                                                        name="ingredients[{{ $index }}][quantity]"
+                                                                        value="{{ $recipeIngredient->quantity }}"
+                                                                        placeholder="Số lượng" step="0.1"
+                                                                        min="0"
+                                                                        onchange="calculateNutrition(this)">
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <div class="nutrition-info">
+                                                                        <small class="d-block">Calories: <span
+                                                                                class="calories">{{ number_format(($recipeIngredient->ingredient->calo * $recipeIngredient->quantity) / 100, 0) }}</span>
+                                                                            kcal</small>
+                                                                        <small class="d-block">
+                                                                            P: <span
+                                                                                class="protein">{{ number_format(($recipeIngredient->ingredient->protein * $recipeIngredient->quantity) / 100, 1) }}</span>g
+                                                                            |
+                                                                            C: <span
+                                                                                class="carb">{{ number_format(($recipeIngredient->ingredient->carb * $recipeIngredient->quantity) / 100, 1) }}</span>g
+                                                                            |
+                                                                            F: <span
+                                                                                class="fat">{{ number_format(($recipeIngredient->ingredient->fat * $recipeIngredient->quantity) / 100, 1) }}</span>g
+                                                                        </small>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <button type="button"
+                                                                        class="btn btn-outline-danger btn-sm"
+                                                                        onclick="removeRecipeIngredient(this)">
+                                                                        <i class="bi bi-trash"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @else
+                                                    <div class="empty-state text-center text-muted py-4">
+                                                        <i class="bi bi-arrow-left-right fs-1 d-block mb-2"></i>
+                                                        <h6>Kéo thả nguyên liệu vào đây</h6>
+                                                        <p class="mb-0">Hoặc click "Thêm nguyên liệu" để bắt đầu</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    {{-- Preparation Section --}}
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <h6 class="border-bottom pb-2">Cách chế biến món ăn</h6>
+                            <div class="mb-4">
+                                <textarea id="preparation" name="preparation" class="form-control" rows="5">{{ old('preparation', $meal->preparation ?? '') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
                     {{-- Submit Button --}}
                     <div class="row mt-4">
                         <div class="col-12">
@@ -244,57 +377,414 @@
     <script>
         let ingredientIndex = {{ isset($meal) ? $meal->recipeIngredients->count() : 0 }};
 
-        function addIngredient() {
-            const container = document.getElementById('ingredients-container');
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing meal form...');
 
-            // Remove empty message if exists
-            const emptyMessage = container.querySelector('.text-muted.text-center');
-            if (emptyMessage) {
-                emptyMessage.remove();
-            }
+            // Initialize drag and drop
+            initializeDragAndDrop();
 
-            const ingredientRow = `
-                <div class="ingredient-row row mb-2" data-index="${ingredientIndex}">
-                    <div class="col-md-6">
-                        <select class="form-select ingredient-select" name="ingredients[${ingredientIndex}][ingredient_id]">
-                            <option value="">Chọn nguyên liệu</option>
-                            @foreach ($ingredients as $ingredient)
-                                <option value="{{ $ingredient->id }}">{{ $ingredient->name }} ({{ $ingredient->unit }})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <input type="number" class="form-control quantity-input" 
-                            name="ingredients[${ingredientIndex}][quantity]" 
-                            placeholder="Số lượng" step="0.1" min="0">
-                    </div>
-                    <div class="col-md-2">
-                        <button type="button" class="btn btn-outline-danger btn-sm w-100" 
-                            onclick="removeIngredient(this)">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            `;
+            // Initialize existing ingredients với timeout để đảm bảo DOM đã load xong
+            setTimeout(() => {
+                initializeExistingIngredients();
+                updateTotalNutrition();
+                console.log('Existing ingredients initialized');
+            }, 100);
+        });
 
-            container.insertAdjacentHTML('beforeend', ingredientRow);
-            ingredientIndex++;
+        function initializeDragAndDrop() {
+            // Add drag event listeners to all ingredient items
+            document.querySelectorAll('.ingredient-item').forEach(item => {
+                item.setAttribute('draggable', 'true');
+
+                item.addEventListener('dragstart', function(e) {
+                    this.style.opacity = '0.5';
+                    this.classList.add('dragging');
+                    e.dataTransfer.setData("ingredient-id", this.dataset.id);
+                    e.dataTransfer.setData("ingredient-name", this.dataset.name);
+                    e.dataTransfer.setData("ingredient-unit", this.dataset.unit);
+                    e.dataTransfer.setData("ingredient-protein", this.dataset.protein);
+                    e.dataTransfer.setData("ingredient-carb", this.dataset.carb);
+                    e.dataTransfer.setData("ingredient-fat", this.dataset.fat);
+                    e.dataTransfer.setData("ingredient-calories", this.dataset.calories);
+                });
+
+                item.addEventListener('dragend', function(e) {
+                    this.style.opacity = '1';
+                    this.classList.remove('dragging');
+                });
+
+                // Double click to add
+                item.addEventListener('dblclick', function() {
+                    const ingredientId = this.dataset.id;
+                    if (isIngredientExists(ingredientId)) {
+                        showAlert('Nguyên liệu này đã được thêm vào công thức!', 'warning');
+                        return;
+                    }
+
+                    addRecipeIngredient(
+                        this.dataset.id,
+                        this.dataset.name,
+                        this.dataset.unit,
+                        this.dataset.protein,
+                        this.dataset.carb,
+                        this.dataset.fat,
+                        this.dataset.calories
+                    );
+                });
+
+                // Hover effects
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#e3f2fd';
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'all 0.2s';
+                });
+
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                    this.style.transform = 'scale(1)';
+                });
+            });
         }
 
-        function removeIngredient(button) {
-            const row = button.closest('.ingredient-row');
-            row.remove();
+        function initializeExistingIngredients() {
+            // Calculate nutrition for existing ingredients
+            document.querySelectorAll('.recipe-ingredient-row').forEach(row => {
+                const quantityInput = row.querySelector('.quantity-input');
+                if (quantityInput && quantityInput.value) {
+                    // Đảm bảo có base nutrition data
+                    const hasBaseData = row.querySelector('.base-protein') &&
+                        row.querySelector('.base-carb') &&
+                        row.querySelector('.base-fat') &&
+                        row.querySelector('.base-calories');
 
-            // Show empty message if no ingredients left
+                    if (hasBaseData) {
+                        calculateNutrition(quantityInput);
+                    } else {
+                        console.warn('Missing base nutrition data for ingredient row');
+                    }
+                }
+            });
+        }
+
+        // Toggle ingredient panel
+        function toggleIngredientPanel() {
+            const panel = document.getElementById('ingredients-panel');
+            const recipeColumn = document.getElementById('recipe-column');
+
+            if (panel.style.display === 'none' || panel.style.display === '') {
+                panel.style.display = 'block';
+                recipeColumn.className = 'col-md-8';
+                // Focus on search input
+                setTimeout(() => {
+                    document.getElementById('ingredient-search').focus();
+                }, 100);
+            } else {
+                panel.style.display = 'none';
+                recipeColumn.className = 'col-md-12';
+            }
+        }
+
+        // Search ingredients
+        document.getElementById('ingredient-search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filter = document.getElementById('ingredient-filter').value;
+            filterIngredients(searchTerm, filter);
+        });
+
+        // Filter ingredients by type
+        document.getElementById('ingredient-filter').addEventListener('change', function() {
+            const searchTerm = document.getElementById('ingredient-search').value.toLowerCase();
+            const filter = this.value;
+            filterIngredients(searchTerm, filter);
+        });
+
+        function filterIngredients(searchTerm, filter) {
+            const ingredients = document.querySelectorAll('.ingredient-item');
+            let visibleCount = 0;
+
+            ingredients.forEach(item => {
+                const name = item.querySelector('.ingredient-name').textContent.toLowerCase();
+                const protein = parseFloat(item.dataset.protein);
+                const carb = parseFloat(item.dataset.carb);
+                const fat = parseFloat(item.dataset.fat);
+
+                let matchesSearch = name.includes(searchTerm);
+                let matchesFilter = true;
+
+                if (filter) {
+                    switch (filter) {
+                        case 'protein':
+                            matchesFilter = protein > carb && protein > fat;
+                            break;
+                        case 'carb':
+                            matchesFilter = carb > protein && carb > fat;
+                            break;
+                        case 'fat':
+                            matchesFilter = fat > protein && fat > carb;
+                            break;
+                        case 'vegetable':
+                            matchesFilter = name.includes('rau') || name.includes('củ') || name.includes('lá') ||
+                                name.includes('cà') || name.includes('nấm');
+                            break;
+                        case 'spice':
+                            matchesFilter = name.includes('muối') || name.includes('tiêu') || name.includes(
+                                    'gia vị') ||
+                                name.includes('hành') || name.includes('tỏi') || name.includes('gừng');
+                            break;
+                    }
+                }
+
+                const shouldShow = matchesSearch && matchesFilter;
+                item.style.display = shouldShow ? 'block' : 'none';
+                if (shouldShow) visibleCount++;
+            });
+
+            // Show no results message
+            const existingNoResults = document.querySelector('.no-results-message');
+            if (existingNoResults) existingNoResults.remove();
+
+            if (visibleCount === 0) {
+                const noResultsMessage = document.createElement('div');
+                noResultsMessage.className = 'no-results-message text-center text-muted py-3';
+                noResultsMessage.innerHTML = `
+                <i class="bi bi-search fs-3 d-block mb-2"></i>
+                <p class="mb-0">Không tìm thấy nguyên liệu nào</p>
+            `;
+                document.querySelector('.ingredients-list').appendChild(noResultsMessage);
+            }
+        }
+
+        // Drag and Drop functionality
+        function allowDrop(ev) {
+            ev.preventDefault();
+            const dropZone = ev.currentTarget;
+            dropZone.style.borderColor = '#007bff';
+            dropZone.querySelector('.card-body').style.backgroundColor = '#f0f8ff';
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const dropZone = ev.currentTarget;
+            dropZone.style.borderColor = '';
+            dropZone.querySelector('.card-body').style.backgroundColor = '';
+
+            const ingredientId = ev.dataTransfer.getData("ingredient-id");
+            const ingredientName = ev.dataTransfer.getData("ingredient-name");
+            const ingredientUnit = ev.dataTransfer.getData("ingredient-unit");
+            const ingredientProtein = ev.dataTransfer.getData("ingredient-protein");
+            const ingredientCarb = ev.dataTransfer.getData("ingredient-carb");
+            const ingredientFat = ev.dataTransfer.getData("ingredient-fat");
+            const ingredientCalories = ev.dataTransfer.getData("ingredient-calories");
+
+            // Check if ingredient already exists
+            if (isIngredientExists(ingredientId)) {
+                showAlert('Nguyên liệu này đã được thêm vào công thức!', 'warning');
+                return;
+            }
+
+            addRecipeIngredient(ingredientId, ingredientName, ingredientUnit, ingredientProtein, ingredientCarb,
+                ingredientFat, ingredientCalories);
+            showAlert(`Đã thêm ${ingredientName} vào công thức!`, 'success');
+        }
+
+        function isIngredientExists(ingredientId) {
+            return document.querySelector(`input[name*="[ingredient_id]"][value="${ingredientId}"]`) !== null;
+        }
+
+        function addRecipeIngredient(id, name, unit, protein, carb, fat, calories) {
             const container = document.getElementById('ingredients-container');
-            if (container.querySelectorAll('.ingredient-row').length === 0) {
-                container.innerHTML = `
-                    <div class="text-muted text-center py-3">
-                        <i class="bi bi-basket3 fs-3 d-block mb-2"></i>
-                        <p class="mb-0">Chưa có nguyên liệu nào. Click "Thêm nguyên liệu" để bắt đầu.</p>
+
+            // Remove empty state if exists
+            const emptyState = container.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            const ingredientRow = document.createElement('div');
+            ingredientRow.className = 'recipe-ingredient-row mb-3 p-3 border rounded bg-light';
+            ingredientRow.dataset.index = ingredientIndex;
+            ingredientRow.innerHTML = `
+            <div class="row align-items-center">
+                <div class="col-md-5">
+                    <strong>${name}</strong>
+                    <small class="text-muted d-block">${unit}</small>
+                    <input type="hidden" name="ingredients[${ingredientIndex}][ingredient_id]" value="${id}">
+                    <input type="hidden" class="base-protein" value="${protein}">
+                    <input type="hidden" class="base-carb" value="${carb}">
+                    <input type="hidden" class="base-fat" value="${fat}">
+                    <input type="hidden" class="base-calories" value="${calories}">
+                </div>
+                <div class="col-md-3">
+                    <input type="number" class="form-control quantity-input" 
+                           name="ingredients[${ingredientIndex}][quantity]"
+                           value="100" 
+                           placeholder="Số lượng" step="0.1" min="0"
+                           onchange="calculateNutrition(this)">
+                </div>
+                <div class="col-md-3">
+                    <div class="nutrition-info">
+                        <small class="d-block">Calories: <span class="calories">${calories}</span> kcal</small>
+                        <small class="d-block">P: <span class="protein">${protein}</span>g | C: <span class="carb">${carb}</span>g | F: <span class="fat">${fat}</span>g</small>
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRecipeIngredient(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+            container.appendChild(ingredientRow);
+            ingredientIndex++;
+
+            // Calculate nutrition for initial quantity
+            const quantityInput = ingredientRow.querySelector('.quantity-input');
+            calculateNutrition(quantityInput);
+
+            // Update total nutrition
+            updateTotalNutrition();
+
+            // Add animation
+            ingredientRow.style.opacity = '0';
+            ingredientRow.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                ingredientRow.style.transition = 'all 0.3s ease';
+                ingredientRow.style.opacity = '1';
+                ingredientRow.style.transform = 'translateY(0)';
+            }, 50);
+        }
+
+        function removeRecipeIngredient(button) {
+            const row = button.closest('.recipe-ingredient-row');
+
+            // Add remove animation
+            row.style.transition = 'all 0.3s ease';
+            row.style.opacity = '0';
+            row.style.transform = 'translateX(100px)';
+
+            setTimeout(() => {
+                row.remove();
+
+                // Show empty state if no ingredients left
+                const container = document.getElementById('ingredients-container');
+                if (container.querySelectorAll('.recipe-ingredient-row').length === 0) {
+                    container.innerHTML = `
+                    <div class="empty-state text-center text-muted py-4">
+                        <i class="bi bi-arrow-left-right fs-1 d-block mb-2"></i>
+                        <h6>Kéo thả nguyên liệu vào đây</h6>
+                        <p class="mb-0">Hoặc click "Thêm nguyên liệu" để bắt đầu</p>
                     </div>
                 `;
+                }
+
+                updateTotalNutrition();
+            }, 300);
+        }
+
+        function calculateNutrition(quantityInput) {
+            const row = quantityInput.closest('.recipe-ingredient-row');
+            const quantity = parseFloat(quantityInput.value) || 0;
+
+            const baseProtein = parseFloat(row.querySelector('.base-protein')?.value || 0);
+            const baseCarb = parseFloat(row.querySelector('.base-carb')?.value || 0);
+            const baseFat = parseFloat(row.querySelector('.base-fat')?.value || 0);
+            const baseCalories = parseFloat(row.querySelector('.base-calories')?.value || 0);
+
+            // Calculate nutrition based on quantity (per 100g base)
+            const actualProtein = (baseProtein * quantity / 100).toFixed(1);
+            const actualCarb = (baseCarb * quantity / 100).toFixed(1);
+            const actualFat = (baseFat * quantity / 100).toFixed(1);
+            const actualCalories = (baseCalories * quantity / 100).toFixed(0);
+
+            // Update display
+            const proteinSpan = row.querySelector('.protein');
+            const carbSpan = row.querySelector('.carb');
+            const fatSpan = row.querySelector('.fat');
+            const caloriesSpan = row.querySelector('.calories');
+
+            if (proteinSpan) proteinSpan.textContent = actualProtein;
+            if (carbSpan) carbSpan.textContent = actualCarb;
+            if (fatSpan) fatSpan.textContent = actualFat;
+            if (caloriesSpan) caloriesSpan.textContent = actualCalories;
+
+            updateTotalNutrition();
+        }
+
+        function updateTotalNutrition() {
+            let totalProtein = 0;
+            let totalCarb = 0;
+            let totalFat = 0;
+            let totalCalories = 0;
+
+            document.querySelectorAll('.recipe-ingredient-row').forEach(row => {
+                const proteinElement = row.querySelector('.protein');
+                const carbElement = row.querySelector('.carb');
+                const fatElement = row.querySelector('.fat');
+                const caloriesElement = row.querySelector('.calories');
+
+                if (proteinElement) totalProtein += parseFloat(proteinElement.textContent) || 0;
+                if (carbElement) totalCarb += parseFloat(carbElement.textContent) || 0;
+                if (fatElement) totalFat += parseFloat(fatElement.textContent) || 0;
+                if (caloriesElement) totalCalories += parseFloat(caloriesElement.textContent) || 0;
+            });
+
+            // Update display with animation
+            updateCounterWithAnimation('total-protein', totalProtein.toFixed(1));
+            updateCounterWithAnimation('total-carb', totalCarb.toFixed(1));
+            updateCounterWithAnimation('total-fat', totalFat.toFixed(1));
+            updateCounterWithAnimation('total-calories', totalCalories.toFixed(0));
+        }
+
+        function updateCounterWithAnimation(elementId, newValue) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.transition = 'all 0.3s ease';
+                element.style.color = '#007bff';
+                element.textContent = newValue;
+                setTimeout(() => {
+                    element.style.color = '';
+                }, 300);
             }
+        }
+
+        function clearAllIngredients() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả nguyên liệu?')) {
+                const container = document.getElementById('ingredients-container');
+                container.innerHTML = `
+                <div class="empty-state text-center text-muted py-4">
+                    <i class="bi bi-arrow-left-right fs-1 d-block mb-2"></i>
+                    <h6>Kéo thả nguyên liệu vào đây</h6>
+                    <p class="mb-0">Hoặc click "Thêm nguyên liệu" để bắt đầu</p>
+                </div>
+            `;
+                updateTotalNutrition();
+                ingredientIndex = 0;
+                showAlert('Đã xóa tất cả nguyên liệu!', 'info');
+            }
+        }
+
+        function showAlert(message, type = 'info') {
+            // Remove existing alerts
+            const existingAlert = document.querySelector('.floating-alert');
+            if (existingAlert) existingAlert.remove();
+
+            // Create new alert
+            const alert = document.createElement('div');
+            alert.className = `floating-alert alert alert-${type} alert-dismissible fade show position-fixed`;
+            alert.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            alert.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" onclick="this.parentElement.remove()"></button>
+        `;
+
+            document.body.appendChild(alert);
+
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (alert.parentElement) alert.remove();
+            }, 3000);
         }
 
         // Image preview function
@@ -316,6 +806,26 @@
             }
         }
 
+        // Thêm function debug để kiểm tra data
+        function debugIngredientData() {
+            console.log('=== Debug Ingredient Data ===');
+            document.querySelectorAll('.recipe-ingredient-row').forEach((row, index) => {
+                const quantity = row.querySelector('.quantity-input')?.value;
+                const baseProtein = row.querySelector('.base-protein')?.value;
+                const baseCarb = row.querySelector('.base-carb')?.value;
+                const baseFat = row.querySelector('.base-fat')?.value;
+                const baseCalories = row.querySelector('.base-calories')?.value;
+
+                console.log(`Row ${index}:`, {
+                    quantity,
+                    baseProtein,
+                    baseCarb,
+                    baseFat,
+                    baseCalories
+                });
+            });
+        }
+
         // Form validation
         document.getElementById('mealForm').addEventListener('submit', function(e) {
             const name = document.getElementById('name').value.trim();
@@ -324,8 +834,49 @@
 
             if (!name || !mealType || !dietType) {
                 e.preventDefault();
-                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                showAlert('Vui lòng điền đầy đủ thông tin bắt buộc!', 'danger');
+                return;
             }
+
+            // Check if at least one ingredient is added
+            const ingredients = document.querySelectorAll('.recipe-ingredient-row');
+            if (ingredients.length === 0) {
+                if (!confirm('Bạn chưa thêm nguyên liệu nào. Bạn có muốn tiếp tục không?')) {
+                    e.preventDefault();
+                    return;
+                }
+            }
+
+            showAlert('Đang lưu món ăn...', 'info');
         });
+
+        // Add some CSS for better UX
+        const style = document.createElement('style');
+        style.textContent = `
+        .ingredient-item {
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+        .ingredient-item:active {
+            cursor: grabbing;
+        }
+        .ingredient-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        .cursor-pointer {
+            cursor: pointer;
+        }
+        #recipe-drop-zone {
+            transition: all 0.3s ease;
+        }
+        .recipe-ingredient-row {
+            transition: all 0.3s ease;
+        }
+        .recipe-ingredient-row:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+    `;
+        document.head.appendChild(style);
     </script>
 @endsection
