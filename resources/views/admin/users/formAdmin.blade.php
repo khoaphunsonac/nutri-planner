@@ -62,6 +62,13 @@
                 <i class="bi bi-arrow-left-circle me-1"></i> Quay lại
             </a>
         </div>
+        {{-- thống báo --}}
+        @if (session('info'))
+        <div class="alert alert-info alert-dismissible fade show mt-2">
+            <i class="bi bi-info-circle me-2"></i> {{ session('info') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
     </div>
 </div>
 
