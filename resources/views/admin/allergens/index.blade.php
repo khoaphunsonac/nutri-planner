@@ -342,9 +342,10 @@
     </div> --}}
 
     {{-- Overview --}}
+    
     <div class="card shadow-sm mt-5">
         <div class="card-header bg-white  d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-eye text-success"></i>Tổng quan chất gây dị ứng của món ăn</h5>
+            <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan chất gây dị ứng của món ăn</h5>
             <small class="text-end">
                     {{--  Tổng số Allergen thỏa query tìm kiếm --}}
                     @if ($item->total() > 0)
@@ -355,21 +356,30 @@
                 </small>
         </div>
         <div class="card-body">
+        <div class="row">
             @foreach($meals as $meal)
-                <div class="border-start border-success border-4 p-3 mb-3 bg-light rounded">
-                    <h6  class="fw-bold text-dark mb-2"><i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}</h6>
-                    <p class="mb-0">
-                        Dị ứng:
-                        @if($meal->allergens->isEmpty())
-                            <span class="text-muted">Không Dị ứng</span>
-                        @else
-                            @foreach($meal->allergens as $a)
-                                <span class="badge bg-danger">{{ $a->name }}</span>
-                            @endforeach
-                        @endif
-                    </p>
+                <div class="col-md-6 mb-4">
+                    <div class="border-start border-success border-4 p-3 bg-light rounded shadow-sm h-100">
+                        <h6 class="fw-bold text-dark mb-2 text-truncate" title="{{ $meal->name }}">
+                            <i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}
+                        </h6>
+
+                        <div class="d-flex flex-wrap gap-1">
+                            <strong class="me-2">Dị ứng:</strong>
+                            @if($meal->allergens->isEmpty())
+                                <span class="text-muted">Không dị ứng</span>
+                            @else
+                                @foreach($meal->allergens as $a)
+                                    <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">
+                                        {{ $a->name }}
+                                    </span>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
                 </div>
             @endforeach
         </div>
     </div>
+
 @endsection
