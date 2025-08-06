@@ -24,10 +24,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
     # A.Khoa code
-        Route::prefix('contacts')->group(function(){
-        Route::get('', [ContactController::class, 'index'])->name('contact.index');
-        Route::get('/{id}', [ContactController::class, 'detail'])->name('contact.show');
-        Route::get('/{id}/delete', [ContactController::class, 'delete'])->name('contact.delete');
+        Route::prefix('contact')->group(function(){
+        Route::get('/', [ContactController::class, 'index'])->name('contact.index');
+        Route::get('/detail/{id}', [ContactController::class, 'detail'])->name('contact.show');
+        Route::get('/delete/{id}/delete', [ContactController::class, 'delete'])->name('contact.delete');
     });
        
 });
