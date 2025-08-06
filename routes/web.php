@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FeedbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\ContactController;
@@ -26,6 +27,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
+    Route::prefix('feedbacks')->as('feedbacks.')->group(function () {
+        Route::get('/', [FeedbackController::class, 'index'])->name('index');              // Danh sách
+        Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
+        Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
+    });
     // MEAL MODULE
     $controller = MealController::class;
     Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {
@@ -42,7 +48,7 @@ Route::prefix('admin')->group(function () {
     });
 
     # CONTACT MODULE
-        Route::prefix('contact')->group(function(){
+    Route::prefix('contact')->group(function(){
         Route::get('/', [ContactController::class, 'index'])->name('contact.index');
         Route::get('/show/{id}', [ContactController::class, 'show'])->name('contact.show');
         Route::get('/delete/{id}/delete', [ContactController::class, 'delete'])->name('contact.delete');
