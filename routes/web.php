@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 // Group Admin
 Route::prefix('admin')->group(function () {
-    // Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // INGREDIENT MODULE
     $controller = IngredientController::class;
