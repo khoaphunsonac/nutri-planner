@@ -3,14 +3,14 @@
      <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Allergen</li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Quản lý Dị ứng</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Dị ứng</li>
         </ol>
     </nav>
 
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">📝 Thông tin chi tiết Allergen</h5>
+            <h5 class="mb-0">📝 Thông tin chi tiết Dị ứng</h5>
             <div>
                 <a href="{{ route('allergens.form', ['id' => $item->id]) }}" class="btn btn-sm btn-warning me-2">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
@@ -22,7 +22,7 @@
         </div>
         <div class="card-body">
             <p><strong>ID:</strong> {{ $item->id }}</p>
-            <p><strong>Tên allergen:</strong> {{ $item->name }}</p>
+            <p><strong>Tên Dị ứng:</strong> {{ $item->name }}</p>
             <p><strong>Trạng thái:</strong>
                 @if ($item->deleted_at)
                     <span class="badge bg-danger">Đã xóa</span>
@@ -35,7 +35,7 @@
             <hr>
 
             @if($item->meals->count() > 0)
-                <h5 class="mb-3"><i class="bi bi-list-ul"></i> Các món ăn được gán với allergen này:</h5>
+                <h5 class="mb-3"><i class="bi bi-list-ul"></i> Các món ăn được gán với Dị ứng này:</h5>
 
                 <div class="row">
                     @foreach($items->meals as $meal)
@@ -55,7 +55,7 @@
                 </div>
             @else
                 <div class="text-muted mt-3">
-                    <em>Tag này hiện chưa được gán với món ăn nào.</em>
+                    <em>Dị ứng này hiện chưa được gán với món ăn nào.</em>
                 </div>
             @endif
         </div>

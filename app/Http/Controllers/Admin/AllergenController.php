@@ -122,7 +122,7 @@ class AllergenController extends BaseController
             // update
             $allergen = AllergenModel::findOrFail($params['id']);
             $allergen->update($params);
-            return redirect()->route('allergens.form',['id'=>$allergen->id])->with('success',"Cập nhật Allergen '{$allergen->name}' thành công");
+            return redirect()->route('allergens.form',['id'=>$allergen->id])->with('success',"Cập nhật Dị ứng '{$allergen->name}' thành công");
         }
         else{
             // create
@@ -130,7 +130,7 @@ class AllergenController extends BaseController
             $params['created_at'] = Carbon::now();
             AllergenModel::insert($params);
             $allergen = AllergenModel::create($params);
-            return redirect()->route('allergens.index')->with('success', "Thêm mới Allergen '{$allergen->name}' thành công");
+            return redirect()->route('allergens.index')->with('success', "Thêm mới Dị ứng '{$allergen->name}' thành công");
         }
         
         
@@ -142,7 +142,7 @@ class AllergenController extends BaseController
         $allergen->delete();
         
         // return $item;
-        return redirect()->route('allergens.index')->with('success', "Đã xóa Allergen '{$name}' thành công");
+        return redirect()->route('allergens.index')->with('success', "Đã xóa Dị ứng '{$name}' thành công");
         
     }
 
@@ -155,7 +155,7 @@ class AllergenController extends BaseController
         $mealIds = $request->input('meals', []);
         $allergen->meals()->sync($mealIds);
         
-        return redirect()->route('allergens.index')->with('success', "Cập nhật món ăn dị ứng  cho '{$allergen->name}' thành công!"); 
+        return redirect()->route('allergens.index')->with('success', "Cập nhật món ăn Dị ứng  cho '{$allergen->name}' thành công!"); 
     }
 
     // public function createMap(Request $request){

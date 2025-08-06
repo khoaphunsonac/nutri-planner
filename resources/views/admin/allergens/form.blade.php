@@ -3,12 +3,12 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Quản lý Dị ứng</a></li>
             <li class="breadcrumb-item link-primary" aria-current="page"> {{$item ? ' Chỉnh sửa Allergen' : ' Thêm mới Allergen'}}</li>
         </ol>
     </nav>
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
-        <h2>{{$item ? ' Chỉnh sửa Allergen' : ' Thêm mới Allergen'}}</h2>
+        <h2>{{$item ? ' Chỉnh sửa Dị ứng' : ' Thêm mới Dị ứng'}}</h2>
         <a href="{{route('allergens.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
     </div>
     @if (session('success'))
@@ -24,7 +24,7 @@
                             <input type="hidden" name="id" value="{{$item->id}}">
                         @endif
                         <div class=" mb-3">
-                            <label for="name" class=" my-3">Tên Allergen</label>
+                            <label for="name" class=" my-3">Tên Dị ứng</label>
                             <input type="text" name="name" class="form-control" id="" value="{{$item->name ?? old('name')}}">
                             @error('name')
                                 <div class="text-danger">{{ $message }}</div>
@@ -32,24 +32,13 @@
                             <div class="mt-4 d-flex gap-2">
                                 
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i>{{$item ? 'Cập nhật Allergen' : 'Thêm Allergen'}}
+                                        <i class="fas fa-save"></i>{{$item ? 'Cập nhật Dị ứng' : 'Thêm Dị ứng'}}
                                     </button>
                                      {{-- nút xóa --}}
                                     <button type="reset" class="btn btn-secondary" onclick="clearForm()">
                                         <i class="fas fa-undo"></i> Làm lại
                                     </button>
-                                    {{-- nút khôi phục --}}
-                                    <button type="reset" class="btn btn-info text-white">Khôi phục</button>
-                                    @if ($item)
-                                    {{-- Nếu đang sửa thì hiện thêm nút “Chi tiết” và “Thêm mới” --}}
-                                    {{-- <a href="{{ route('allergens.show', ['id' => $item->id, 'redirect'=>url()->current()]) }}" class="btn btn-outline-dark">
-                                        <i class="fas fa-eye"></i> Chi tiết
-                                    </a> --}}
-
-                                    <a href="{{ route('allergens.add') }}" class="btn btn-success">
-                                        <i class="fas fa-plus-circle"></i> Thêm mới
-                                    </a>
-                                @endif
+                                    
                                     <a href="{{route('allergens.index')}}" class="btn btn-outline-secondary"> Hủy</a>
                                 
                             </div>
@@ -67,8 +56,8 @@
                 <div class="card border-0 shadow-sm">
                 
                     <div class="card-body">
-                        <h5>📝 Gợi ý đặt tên Allergen</h5>
-                        <p> Tên Allergen nên ngắn gọn, dễ đọc, tên dạng danh từ, không thêm từ “Allergen” phía sau</p>
+                        <h5>📝 Gợi ý đặt tên Dị ứng</h5>
+                        <p> Tên Dị ứng nên ngắn gọn, dễ đọc, tên dạng danh từ, không thêm từ “Dị ứng” phía sau</p>
                         <p class="mb-0">
                             Ví dụ: 
                             <code>Peanuts</code>, 
@@ -86,7 +75,28 @@
 
     <script>
         function clearForm() {
-        document.querySelector('input[name=name]').value = '';
+            const form = document.getElementById('tagForm');
+            const isEditing = !!document.querySelector('input[name="id"]'); // Nếu có ID là đang sửa
+
+            if (isEditing) {
+                // Gán lại dữ liệu từ data-default
+                form.querySelectorAll('input, textarea, select').forEach(el => {
+                    if (el.dataset.default !== undefined) {
+                        el.value = el.dataset.default;
+                    }
+                    if (el.type === 'checkbox' || el.type === 'radio') {
+                        el.checked = el.dataset.default === '1' ? true : false;
+                    }
+                });
+            } else {
+                // Xóa sạch khi thêm mới
+                form.querySelectorAll('input, textarea, select').forEach(el => {
+                    if (el.type !== 'hidden' && el.type !== 'submit' && el.type !== 'button') {
+                        el.value = '';
+                        if (el.type === 'checkbox' || el.type === 'radio') el.checked = false;
+                    }
+                });
+            }
         }
     </script>
 @endsection

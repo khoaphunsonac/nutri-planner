@@ -3,14 +3,14 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Thêm mới Allergen Mapping</li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Quản lý Dị ứng</a></li>
+            <li class="breadcrumb-item link-primary" aria-current="page"> Thêm mới liên kết món ăn với Dị ứng</li>
         </ol>
     </nav>
 
    
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Allergens Management</h2>
+            <h2>Quản lý Dị ứng</h2>
             <a href="{{route('allergens.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
     </div>
 

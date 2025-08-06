@@ -3,14 +3,14 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Allergens Management</a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Quản lý Dị ứng</a></li>
             <li class="breadcrumb-item link-primary" aria-current="page"> Danh sách</li>
         </ol>
     </nav>
 
    
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Allergens Management</h2>
+            <h2>Quản lý Dị ứng</h2>
     </div>
     
 
@@ -26,7 +26,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$totalAllergens ?? 0}}</h4>
-                        <p class="text-muted mb-0">Tổng Allergen</p>
+                        <p class="text-muted mb-0">Tổng Dị ứng</p>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$activeAllergens ?? 0}}</h4>
-                        <p class="text-muted mb-0">Tổng Allergen đang hoạt động</p>
+                        <p class="text-muted mb-0">Tổng Dị ứng hoạt động</p>
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$usageRate ?? 0}}</h4>
-                        <p class="text-muted mb-0">Sử dụng Allergen</p>
+                        <p class="text-muted mb-0">Sử dụng Dị ứng</p>
                     </div>
                 </div>
             </div>
@@ -54,7 +54,7 @@
                 <div class="card text-center -shadow-sm">
                     <div class="card-body">
                         <h4>{{$totalMealsModel ?? 0}}</h4>
-                        <p class="text-muted mb-0">Tổng Meals</p>
+                        <p class="text-muted mb-0">Tổng Món ăn</p>
                     </div>
                 </div>
             </div>
@@ -87,10 +87,10 @@
                         <form action="" method="GET" class="row g-2 align-items-center">
                             
                             <div class="col-sm-5">
-                                <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo Allergen... " value="{{$allergenSearch ?? old($allergenSearch)}}">
+                                <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo dị ứng... " value="{{$allergenSearch ?? old($allergenSearch)}}">
                             </div>
                             <div class="col-sm-5">
-                                <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo Meal... " value="{{$mealSearch ?? old($mealSearch)}}">
+                                <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
                             </div>
                             <div class="col-sm-2">
                                 <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i> Tìm
@@ -104,7 +104,7 @@
             {{-- Allergen table --}}
             
                 <div class=" card shadow-sm mb-1 px-3 py-3 bg-light text-end">
-                    <a href="{{route('allergens.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Add Allergen</a>
+                    <a href="{{route('allergens.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Thêm Dị ứng</a>
                 </div>
             
         </div>
@@ -114,7 +114,7 @@
     <div class="card shadow-sm mb-5">
        
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h5>Danh sách Allergens</h5>
+            <h5>Danh sách Dị ứng</h5>
             
                 <small class="text-end">
                     {{--  Tổng số Allergen thỏa query tìm kiếm --}}
@@ -130,8 +130,8 @@
                 <thead class="table-light ">
                     <tr>
                         <th width="30">ID</th>
-                        <th width="150">Tên Allergen</th>
-                        <th width="150">Meal</th>
+                        <th width="150">Tên Dị ứng</th>
+                        <th width="150">Món ăn</th>
                         <th width="100">Số món ăn</th>
                         <th width="150">Ngày tạo</th>
                         <th width="200" class="text-center">Thao tác</th>
@@ -161,14 +161,14 @@
                                     {{ $phanTu->meals_count ?? 0 }}
                                 </td>
                                 <td>
-                                    {{ optional($phanTu->created_at)->setTimezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i')  ?? '0' }}
+                                    {{ $phanTu->created_at }}
                                 </td>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
                                         <a href="{{route('allergens.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
                                         <a href="{{route('allergens.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
-                                        <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Allergen này không?')">
+                                        <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Dị ứng này không?')">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
@@ -200,25 +200,30 @@
                                             </div>
                                             <div class="modal-body text-start">
                                                 <div class="row">
-                                                    @foreach ($meals as $meal)
-                                                        <div class="col-md-4 mb-2">
-                                                            <div class="form-check">
-                                                                <input 
-                                                                    class="form-check-input" 
-                                                                    type="checkbox" 
-                                                                    name="meals[]" 
-                                                                    id="meal_{{ $phanTu->id }}_{{ $meal->id }}" 
-                                                                    value="{{ $meal->id }}"
-                                                                    {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}
-                                                                >
-                                                                <label class="form-check-label" for="meal_{{ $phanTu->id }}_{{ $meal->id }}">
-                                                                    {{ $meal->name }}
-                                                                </label>
-                                                            </div>
+                                                    <div class="col-12" style="max-height: 300px; overflow-y: auto;">
+                                                        <div class="row">
+                                                            @foreach ($meals as $meal)
+                                                                <div class="col-md-6 mb-2"> <!-- 2 cột -->
+                                                                    <div class="form-check text-truncate" title="{{ $meal->name }}">
+                                                                        <input 
+                                                                            class="form-check-input" 
+                                                                            type="checkbox" 
+                                                                            name="meals[]" 
+                                                                            id="meal_{{ $phanTu->id }}_{{ $meal->id }}" 
+                                                                            value="{{ $meal->id }}"
+                                                                            {{ $phanTu->meals->contains($meal->id) ? 'checked' : '' }}
+                                                                        >
+                                                                        <label class="form-check-label text-truncate d-inline-block w-100" for="meal_{{ $phanTu->id }}_{{ $meal->id }}">
+                                                                            {{ $meal->name }}
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
                                                         </div>
-                                                    @endforeach
+                                                    </div>
                                                 </div>
                                             </div>
+
                                             <div class="modal-footer">
                                                 <button type="submit" class="btn btn-success">Lưu</button>
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -339,7 +344,7 @@
     {{-- Overview --}}
     <div class="card shadow-sm mt-5">
         <div class="card-header bg-white  d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="fas fa-eye text-success"></i> Meal-Allergen Overview</h5>
+            <h5 class="mb-0"><i class="fas fa-eye text-success"></i>Tổng quan chất gây dị ứng của món ăn</h5>
             <small class="text-end">
                     {{--  Tổng số Allergen thỏa query tìm kiếm --}}
                     @if ($item->total() > 0)
@@ -354,9 +359,9 @@
                 <div class="border-start border-success border-4 p-3 mb-3 bg-light rounded">
                     <h6  class="fw-bold text-dark mb-2"><i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}</h6>
                     <p class="mb-0">
-                        Allergens:
+                        Dị ứng:
                         @if($meal->allergens->isEmpty())
-                            <span class="text-muted">No allergens</span>
+                            <span class="text-muted">Không Dị ứng</span>
                         @else
                             @foreach($meal->allergens as $a)
                                 <span class="badge bg-danger">{{ $a->name }}</span>
