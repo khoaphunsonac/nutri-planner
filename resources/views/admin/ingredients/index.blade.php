@@ -15,8 +15,8 @@
     </nav>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Ingredients Management</h2>
-        <a href="{{ route('ingredients.add') }}"><i class="bi bi-plus-circle"></i> Add New Ingredient</a>
+        <h2>Quản lý nguyên liệu</h2>
+        <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Thêm nguyên liệu mới</a>
     </div>
 
 
