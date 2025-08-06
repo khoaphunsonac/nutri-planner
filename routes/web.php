@@ -27,7 +27,7 @@ Route::prefix('admin')->group(function () {
 
     // DIET TYPE MODULE
 
-Route::prefix('diettypes')->name('diettypes.')->group(function () {
+Route::prefix('diet-types')->name('diettypes.')->group(function () {
     Route::get('/', [DietTypeController::class, 'index'])->name('index');
     Route::get('/create', [DietTypeController::class, 'create'])->name('create');
     Route::post('/', [DietTypeController::class, 'store'])->name('store');

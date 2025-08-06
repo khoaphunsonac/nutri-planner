@@ -33,7 +33,7 @@
                 <div class="mb-3">
                     <label for="name" class="form-label fw-semibold">Tên loại chế độ ăn</label>
                     <input type="text" name="name" id="name" class="form-control" placeholder="Nhập tên..."
-                        value="{{ old('name') }}" required>
+                        value="{{ old('name') }}" >
                 </div>
 
                 <button type="submit" class="btn btn-success">
