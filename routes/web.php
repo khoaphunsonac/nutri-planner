@@ -34,7 +34,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
-    
+
     // MEAL MODULE
     $controller = MealController::class;
     Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {
@@ -79,8 +79,17 @@ Route::prefix('admin')->group(function () {
 
     // DIET TYPE MODULE
     $controller = DietTypeController::class;
-
+    Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
+        Route::get('/', [$controller, 'index'])->name('index');
+        Route::get('/create', [$controller, 'create'])->name('create');
+        Route::post('/', [$controller, 'store'])->name('store');
+        Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
+        Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
+        Route::post('/{id}', [$controller, 'update'])->name('update');
+        Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+    });
     // CONTACT MODULE
+    
     $controller = ContactController::class;
     Route::prefix('contact')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('contact.index');
