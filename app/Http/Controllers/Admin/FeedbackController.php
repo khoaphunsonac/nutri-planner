@@ -20,7 +20,7 @@ class FeedbackController extends Controller
         }
 
         // $feedbacks = FeedbackModel::all();
-         $feedbacks = $query->orderBy('created_at', 'desc')->get();
+         $feedbacks = $query->orderBy('created_at', 'desc')->paginate(10);
         // return $feedbacks;
         return view('Admin.feedbacks.index', [
             'feedbacks' => $feedbacks,
