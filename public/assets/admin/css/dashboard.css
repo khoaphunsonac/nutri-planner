@@ -1,0 +1,106 @@
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #f9fafb;
+    color: #333;
+}
+
+/* 4 link đầu */
+
+.dashboard-card {
+    transition: all 0.3s ease-in-out;
+    border-radius: 14px;
+    padding: 12px 8px;
+    /* giảm lại */
+    background-color: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    border: 2.5px solid #afafaf;
+}
+
+.icon-circle {
+    width: 40px;
+    /* nhỏ hơn */
+    height: 40px;
+    font-size: 18px;
+    /* icon nhỏ hơn */
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+}
+
+.dashboard-text {
+    font-weight: 500;
+    font-size: 13.5px;
+    /* nhỏ hơn */
+    color: #434343;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    /* hơi nhấc lên nhẹ */
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+    /* bóng đổ mềm */
+    border-color: #ffaa2a;
+    /* hoặc đổi theo màu từng thẻ */
+}
+
+/* --------------*/
+
+.overview {
+    font-weight: 700;
+    font-size: 28px;
+    color: #2f4858;
+}
+
+.dashboard-link {
+    display: block;
+    text-decoration: none;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    transition: transform 0.2s ease-in-out;
+}
+
+.dashboard-link:hover {
+    transform: scale(1.05);
+}
+
+.dashboard-link i {
+    font-size: 32px;
+}
+
+.dashboard-link .fw-semibold {
+    font-size: 16px;
+    color: #333;
+}
+
+.card {
+    border-radius: 16px;
+}
+
+.card .card-title {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.card .fw-bold {
+    font-size: 28px;
+}
+
+.btn-outline-secondary {
+    border-radius: 12px;
+}
+
+.text-primary {
+    color: #0d6efd !important;
+}
+
+.chart span {
+    font-weight: 600;
+    font-size: 20px;
+    color: #2f4858;
+}
