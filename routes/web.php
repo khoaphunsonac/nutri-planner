@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AllergenController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\IngredientController;
+use App\Http\Controllers\Admin\MealController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -27,11 +28,7 @@ Route::prefix('admin')->group(function () {
     });
 
     //================Route Allergens================
-    // Route::resource('allergens', AllergenController::class);
-    // Route::get('allergens/mapping', [AllergenController::class,'indexMap'])->name('indexMap');
-    // Route::get('allergens/mapping/create', [AllergenController::class,'createMap'])->name('createMap');
-    // Route::post('allergens/mapping/store', [AllergenController::class,'storeMap'])->name('storeMap');
-    // Route::delete('allergens/mapping/delete/{id}', [AllergenController::class,'destroyMap'])->name('destroyMap');
+    
     $allergenController = AllergenController::class;
         Route::prefix('allergens')->as('allergens.')->group(function () use ($allergenController) {
         Route::get('/', [$allergenController, 'index'])->name('index');                // Danh sách
@@ -43,10 +40,24 @@ Route::prefix('admin')->group(function () {
 
         // Mapping meal-allergen
         Route::post('/{id}/mapping', [$allergenController, 'mapMeals'])->name('mapMeals');
-        // Route::get('/mapping/add', [$allergenController, 'createMap'])->name('mapping.add');
-        // Route::post('/mapping/save', [$allergenController, 'storeMap'])->name('mapping.save');
-        // Route::post('/mapping/delete/{id}', [$allergenController, 'destroyMap'])->name('mapping.delete');
+        
     });
+    
+    // MEAL MODULE
+    $controller = MealController::class;
+    Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {
+        Route::get('/', [$controller, 'index'])->name('index');              // Danh sách
+        Route::get('/show/{id}', [$controller, 'show'])->name('show');        // Xem chi tiết
+        Route::get('/add', [$controller, 'create'])->name('add');             // Trang thêm mới
+        Route::get('/form/{id}', [$controller, 'edit'])->name('form');        // Form sửa
+        Route::post('/save', [$controller, 'save'])->name('save');            // Lưu thêm hoặc sửa
+        Route::post('/delete/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
+
+        // AJAX endpoints
+        Route::get('/api/meal-types', [$controller, 'getMealTypes'])->name('api.meal-types');
+        Route::get('/api/diet-types', [$controller, 'getDietTypes'])->name('api.diet-types');
+    });
+
 
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
@@ -57,5 +68,3 @@ Route::prefix('admin')->group(function () {
 });
 
 // tạm thời không dùng middlewarem thời bỏ middlleware để test
-
-
