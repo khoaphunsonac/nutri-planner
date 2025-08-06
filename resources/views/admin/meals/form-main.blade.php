@@ -349,14 +349,78 @@
                     </div>
 
                     {{-- Preparation Section --}}
+                    {{-- Preparation Section --}}
                     <div class="row mt-4">
                         <div class="col-12">
-                            <h6 class="border-bottom pb-2">Cách chế biến món ăn</h6>
-                            <div class="mb-4">
-                                <textarea id="preparation" name="preparation" class="form-control" rows="5">{{ old('preparation', $meal->preparation ?? '') }}</textarea>
+                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                                <h6 class="mb-0">Cách chế biến món ăn</h6>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-outline-success btn-sm"
+                                        onclick="addPreparationStep()">
+                                        <i class="bi bi-plus-circle"></i> Thêm bước
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                        onclick="clearAllSteps()">
+                                        <i class="bi bi-trash"></i> Xóa tất cả
+                                    </button>
+                                </div>
                             </div>
+
+                            <div id="preparation-steps-container">
+                                @if (isset($meal) && $meal->preparation)
+                                    @php
+                                        // Tách preparation thành các bước (split by line breaks)
+                                        $steps = explode("\n", trim($meal->preparation));
+                                        $steps = array_filter($steps, function ($step) {
+                                            return trim($step) !== '';
+                                        });
+                                    @endphp
+
+                                    @if (count($steps) > 0)
+                                        @foreach ($steps as $index => $step)
+                                            <div class="preparation-step mb-3 p-3 border rounded bg-light"
+                                                data-step="{{ $index + 1 }}">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-1">
+                                                        <div class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                                            style="width: 35px; height: 35px;">
+                                                            <strong>B{{ $index + 1 }}</strong>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        <textarea class="form-control step-content" name="preparation_steps[]" rows="2"
+                                                            placeholder="Nhập bước chế biến...">{{ trim($step) }}</textarea>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <button type="button" class="btn btn-outline-danger btn-sm"
+                                                            onclick="removePreparationStep(this)">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @else
+                                        <div class="empty-steps-state text-center text-muted py-4">
+                                            <i class="bi bi-list-ol fs-1 d-block mb-2"></i>
+                                            <h6>Chưa có bước chế biến nào</h6>
+                                            <p class="mb-0">Click "Thêm bước" để bắt đầu</p>
+                                        </div>
+                                    @endif
+                                @else
+                                    <div class="empty-steps-state text-center text-muted py-4">
+                                        <i class="bi bi-list-ol fs-1 d-block mb-2"></i>
+                                        <h6>Chưa có bước chế biến nào</h6>
+                                        <p class="mb-0">Click "Thêm bước" để bắt đầu</p>
+                                    </div>
+                                @endif
+                            </div>
+
+                            {{-- Hidden field để lưu preparation as text --}}
+                            <textarea id="preparation" name="preparation" style="display: none;">{{ old('preparation', $meal->preparation ?? '') }}</textarea>
                         </div>
                     </div>
+
                     {{-- Submit Button --}}
                     <div class="row mt-4">
                         <div class="col-12">
@@ -376,6 +440,7 @@
 
     <script>
         let ingredientIndex = {{ isset($meal) ? $meal->recipeIngredients->count() : 0 }};
+        let stepIndex = {{ isset($meal) && $meal->preparation ? count(explode("\n", trim($meal->preparation))) : 0 }};
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -392,6 +457,7 @@
             }, 100);
         });
 
+        // Recipe ingredient management
         function initializeDragAndDrop() {
             // Add drag event listeners to all ingredient items
             document.querySelectorAll('.ingredient-item').forEach(item => {
@@ -826,6 +892,148 @@
             });
         }
 
+        // Preparation Steps Management
+
+        function addPreparationStep() {
+            const container = document.getElementById('preparation-steps-container');
+
+            // Remove empty state if exists
+            const emptyState = container.querySelector('.empty-steps-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            stepIndex++;
+
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'preparation-step mb-3 p-3 border rounded bg-light';
+            stepDiv.dataset.step = stepIndex;
+            stepDiv.innerHTML = `
+        <div class="row align-items-center">
+            <div class="col-md-1">
+                <div class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 35px; height: 35px;">
+                    <strong>B${stepIndex}</strong>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <textarea class="form-control step-content" name="preparation_steps[]" rows="2" placeholder="Nhập bước chế biến..."></textarea>
+            </div>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-outline-danger btn-sm" onclick="removePreparationStep(this)">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    `;
+
+            container.appendChild(stepDiv);
+
+            // Add animation
+            stepDiv.style.opacity = '0';
+            stepDiv.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                stepDiv.style.transition = 'all 0.3s ease';
+                stepDiv.style.opacity = '1';
+                stepDiv.style.transform = 'translateY(0)';
+            }, 50);
+
+            // Focus on the new textarea
+            setTimeout(() => {
+                stepDiv.querySelector('.step-content').focus();
+            }, 100);
+
+            updatePreparationField();
+            showAlert('Đã thêm bước chế biến mới!', 'success');
+        }
+
+        function removePreparationStep(button) {
+            const step = button.closest('.preparation-step');
+
+            // Add remove animation
+            step.style.transition = 'all 0.3s ease';
+            step.style.opacity = '0';
+            step.style.transform = 'translateX(100px)';
+
+            setTimeout(() => {
+                step.remove();
+
+                // Renumber all steps
+                renumberPreparationSteps();
+
+                // Show empty state if no steps left
+                const container = document.getElementById('preparation-steps-container');
+                if (container.querySelectorAll('.preparation-step').length === 0) {
+                    container.innerHTML = `
+                <div class="empty-steps-state text-center text-muted py-4">
+                    <i class="bi bi-list-ol fs-1 d-block mb-2"></i>
+                    <h6>Chưa có bước chế biến nào</h6>
+                    <p class="mb-0">Click "Thêm bước" để bắt đầu</p>
+                </div>
+            `;
+                    stepIndex = 0;
+                }
+
+                updatePreparationField();
+            }, 300);
+        }
+
+        function renumberPreparationSteps() {
+            const steps = document.querySelectorAll('.preparation-step');
+            steps.forEach((step, index) => {
+                const stepNumber = index + 1;
+                step.dataset.step = stepNumber;
+                step.querySelector('.step-number strong').textContent = `B${stepNumber}`;
+            });
+            stepIndex = steps.length;
+        }
+
+        function clearAllSteps() {
+            if (confirm('Bạn có chắc chắn muốn xóa tất cả các bước chế biến?')) {
+                const container = document.getElementById('preparation-steps-container');
+                container.innerHTML = `
+            <div class="empty-steps-state text-center text-muted py-4">
+                <i class="bi bi-list-ol fs-1 d-block mb-2"></i>
+                <h6>Chưa có bước chế biến nào</h6>
+                <p class="mb-0">Click "Thêm bước" để bắt đầu</p>
+            </div>
+        `;
+                stepIndex = 0;
+                updatePreparationField();
+                showAlert('Đã xóa tất cả các bước chế biến!', 'info');
+            }
+        }
+
+        function updatePreparationField() {
+            const steps = document.querySelectorAll('.step-content');
+            const preparationText = Array.from(steps).map(step => step.value.trim()).filter(text => text !== '').join('\n');
+            document.getElementById('preparation').value = preparationText;
+        }
+
+        // Add event listeners for step content changes
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('step-content')) {
+                updatePreparationField();
+            }
+        });
+
+        // Auto-resize textareas
+        document.addEventListener('input', function(e) {
+            if (e.target.classList.contains('step-content')) {
+                e.target.style.height = 'auto';
+                e.target.style.height = e.target.scrollHeight + 'px';
+            }
+        });
+
+        // Initialize existing steps on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing initialization code ...
+
+            // Auto-resize existing textareas
+            document.querySelectorAll('.step-content').forEach(textarea => {
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            });
+        });
         // Form validation
         document.getElementById('mealForm').addEventListener('submit', function(e) {
             const name = document.getElementById('name').value.trim();
