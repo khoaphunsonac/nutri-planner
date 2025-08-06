@@ -23,7 +23,7 @@
         <span class="badge bg-primary rounded-pill">{{ $accounts->total() }}</span>
         <small class="text-muted ms-2">
             <i class="bi bi-info-circle me-1"></i>
-            <a href="{{ route($shareUser.'index') }}" class="text-decoration-none">Click vào dòng để xem chi tiết</a>
+            <a href="{{ route($shareUser.'index') }}" class="text-decoration-none">Quản lý tài khoản admin và người dùng</a>
         </small>
     </div>
     {{-- <a href="{{ route('users.add') }}" class="btn btn-primary btn-sm">
@@ -38,7 +38,7 @@
             <div class="card-body d-flex p-0">
                 {{-- Tổng người dùng --}}
                 <div class="w-50 bg-info text-white text-center py-3 rounded-start">
-                    <h5 class="mb-1">{{ $countUser ?? 0 }}</h5>
+                    <h5 class="mb-1">{{ $accounts->total() ?? 0 }}</h5>
                     <small>Tổng người dùng</small>
                 </div>
 
@@ -55,7 +55,54 @@
 </div>
 
 {{-- Table danh sách --}}
-<div class="table-responsive shadow-sm">
+
+   <table class="table table-hover align-middle text-center" 
+   style="border: 2px solid rgb(255, 0, 0);">
+    <thead class="table-light">
+        <tr>
+            <th style="color: rgb(255, 94, 0)">#</th>
+            <th style="color: rgb(255, 94, 0)">Tên đăng nhập</th>
+            <th style="color: rgb(255, 94, 0)">Ngày tạo</th>
+            <th style="color: rgb(255, 94, 0)">Email</th>
+            <th style="color: rgb(255, 94, 0)">Vai trò</th>
+            <th style="color: rgb(255, 94, 0)">Trạng thái</th>
+            <th style="color: rgb(255, 94, 0)">Hành động</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <!-- Cột số thứ tự hoặc biểu tượng -->
+            <td>
+                <span class="badge bg-warning text-bold rounded-pill p-2">
+                    <i class="bi bi-gem" style="font-size: 20px;"></i>
+                </span>
+            </td>
+            <td class="fw-semibold text-secondary">{{ $Admin->username }}</td>
+            <td>{{ $Admin->created_at->format('d/m/Y') }}</td>
+            <td>{{ $Admin->email }}</td>
+            <td>
+                <span class="badge bg-danger text-white px-3 py-2 rounded-pill">
+                    <i class="bi bi-award-fill me-1"></i> Admin
+                </span>
+            </td>
+            <td>
+                @if ($Admin->status === 'active')
+                    <span class="badge bg-success">Hoạt động</span>
+                @else
+                    <span class="badge bg-danger">Dừng hoạt động</span>
+                @endif
+            </td>
+            <td>
+                <a href="{{ route($shareUser.'edit') }}" class="btn btn-sm btn-primary">
+                    <i class="bi bi-pencil-square"></i> Sửa tài khoản admin
+                </a>
+            </td>
+        </tr>
+    </tbody>
+    </table>
+
+    {{-- bảng user --}}
+    <div class="table-responsive shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center bg-light px-4 py-3">
         <h5 class="mb-0">Danh sách người dùng</h5>
         <small class="text-muted" style="font-size: 20px">
@@ -82,6 +129,7 @@
             </thead>
             <tbody class="table-light">
                 @forelse ($accounts as $item)
+                {{-- hiển thị riêng môi admin --}}
                     <tr style="cursor: pointer;" onclick="window.location='{{ route($shareUser . 'form', ['id' => $item->id]) }}'">
                         <td class="fw-bold text-primary">
                             <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
@@ -89,7 +137,7 @@
                                 {{ $item->id }}
                             </span>
                         </td>
-                        <td class="text-start">
+                        <td class="text-center">
                             <strong>{{ $item->username }}</strong>
                         </td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
