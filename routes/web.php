@@ -35,7 +35,7 @@ Route::prefix('admin')->group(function () {
 
     # USER MODULE
     $controller = UserController::class;
-    Route::prefix('users')->as('users.')->group(function () use($controller){
+    Route::prefix('users')->as('users.')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('index');
         Route::get('/form/{id?}', [$controller, 'form'])->name('form');
         Route::get('/edit/{id?}', [$controller, 'edit'])->name('edit'); # sửa tk admin
@@ -52,23 +52,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
 
-    //=================Route Tags======================
-    // Route::resource('tags', TagController::class);
-    $tagController = TagController::class;
-    Route::prefix('tags')->as('tags.')->group(function () use($tagController) {
-        Route::get('/', [$tagController, 'index'])->name('index');                   // Danh sách
-         Route::get('/show/{id}', [$tagController, 'show'])->name('show');          // Xem chi tiết
-        Route::get('/add', [$tagController, 'form'])->name('add');                // Trang thêm
-        Route::get('/form/{id}', [$tagController, 'form'])->name('form');          // Form sửa
-        Route::post('/save', [$tagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
-        Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
 
-        //===========Mapping Tag-Meal==========
-        
-        Route::post('/{id}/mapmeals', [$tagController, 'mapMeals'])->name('mapMeals')->where('id', '[0-9]+');
 
-    });
-    
     // MEAL MODULE
     $controller = MealController::class;
     Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {
@@ -123,7 +108,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
     });
     // CONTACT MODULE
-    
+
     $controller = ContactController::class;
     Route::prefix('contact')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('contact.index');
@@ -133,7 +118,11 @@ Route::prefix('admin')->group(function () {
 
     //FEEDBACK MODULE
     $controller = FeedbackController::class;
-
+    Route::prefix('feedbacks')->as('feedbacks.')->group(function () {
+        Route::get('/', [FeedbackController::class, 'index'])->name('index');              // Danh sách
+        Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
+        Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
+    });
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');
