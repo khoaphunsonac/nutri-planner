@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -17,6 +18,7 @@ Route::get('/', function () {
 // Group Admin
 Route::prefix('admin')->group(function () {
     // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // INGREDIENT MODULE
     $controller = IngredientController::class;
