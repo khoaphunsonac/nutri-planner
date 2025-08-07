@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
+use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -31,11 +32,13 @@ Route::prefix('admin')->group(function () {
         Route::post('/save/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
-    # Đạt code user(account)
+    # USER MODULE
     $controller = UserController::class;
     Route::prefix('users')->as('users.')->group(function () use($controller){
         Route::get('/', [$controller, 'index'])->name('index');
         Route::get('/form/{id?}', [$controller, 'form'])->name('form');
+        Route::get('/edit/{id?}', [$controller, 'edit'])->name('edit'); # sửa tk admin
+        Route::post('/edit/{id?}', [$controller, 'update'])->name('update'); # bấm lưu
         Route::get('/delete/{id?}', [$controller, 'delete'])->name('delete');
         Route::post('/save/{id?}', [$controller, 'save'])->name('save');
         # mở & khoá tk
