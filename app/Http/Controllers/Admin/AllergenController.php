@@ -38,9 +38,6 @@ class AllergenController extends BaseController
         $query = AllergenModel::with(['meals'])->withCount('meals');
         $item = null;
        
-        // if($search){
-        //      $query = $query->where('name','like',"%$search%")->orwhere('id',$id);
-        // };
         if($mealSearch){
              $query = $query->whereHas('meals', function ($query) use($mealSearch) { $query->where('name', 'like', "%$mealSearch%");});
         };
@@ -55,7 +52,7 @@ class AllergenController extends BaseController
        
         // tổng số tag
         $totalAllergens = count($totalAllergenWithTrashed);
-        //  return $totalTagsWithTrashed;
+        
         // đếm số tag đang hoạt động
         $activeAllergens = 0;
         //  chưa lọc được tag bị xóa, đặt cứng
@@ -78,6 +75,11 @@ class AllergenController extends BaseController
         // Clone để đếm số mục sau lọc
         $totalMappings = MealAllergenModel::count();
         //  return $item;
+        // Tính chỉ số bắt đầu đếm ngược (số lớn nhất trên trang hiện tại)
+        $total = $item->total();
+        $perPage = $item->perPage();
+        $currentPage = $item->currentPage();
+        $startIndex = $total - ($currentPage - 1) * $perPage;
         return view($this->pathViewController.'index',[
             'allergen'=> $allergen,
             'meals'=>$meals,
@@ -95,6 +97,8 @@ class AllergenController extends BaseController
             'mappingPaginate'=>$mappingPaginate,
             'mealSearch'=>$mealSearch,
             'allergenSearch'=>$allergenSearch,
+            'startIndex'=>$startIndex,
+            'totalMeals'=>$totalMeals
         ]);
     }
 
@@ -107,7 +111,8 @@ class AllergenController extends BaseController
         ]);
     }
 
-    public function form($id = null){
+    public function form(Request $request){
+        $id=$request->id;
          $item = $id ? AllergenModel::findOrFail($id) : null;
         return view($this->pathViewController.'form',[
             
@@ -116,19 +121,16 @@ class AllergenController extends BaseController
     }
 
     public function save(AllergenRequest $request){
-        
+        $id = $request->id;
         $params = $request->all();
-        if(!empty($params['id'])){
+        if($id){
             // update
-            $allergen = AllergenModel::findOrFail($params['id']);
+            $allergen = AllergenModel::findOrFail($id);
             $allergen->update($params);
-            return redirect()->route('allergens.form',['id'=>$allergen->id])->with('success',"Cập nhật Dị ứng '{$allergen->name}' thành công");
+            return redirect()->route('allergens.index',['id'=>$allergen->id])->with('success',"Cập nhật Dị ứng '{$allergen->name}' thành công");
         }
         else{
             // create
-            $params = $request->only(['name']);
-            $params['created_at'] = Carbon::now();
-            AllergenModel::insert($params);
             $allergen = AllergenModel::create($params);
             return redirect()->route('allergens.index')->with('success', "Thêm mới Dị ứng '{$allergen->name}' thành công");
         }

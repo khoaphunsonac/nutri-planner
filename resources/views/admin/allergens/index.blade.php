@@ -3,7 +3,7 @@
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb breadcrumb-compact">
             <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
-            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-exclamation-triangle">Dị ứng</i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"><i class="bi bi-exclamation-triangle">Dị ứng</i></a></li>
             <li class="breadcrumb-item active" active> Danh sách</li>
         </ol>
     </nav>
@@ -131,7 +131,7 @@
             <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="table-light ">
                     <tr>
-                        <th width="30">ID</th>
+                        <th width="30">Số thứ tự</th>
                         <th width="150">Tên Dị ứng</th>
                         <th width="150">Món ăn</th>
                         <th width="100">Số món ăn</th>
@@ -141,29 +141,43 @@
                 </thead>
                 <tbody>
                     @if (count($item)>0)
-                        @foreach ($item as $phanTu)
+                        @foreach ($item as $key => $phanTu)
                             <tr onclick="window.location='{{ route('allergens.show', $phanTu->id) }}'" style="cursor: pointer;">
                                 
                                 <td class="align-middle text-center">
-                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu['id'] ?? 1}} </span>
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$startIndex - $key}} </span>
                                 </td>
                                 <td>
                                     {{$phanTu['name']}}
                                 </td>
                                 <td>
-                                    @if ($phanTu->meals->count()>0)
+                                    @php
+                                        $totalmeals = $phanTu->meals;
+                                        $total = $totalmeals->count();
+                                    @endphp
+                                    @if ($total)
+                                        @foreach ($totalmeals->take(2) as $meal)
+                                            <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
+                                        @endforeach
+                                        @if ($total > 2)
+                                            <span class=" badge bg-success me-1 text-white fw-bold">...</span>
+                                        @endif
+                                    @else
+                                        0
+                                    @endif
+                                    {{-- @if ($phanTu->meals->count()>0)
                                         @foreach ($phanTu->meals as $meal)
                                             <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
                                         @endforeach
                                     @else
                                         0
-                                    @endif
+                                    @endif --}}
                                 </td>
                                 <td>
                                     {{ $phanTu->meals_count ?? 0 }}
                                 </td>
                                 <td>
-                                    {{ $phanTu->created_at }}
+                                    {{ \Carbon\Carbon::parse($phanTu->created_at)->setTimezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') }}
                                 </td>
                                 </td>
                                 <td class="text-center">
@@ -181,7 +195,7 @@
                                             data-bs-target="#mapMealModal{{ $phanTu->id }}" 
                                             class="btn btn-sm btn-outline-primary rounded me-3"
                                             onclick="event.stopPropagation()"
-                                            title="gắn mapping"
+                                            title="gắn liên kết với món ăn"
                                         >
                                             <i class="bi bi-link-45deg"></i>
                                         </button>
@@ -190,6 +204,7 @@
                                 </td>
                             </tr>
                         @endforeach
+
                         @foreach ($item as $phanTu)
                             <div class="modal fade" id="mapMealModal{{ $phanTu->id }}" tabindex="-1" aria-hidden="true">
                                 <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -197,7 +212,7 @@
                                         @csrf
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Gán món ăn bị dị ứng cho: {{ $phanTu->name }}</h5>
+                                                <h5 class="modal-title">Gán món ăn có thể bị dị ứng bởi: {{ $phanTu->name }}</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body text-start">
@@ -349,36 +364,40 @@
         <div class="card-header bg-white  d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan chất gây dị ứng của món ăn</h5>
             <small class="text-end">
-                    {{--  Tổng số Allergen thỏa query tìm kiếm --}}
-                    @if ($item->total() > 0)
-                    Tổng: giới hạn {{$totalMeals }} mục
-                    @else
-                        0 mục
-                    @endif
-                </small>
+                {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                @if ($item->total() > 0)
+                Tổng: giới hạn {{$totalMeals }} mục
+                @else
+                    0 mục
+                @endif
+            </small>
         </div>
         <div class="card-body">
         <div class="row">
             @foreach($meals as $meal)
                 <div class="col-md-6 mb-4">
-                    <div class="border-start border-success border-4 p-3 bg-light rounded shadow-sm h-100">
-                        <h6 class="fw-bold text-dark mb-2 text-truncate" title="{{ $meal->name }}">
-                            <i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}
-                        </h6>
+                     <a href="{{ route('meals.show', $meal->id) }}" class="text-decoration-none text-dark">
+                        <div class=" list-group-item border-start border-success border-4 p-3 bg-light rounded shadow-sm h-100 hover-shadow">
+                            <h6 class="fw-bold text-dark mb-2 text-truncate" title="{{ $meal->name }}">
+                                <i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}
+                            </h6>
 
-                        <div class="d-flex flex-wrap gap-1">
-                            <strong class="me-2">Có thể Dị ứng:</strong>
-                            @if($meal->allergens->isEmpty())
-                                <span class="text-muted">Không gây dị ứng</span>
-                            @else
-                                @foreach($meal->allergens as $a)
-                                    <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">
-                                        {{ $a->name }}
-                                    </span>
-                                @endforeach
-                            @endif
+                            <div class="d-flex flex-wrap gap-1">
+                                <strong class="me-2">Có thể Dị ứng:</strong>
+                                @if($meal->allergens->isEmpty())
+                                    <span class="text-muted">Không gây dị ứng</span>
+                                @else
+                                    @foreach($meal->allergens as $a)
+                                        
+                                                <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">
+                                                    {{ $a->name }}
+                                                </span>
+                                        
+                                    @endforeach
+                                @endif
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @endforeach
         </div>
