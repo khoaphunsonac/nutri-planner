@@ -1,16 +1,24 @@
 @extends('admin.layout')
 @section('content')
     <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Quản lý Dị ứng</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Danh sách</li>
+        <ol class="breadcrumb breadcrumb-compact">
+            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-exclamation-triangle">Dị ứng</i></a></li>
+            <li class="breadcrumb-item active" active> Danh sách</li>
         </ol>
     </nav>
 
    
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Quản lý Dị ứng</h2>
+        <div class="d-flex align-items-center">
+            <h3 class="mb-0 me-3">Quản lý Dị ứng</h3>
+            <span class="badge bg-primary rounded-pill">{{ $totalAllergens}}</span>
+            <small class="text-muted ms-2">
+                <i class="bi bi-info-circle me-1"></i>Click vào dòng để xem chi tiết
+            </small>
+        </div>
+        <a href="{{route('allergens.add')}}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i> Thêm Dị ứng</a>
+        
     </div>
     
 
@@ -71,7 +79,7 @@
     </div>
     
     <div class="row mt-5">
-        <div class="col-md-9">
+        <div class="col-md-12">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
                 {{-- fillter form --}}
                 {{-- <form action="" method="GET" class="row g-2 align-items-center" >
@@ -100,14 +108,7 @@
                    
             </div>
         </div>
-        <div class="col-md-3">
-            {{-- Allergen table --}}
-            
-                <div class=" card shadow-sm mb-1 px-3 py-3 bg-light text-end">
-                    <a href="{{route('allergens.add')}}" class="btn btn-outline-primary "><i class="bi bi-plus-circle mb-2"></i> Thêm Dị ứng</a>
-                </div>
-            
-        </div>
+        
     </div> 
 
 
@@ -125,6 +126,7 @@
                     @endif
                 </small> 
         </div>
+        {{-- Allergen table --}}
         <div class="card-body table-responsive">
             <table class="table table-hover table-bordered align-middle text-center">
                 <thead class="table-light ">
@@ -349,7 +351,7 @@
             <small class="text-end">
                     {{--  Tổng số Allergen thỏa query tìm kiếm --}}
                     @if ($item->total() > 0)
-                    Tổng: {{$totalMeals }} mục
+                    Tổng: giới hạn {{$totalMeals }} mục
                     @else
                         0 mục
                     @endif
@@ -365,9 +367,9 @@
                         </h6>
 
                         <div class="d-flex flex-wrap gap-1">
-                            <strong class="me-2">Dị ứng:</strong>
+                            <strong class="me-2">Có thể Dị ứng:</strong>
                             @if($meal->allergens->isEmpty())
-                                <span class="text-muted">Không dị ứng</span>
+                                <span class="text-muted">Không gây dị ứng</span>
                             @else
                                 @foreach($meal->allergens as $a)
                                     <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">

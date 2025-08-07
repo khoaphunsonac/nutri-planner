@@ -38,6 +38,6 @@ class AccountModel extends Authenticatable
 
     public function feedback()
     {
-        return $this->hasMany(FeedbackModel::class, 'user_id');
+        return $this->hasMany(FeedbackModel::class, 'account_id');
     }
 }
