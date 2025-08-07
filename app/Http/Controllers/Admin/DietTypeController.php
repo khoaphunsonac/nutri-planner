@@ -19,7 +19,9 @@ class DietTypeController extends Controller
 
         $dietTypes = $query->orderByDesc('id')->paginate(10);
 
-        return view('Admin.diettypes.index', compact('dietTypes'));
+        return view('Admin.diettypes.index',[
+            'dietTypes'=> $dietTypes,
+        ]);
     }
 
     // Hiển thị form tạo mới
@@ -46,7 +48,9 @@ class DietTypeController extends Controller
     public function edit($id)
     {
         $diet = DietTypeModel::findOrFail($id);
-        return view('Admin.diettypes.edit', compact('diet'));
+        return view('Admin.diettypes.edit', [
+            'diet' => $diet
+        ]);
     }
 
     // Cập nhật bản ghi
@@ -76,6 +80,8 @@ class DietTypeController extends Controller
     public function show($id)
     {
         $diet = DietTypeModel::with('meals')->findOrFail($id);
-        return view('Admin.diettypes.show', compact('diet'));
+        return view('Admin.diettypes.show', [
+            'diet' => $diet
+        ]);
     }
 }
