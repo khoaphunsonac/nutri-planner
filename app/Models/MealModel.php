@@ -27,7 +27,7 @@ class MealModel extends Model
     // Relationships
     public function dietType()
     {
-        return $this->belongsTo(DietTypeModel::class, 'diet_type_id');
+        return $this->belongsToMany(DietTypeModel::class, 'diet_type_id' );
     }
 
     public function mealType()

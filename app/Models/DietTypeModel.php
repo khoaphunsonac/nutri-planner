@@ -24,6 +24,6 @@ class DietTypeModel extends Model
     // Relationships
     public function meals()
     {
-        return $this->hasMany(MealModel::class, 'diet_type_id');
+        return $this->hasMany(MealModel::class, 'diet_type_id','diet_type_meal','meal_id');
     }
 }

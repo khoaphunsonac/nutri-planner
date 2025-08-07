@@ -75,7 +75,7 @@ class DietTypeController extends Controller
     // Xem chi tiết (nếu cần)
     public function show($id)
     {
-        $diet = DietTypeModel::findOrFail($id);
+        $diet = DietTypeModel::with('meals')->findOrFail($id);
         return view('Admin.diettypes.show', compact('diet'));
     }
 }

@@ -52,7 +52,7 @@
         <a href="""><i class="bi bi-envelope"></i> Contacts</a>
         <a href=""><i class="bi bi-chat-dots"></i> Feedbacks</a>
         <a href=""><i class="bi bi-envelope"></i> Contacts</a>
-        <a href="{{route('feedbacks.index')}}"><i class="bi bi-chat-dots"></i> Feedbacks</a>
+        <a href=""><i class="bi bi-chat-dots"></i> Feedbacks</a>
         <a href=""><i class="bi bi-list-ul"></i> Diet Types</a>
         <a href=""><i class="bi bi-grid"></i> Meal Types</a>
     </aside>
