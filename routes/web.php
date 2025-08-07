@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
@@ -14,6 +15,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 Route::get('/', function () {
     return view('welcome');
 });
+
 
 // Group Admin
 Route::prefix('admin')->group(function () {
@@ -51,6 +53,23 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
 
+    //=================Route Tags======================
+    // Route::resource('tags', TagController::class);
+    $tagController = TagController::class;
+    Route::prefix('tags')->as('tags.')->group(function () use($tagController) {
+        Route::get('/', [$tagController, 'index'])->name('index');                   // Danh sách
+         Route::get('/show/{id}', [$tagController, 'show'])->name('show');          // Xem chi tiết
+        Route::get('/add', [$tagController, 'form'])->name('add');                // Trang thêm
+        Route::get('/form/{id}', [$tagController, 'form'])->name('form');          // Form sửa
+        Route::post('/save', [$tagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
+        Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
+
+        //===========Mapping Tag-Meal==========
+        
+        Route::post('/{id}/mapmeals', [$tagController, 'mapMeals'])->name('mapMeals')->where('id', '[0-9]+');
+
+    });
+    
     // MEAL MODULE
     $controller = MealController::class;
     Route::prefix('meals')->as('meals.')->group(function () use ($controller): void {

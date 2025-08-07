@@ -164,3 +164,11 @@ button,
         margin-left: 0 !important;
     }
 }
+.table td {
+        white-space: normal !important;
+        word-break: break-word;
+    }
+tr:hover {
+        background-color: #f0f8ff !important;
+        transition: 0.2s ease-in-out;
+    }
