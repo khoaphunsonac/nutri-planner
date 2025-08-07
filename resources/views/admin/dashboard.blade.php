@@ -125,7 +125,7 @@
         <div class="col-md-6 d-flex justify-content-center" >
           {{-- kích cỡ biểu đồ --}}
           <div style="position: relative; width: 100%; height: 220px;">
-            <canvas id="userGaugeChart"></canvas>
+          <canvas id="userGaugeChart"></canvas>
             <div style="
               position: absolute; top: 50%; left: 50%;
               transform: translate(-50%, -40%);
