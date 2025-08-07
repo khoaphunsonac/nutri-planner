@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
@@ -110,7 +111,7 @@ Route::prefix('admin')->group(function () {
     // CONTACT MODULE
 
     $controller = ContactController::class;
-    Route::prefix('contact')->group(function () use ($controller) {
+    Route::prefix('contacts')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('contact.index');
         Route::get('/show/{id}', [$controller, 'show'])->name('contact.show');
         Route::get('/delete/{id}/delete', [$controller, 'delete'])->name('contact.delete');
@@ -129,5 +130,13 @@ Route::prefix('admin')->group(function () {
     //     ...
     // });
 });
+
+
+// Các controller khác có thể cấu trúc y hệt như vậy:
+// Route::prefix('meals')->as('meals.')->group(function () {
+//     Route::get('/', [...])->name('index');
+//     ...
+// });
+
 
 // tạm thời không dùng middlewarem thời bỏ middlleware để test
