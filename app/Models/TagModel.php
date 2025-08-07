@@ -18,7 +18,7 @@ class TagModel extends Model
         'name'
     ];
 
-    protected $dates = ['deleted_at'];
+    protected $dates = ['deleted_at','updated_at', 'created_at'];
 
     // Relationship with meals
     public function meals()
