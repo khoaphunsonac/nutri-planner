@@ -26,10 +26,15 @@
             <a href="{{ route($shareUser.'index') }}" class="text-decoration-none">Quản lý tài khoản admin và người dùng</a>
         </small>
     </div>
-    {{-- <a href="{{ route('users.add') }}" class="btn btn-primary btn-sm">
-        <i class="bi bi-plus me-1"></i>Thêm người dùng
-    </a> --}}
 </div>
+    {{-- Hiển thị thông báo nếu cap nhat ok --}}
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert"
+        style="font-size: 25px">
+            <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
 {{-- Dashboard summary --}}
 <div class="row g-3 mb-4">
@@ -125,7 +130,7 @@
                     <th class="text-primary">Phản hồi</th>
                     <th class="text-primary">Trạng thái</th>
                     <th colspan="2">Thao tác</th>
-                </tr>
+                </tr>   
             </thead>
             <tbody class="table-light">
                 @forelse ($accounts as $item)

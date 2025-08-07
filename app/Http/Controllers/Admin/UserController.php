@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminUserRequest;
 use App\Models\AccountModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash; // mới thêm này
 use Illuminate\Support\Facades\View;
 
     class UserController extends Controller
@@ -58,26 +59,52 @@ use Illuminate\Support\Facades\View;
             "btnUpdate" => $btnUpdate
         ]);
     }
-    public function update(AdminUserRequest $request){
-    //$id = $request->id;
+    public function update(AdminUserRequest $request)
+{
+    // Tìm tài khoản admin
     $admin = AccountModel::where('role', 'admin')->first();
 
-        if ($admin) {
-            $admin->username = $request->username;
-            $admin->email = $request->email;
-
-            // nếu nhập mật khẩu mới thì mới mã hoá
-            if ($request->password) {
-                $admin->password = bcrypt($request->password);
-            }
-
-            $admin->status = $request->status ?? $admin->status;
-            $admin->save();
-        }
-
-        return redirect(route('users.index'))->with('success', 'Cập nhật tài khoản thành công');
+    // Nếu không tìm thấy
+    if (!$admin) {
+        return redirect()->back()->with('error', 'Không tìm thấy tài khoản quản trị');
     }
 
+    // Biến này để kiểm tra có thay đổi gì không
+    $daThayDoi = false;
+
+    // So sánh và gán username
+    $usernameMoi = $request->username;
+    if ($admin->username !== $usernameMoi) {
+        $admin->username = $usernameMoi;
+        $daThayDoi = true;
+    }
+
+    // So sánh và gán email
+    $emailMoi = $request->email;
+    if ($admin->email !== $emailMoi) {
+        $admin->email = $emailMoi;
+        $daThayDoi = true;
+    }
+
+    // Nếu người dùng có nhập mật khẩu mới
+    if ($request->filled('password')) {
+        $matKhauMoi = $request->password;
+
+        // So sánh mật khẩu mới với mật khẩu cũ (đã mã hoá)
+        if (!Hash::check($matKhauMoi, $admin->password)) {
+            $admin->password = bcrypt($matKhauMoi);
+            $daThayDoi = true;
+            }
+        }
+
+        // Nếu có bất kỳ thay đổi nào thì mới lưu
+        if ($daThayDoi) {
+            $admin->save();
+            return redirect()->route('users.index')->with('success', 'Đã cập nhật tài khoản quản trị');
+        } else {
+            return redirect()->back()->with('info', 'Bạn chưa thay đổi thông tin nào');
+        }
+    }
     public function delete(Request $request){
         $id = $request->id;
         if($id){

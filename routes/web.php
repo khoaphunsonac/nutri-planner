@@ -7,18 +7,19 @@ use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 
-// routes/web.php
 // Group Admin
 Route::prefix('admin')->group(function () {
     // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // INGREDIENT MODULE
     $controller = IngredientController::class;
@@ -51,20 +52,21 @@ Route::prefix('admin')->group(function () {
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
 
-    //================Route Allergens================
-    
-    $allergenController = AllergenController::class;
-        Route::prefix('allergens')->as('allergens.')->group(function () use ($allergenController) {
-        Route::get('/', [$allergenController, 'index'])->name('index');                // Danh sách
-        Route::get('/show/{id}', [$allergenController, 'show'])->name('show');        // Xem chi tiết
-        Route::get('/add', [$allergenController, 'form'])->name('add');             // Trang thêm mới
-        Route::get('/form/{id}', [$allergenController, 'form'])->name('form');        // Form sửa
-        Route::post('/save', [$allergenController, 'save'])->name('save');            // Lưu thêm hoặc sửa
-        Route::post('/delete/{id}', [$allergenController, 'destroy'])->name('delete'); // Xoá
+    //=================Route Tags======================
+    // Route::resource('tags', TagController::class);
+    $tagController = TagController::class;
+    Route::prefix('tags')->as('tags.')->group(function () use($tagController) {
+        Route::get('/', [$tagController, 'index'])->name('index');                   // Danh sách
+         Route::get('/show/{id}', [$tagController, 'show'])->name('show');          // Xem chi tiết
+        Route::get('/add', [$tagController, 'form'])->name('add');                // Trang thêm
+        Route::get('/form/{id}', [$tagController, 'form'])->name('form');          // Form sửa
+        Route::post('/save', [$tagController, 'save'])->name('save');               // Lưu (thêm hoặc sửa)
+        Route::post('/delete/{id}', [$tagController, 'destroy'])->name('delete');  // Xóa
 
-        // Mapping meal-allergen
-        Route::post('/{id}/mapping', [$allergenController, 'mapMeals'])->name('mapMeals');
+        //===========Mapping Tag-Meal==========
         
+        Route::post('/{id}/mapmeals', [$tagController, 'mapMeals'])->name('mapMeals')->where('id', '[0-9]+');
+
     });
     
     // MEAL MODULE
