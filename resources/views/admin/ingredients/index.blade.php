@@ -16,7 +16,8 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Quản lý nguyên liệu</h2>
-        <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Thêm nguyên liệu mới</a>
+        <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Thêm
+            nguyên liệu mới</a>
     </div>
 
 
@@ -92,50 +93,29 @@
                 <tbody class="text-center">
                     @if (count($ingredients) > 0)
                         @foreach ($ingredients as $ingredient)
-                            <tr style="cursor: pointer;">
+                            <tr style="cursor: pointer;"
+                                onclick="window.location='{{ route('ingredients.show', ['id' => $ingredient->id]) }}'">
                                 <td class="align-middle text-center">
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span
-                                            class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
-                                            style="width:50px">{{ $ingredient->id }} </span>
-                                    </a>
+                                    <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
+                                        style="width:50px">{{ $ingredient->id }} </span>
                                 </td>
                                 <td class="text-start">
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <strong>{{ $ingredient->name }}</strong>
-                                    </a>
+                                    <span>{{ $ingredient->name }}</span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span class="badge bg-secondary">{{ $ingredient->unit }}</span>
-                                    </a>
+                                    <span class="badge bg-secondary">{{ $ingredient->unit }}</span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span class="text-warning">{{ $ingredient->protein }}g</span>
-                                    </a>
+                                    <span class="text-warning">{{ $ingredient->protein }}g</span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span class="text-success">{{ $ingredient->carb }}g</span>
-                                    </a>
+                                    <span class="text-success">{{ $ingredient->carb }}g</span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span class="text-danger">{{ $ingredient->fat }}g</span>
-                                    </a>
+                                    <span class="text-danger">{{ $ingredient->fat }}g</span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
-                                        class="text-decoration-none text-dark d-block">
-                                        <span class="text-primary fw-bold">{{ $ingredient->calo }} kcal</span>
-                                    </a>
+                                    <span class="text-primary">{{ $ingredient->calo }} kcal</span>
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-group" role="group">
@@ -149,8 +129,8 @@
                                             method="POST" style="display:inline-block"
                                             onsubmit="return confirm('Bạn có chắc chắn muốn xóa nguyên liệu này không?')">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-danger rounded me-3" title="Xóa"><i
-                                                    class="bi bi-trash"></i></button>
+                                            <button type="submit" class="btn btn-sm btn-danger rounded me-3"
+                                                title="Xóa"><i class="bi bi-trash"></i></button>
                                         </form>
                                     </div>
                                 </td>
@@ -170,4 +150,3 @@
     </div>
 
 @endsection
-
