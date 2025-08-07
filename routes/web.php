@@ -108,7 +108,7 @@ Route::prefix('admin')->group(function () {
     // CONTACT MODULE
     
     $controller = ContactController::class;
-    Route::prefix('contact')->group(function () use ($controller) {
+    Route::prefix('contacts')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('contact.index');
         Route::get('/show/{id}', [$controller, 'show'])->name('contact.show');
         Route::get('/delete/{id}/delete', [$controller, 'delete'])->name('contact.delete');
