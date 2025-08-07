@@ -87,13 +87,21 @@
                             <div class="mt-4">
                                 <h6 class="mb-2"><i class="bi bi-clipboard-check me-1"></i>Cách chế biến:</h6>
                                 <div class="bg-white border rounded shadow-sm p-3">
-                                    @foreach (explode("\n", $meal->preparation) as $step)
+                                    @foreach (explode("\n", $meal->preparation) as $index => $step)
                                         @if (trim($step) !== '')
                                             <div class="d-flex align-items-start mb-2">
-                                                <span class="badge bg-primary me-2" style="min-width: 32px;">
+                                                {{-- <span class="badge bg-primary me-2" style="min-width: 32px;">
                                                     <i class="bi bi-check2-circle"></i>
-                                                </span>
-                                                <span style="white-space: pre-line;">{{ $step }}</span>
+                                                </span> --}}
+                                                <div class="col-md-1">
+                                                    <div class="step-number bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                                                        style="width: 30px; height: 30px;">
+                                                        <strong>B{{ $index + 1 }}</strong>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-10">
+                                                    <span style="white-space: pre-line;">{{ $step }}</span>
+                                                </div>
                                             </div>
                                         @endif
                                     @endforeach
