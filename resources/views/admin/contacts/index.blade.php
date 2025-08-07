@@ -13,159 +13,124 @@
             </ol>
         </nav>
 
-        <!-- Compact Header -->
+        <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="d-flex align-items-center">
-                {{-- Tiêu đề --}}
                 <h4 class="mb-0 me-3">Quản lý liên hệ</h4>
-        
-                {{-- Thông tin chi tiết --}}
                 <small class="text-muted ms-2">
                     <i class="bi bi-info-circle me-1"></i>
-                    @if ($selectedItem)
-                        <a href="{{ route('contact.show', ['id' => $selectedItem->id]) }}" class="text-decoration-none">
-                            Xem chi tiết liên hệ #{{ $selectedItem->id }}
-                        </a>
-                    @else
-                        Chưa chọn liên hệ nào
-                    @endif
+                    Chọn một liên hệ để xem chi tiết
                 </small>
             </div>
         </div>
-        
 
-    
+        <!-- Alerts -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
+                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
+                <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
+            </div>
+        @endif
 
-    <!-- Alerts -->
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
-            <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-            <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
-        </div>
-    @endif
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>{{ $errors->first() }}
+                <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
+            </div>
+        @endif
 
-    @if ($errors->any())
-        <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>{{ $errors->first() }}
-            <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
-        </div>
-    @endif
-
-    <!-- Table -->
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover text-center align-middle">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Họ tên</th>
-                    <th>Email</th>
-                    <th>Nội dung</th>
-                    <th>Thời gian gửi</th>
-                    <th>Hành động</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($items as $item)
-                    <tr onclick="window.location='{{ route('contact.show', $item->id) }}'" style="cursor: pointer;">
-                        <td>{{ $item->id }}</td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->email }}</td>
-                        <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
-                        <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                        <td>
-                            <a href="{{ route('contact.show', $item->id) }}" class="btn btn-sm btn-info">
-                                <i class="bi bi-eye"></i> Chi tiết
-                            </a>
-                            <a href="{{ route('contact.delete', $item->id) }}" class="btn btn-sm btn-danger"
-                                onclick="return confirm('Xác nhận xoá?')">
-                                <i class="bi bi-trash"></i> Xoá
-                            </a>
-                        </td>
-                    </tr>
-
-                @empty
+        <!-- Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-dark">
                     <tr>
-                        <td colspan="6">Không có liên hệ nào.</td>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Nội dung</th>
+                        <th>Thời gian gửi</th>
+                        <th>Hành động</th>
                     </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @forelse($items as $item)
+                        <tr onclick="window.location='{{ route('contact.show', $item->id) }}'" style="cursor: pointer;">
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->email }}</td>
+                            <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
+                            <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
+                            <td>
+                                <a href="{{ route('contact.show', $item->id) }}" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Chi tiết
+                                </a>
+                                <a href="{{ route('contact.delete', $item->id) }}" class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Xác nhận xoá?')">
+                                    <i class="bi bi-trash"></i> Xoá
+                                </a>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6">Không có liên hệ nào.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
 
-    <!-- Chi tiết liên hệ -->
-    @if (isset($selectedItem))
+        <!-- Địa chỉ trung tâm và bản đồ -->
         <hr>
-        <div class="card mt-4 shadow-sm">
-            <div class="card-header bg-info text-white">
-                <strong><i class="bi bi-chat-left-text me-1"></i>Chi tiết liên hệ</strong>
+        <div class="mt-5">
+            <h5><i class="bi bi-geo-alt-fill me-1"></i>Địa chỉ trung tâm</h5>
+
+            <!-- Email -->
+            <p id="emailDisplay">
+                <strong>Email:</strong>
+                <span id="currentEmail">support@yourcenter.com</span>
+                <button class="btn btn-sm btn-warning ms-2" onclick="enableEmailEdit()">
+                    <i class="bi bi-pencil"></i> Sửa
+                </button>
+            </p>
+
+            <div id="emailEdit" class="d-none">
+                <input type="email" id="emailInput" class="form-control w-auto d-inline-block" style="width: 300px;"
+                       value="support@yourcenter.com" />
+                <button class="btn btn-sm btn-success ms-2" onclick="saveEmail()">
+                    <i class="bi bi-check-lg"></i> Lưu
+                </button>
             </div>
-            <div class="card-body">
-                <p><strong>ID:</strong> {{ $selectedItem->id }}</p>
-                <p><strong>Họ tên:</strong> {{ $selectedItem->name }}</p>
-                <p><strong>Email:</strong> {{ $selectedItem->email }}</p>
-                <p><strong>Nội dung:</strong></p>
-                <div class="border rounded p-3 bg-light">{{ $selectedItem->message }}</div>
-                <p class="mt-3"><strong>Thời gian gửi:</strong> {{ $selectedItem->created_at->format('d/m/Y H:i') }}</p>
-                <a href="{{ route('contact.index') }}" class="btn btn-secondary mt-3">
-                    <i class="bi bi-arrow-left"></i> Ẩn chi tiết
-                </a>
+
+            <!-- Địa chỉ -->
+            <p id="addressDisplay">
+                <span id="currentAddress">778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam</span>
+                <button class="btn btn-sm btn-warning ms-2" onclick="enableEdit()">
+                    <i class="bi bi-pencil"></i> Sửa
+                </button>
+            </p>
+
+            <div id="addressEdit" class="d-none">
+                <input type="text" id="mapAddress" class="form-control"
+                       value="778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam" />
+                <button class="btn btn-sm btn-success mt-2" onclick="updateMap()">
+                    <i class="bi bi-check-lg"></i> Cập nhật
+                </button>
             </div>
-        </div>
-    @endif
 
-    <!-- Địa chỉ trung tâm và bản đồ -->
-    <hr>
-    <div class="mt-5">
-        <h5><i class="bi bi-geo-alt-fill me-1"></i>Địa chỉ trung tâm</h5>
-        <!-- Hiển thị email và nút sửa -->
-        <p id="emailDisplay">
-            <strong>Email:</strong>
-            <span id="currentEmail">support@yourcenter.com</span>
-            <button class="btn btn-sm btn-warning ms-2" onclick="enableEmailEdit()">
-                <i class="bi bi-pencil"></i> Sửa
-            </button>
-        </p>
-
-        <!-- Sửa email -->
-        <div id="emailEdit" class="d-none">
-            <input type="email" id="emailInput" class="form-control w-auto d-inline-block" style="width: 300px;"
-                value="support@yourcenter.com" />
-            <button class="btn btn-sm btn-success ms-2" onclick="saveEmail()">
-                <i class="bi bi-check-lg"></i> Lưu
-            </button>
-        </div>
-
-        <!-- Hiển thị địa chỉ và nút sửa -->
-        <p id="addressDisplay">
-            <span id="currentAddress">778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam</span>
-            <button class="btn btn-sm btn-warning ms-2" onclick="enableEdit()">
-                <i class="bi bi-pencil"></i> Sửa
-            </button>
-        </p>
-
-        <!-- Chỉnh sửa địa chỉ -->
-        <div id="addressEdit" class="d-none">
-            <input type="text" id="mapAddress" class="form-control"
-                value="778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam" />
-            <button class="btn btn-sm btn-success mt-2" onclick="updateMap()">
-                <i class="bi bi-check-lg"></i> Cập nhật
-            </button>
-        </div>
-
-        <!-- Bản đồ -->
-        <div class="ratio ratio-16x9 mt-3 shadow-sm">
-            <iframe id="mapFrame"
-                src="https://www.google.com/maps?q=778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam&output=embed"
-                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+            <!-- Bản đồ -->
+            <div class="ratio ratio-16x9 mt-3 shadow-sm">
+                <iframe id="mapFrame"
+                        src="https://www.google.com/maps?q=778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam&output=embed"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
     </div>
-    </div>
 
-    <!-- Script xử lý cập nhật bản đồ -->
+    <!-- Script xử lý -->
     <script>
-        // --- Xử lý cập nhật bản đồ ---
+        // Địa chỉ
         const addressDisplay = document.getElementById('addressDisplay');
         const addressEdit = document.getElementById('addressEdit');
         const mapAddress = document.getElementById('mapAddress');
@@ -191,7 +156,7 @@
             addressDisplay.classList.remove('d-none');
         }
 
-        // --- Xử lý cập nhật email ---
+        // Email
         const emailDisplay = document.getElementById('emailDisplay');
         const emailEdit = document.getElementById('emailEdit');
         const emailInput = document.getElementById('emailInput');

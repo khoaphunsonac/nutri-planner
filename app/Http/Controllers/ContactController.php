@@ -28,19 +28,17 @@ class ContactController extends Controller
 
     public function show($id)
     {
-        $selectedItem = ContactModel::find($id);
-        $items = ContactModel::orderBy('id', 'desc')->get();
-
-        if (!$selectedItem) {
+        $contact = ContactModel::find($id);
+    
+        if (!$contact) {
             return redirect()->route('contact.index')->withErrors(['msg' => 'Liên hệ không tồn tại']);
         }
-
-        return view($this->pathViewController . "index", [
-            'items' => $items,
-            'selectedItem' => $selectedItem
+    
+        return view($this->pathViewController . 'detail', [
+            'item' => $contact
         ]);
     }
-
+    
     public function delete($id)
     {
         $item = ContactModel::find($id);
