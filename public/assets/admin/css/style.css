@@ -172,3 +172,18 @@ tr:hover {
         background-color: #f0f8ff !important;
         transition: 0.2s ease-in-out;
     }
+
+.meal-item {
+    transition: background-color 0.2s ease-in-out, transform 0.1s;
+    cursor: pointer;
+}
+.meal-item:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.01);
+}
+
+.hover-shadow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s ease;
+}
