@@ -8,8 +8,11 @@
                 <li class="breadcrumb-item">
                     <a href="#"><i class="bi bi-house-door"></i></a>
                 </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('meals.index') }}">Món ăn</a>
+                </li>
                 <li class="breadcrumb-item active">
-                    <i class="bi bi-egg-fried me-1"></i>Món ăn
+                    Danh sách
                 </li>
             </ol>
         </nav>
