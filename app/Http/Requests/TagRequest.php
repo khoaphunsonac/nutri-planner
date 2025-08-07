@@ -22,15 +22,17 @@ class TagRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->input('id');
+        
         return [
             'name' => [
                 'required',
                 'string',
                 'min:2',
                 'max:255',
-                'unique:tags,name,' . $id . ',id', //k check trung với id chính nó
+               'unique:tags,name,' . $this->id, // Bỏ qua tag hiện tại
+               
             ],
+            'meals'=> 'nullable|string',
             
         ];
     }

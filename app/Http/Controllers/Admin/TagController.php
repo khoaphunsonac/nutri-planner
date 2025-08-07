@@ -53,7 +53,11 @@ class TagController extends BaseController
         $usageRate =  $totalTags > 0 ? round(($activeTags/$totalTags) *100) . '%' : '0%';
         // $item = $query->orderBy('id','desc')->get();
         $item = $query->orderBy('id','desc')->paginate(10);
-        
+        // Tính chỉ số bắt đầu đếm ngược (số lớn nhất trên trang hiện tại)
+        $total = $item->total();
+        $perPage = $item->perPage();
+        $currentPage = $item->currentPage();
+        $startIndex = $total - ($currentPage - 1) * $perPage;
         //  return $item;
         return view($this->pathViewController.'index',[
             'tags'=> $tags,
@@ -68,6 +72,7 @@ class TagController extends BaseController
             'allMeals'=>$allMeals,
             'meals'=>$meals,
             'itemMeal' =>$itemMeal,
+            'startIndex'=>$startIndex,
         ]);
     }
 
@@ -79,28 +84,36 @@ class TagController extends BaseController
         ]);
     }
 
-    public function form($id =null){
-        $item = $id ? TagModel::findOrFail($id) : null;
+    public function form(Request $request){
+         $id=$request->id;
+        $item = $id ? TagModel::with('meals')->findOrFail($id) : null;
+        $allMeals = MealModel::select('id', 'name')->get();
         return view($this->pathViewController.'form',[
             'item'=>$item,
+            "allMeals"=>$allMeals,
         ]);
     }
 
 
 
     public function save(TagRequest $request){
-        $params = $request->all();
-        if(!empty($params['id'])){
-            $tag = TagModel::findOrFail($params['id']);
+        $id = $request->id;
+        $params = $request->except(['meals']); // chỉ lấy những field liên quan đến tag
+         $mealsInput = $request->input('meals', '');
+        // $mealIds = $mealsInput ?  explode(',', $mealsInput) : [];
+        $mealIds = collect(explode(',', $mealsInput))->filter()->all(); // Loại bỏ phần tử rỗng
+        if($id){
+            $tag = TagModel::withTrashed()->findOrFail($id);
             $tag->update($params);
-            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Thẻ `{$tag->name}` thành công");
+            $message = "Cập nhật Thẻ `{$tag->name}` thành công";
         }else{
-            $params = $request->only(['name']);
+            
             $tag =TagModel::create($params);
-            return redirect()->route('tags.index')->with('success',"Thêm Thẻ '{$tag->name}' thành công");
+             $message = "Thêm Thẻ '{$tag->name}' thành công";
+
         }
-        
-        
+        $tag->meals()->sync($mealIds);
+         return redirect()->route('tags.index')->with('success', $message);
     }
     
     public function destroy($id){

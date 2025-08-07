@@ -1,29 +1,30 @@
 @extends('admin.layout')
 @section('content')
-     <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Quản lý Thẻ</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page"> Xem chi tiết Thẻ</li>
+    {{-- Breadcrumb --}}
+     <nav aria-label="breadcrumb breadcrumb-compact" class="mb-4">
+        <ol class="breadcrumb breadcrumb-compact">
+            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-tags">Thẻ</i></a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $item->name }}</li>
         </ol>
     </nav>
-
-    <div class="card shadow-sm border-0">
-        <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">📝 Thông tin chi tiết Thẻ</h5>
+    {{-- Header --}}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">📝 Thông tin chi tiết <span class="fw-semibold text-success">Thẻ {{ $item->name }} </span> </h5>
             <div>
                 <a href="{{ route('tags.form', ['id' => $item->id]) }}" class="btn btn-sm btn-warning me-2">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
                 </a>
-                <a href="{{ route('tags.index') }}" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Quay lại
+                <a href="{{ route('tags.index') }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại
                 </a>
             </div>
-        </div>
+    </div>
 
+    <div class="card shadow-sm border-0">
         <div class="card-body">
             <p><strong>ID:</strong> {{ $item->id }}</p>
-            <p><strong>Tên Thẻ:</strong> {{ $item->name }}</p>
+            <p><strong>Tên Thẻ:</strong> <span class="text-success">Thẻ {{ $item->name }} </span></p>
             <p><strong>Trạng thái:</strong>
                 @if ($item->deleted_at)
                     <span class="badge bg-danger">Đã xóa</span>
@@ -58,10 +59,13 @@
                         <ul class="list-group w-100" style="max-width: 1000px;">
                             @foreach($item->meals as $meal)
                                 <div class="col-md-6 mb-3">
-                                    <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded  ">
-                                        <span class="text-truncate">{{ $meal->name }}</span>
-                                        <span class="badge bg-info">{{ $meal->mealType->name ?? 'Không rõ loại' }}</span>
-                                    </div>
+                                    <a href="{{ route('meals.show', $meal->id) }}" class="text-decoration-none text-dark">
+                                        <div class="list-group-item d-flex justify-content-between align-items-center shadow-sm rounded  ">
+                                            <span class="text-truncate">{{ $meal->name }}</span>
+                                            <span class="badge bg-info">{{ $meal->mealType->name ?? 'Không rõ loại' }}</span>
+                                        </div>
+                                    </a>
+                                    
                                 </div>
                             @endforeach
                         </ul>

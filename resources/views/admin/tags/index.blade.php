@@ -1,17 +1,24 @@
 @extends('admin.layout')
 @section('content')
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}">Quản lý Thẻ</a></li>
-            <li class="breadcrumb-item link-primary" aria-current="page">Danh sách</li>
+    {{-- Breadcrumb --}}
+    <nav aria-label="breadcrumb breadcrumb-compact" class="mb-4">
+        <ol class="breadcrumb breadcrumb-compact">
+            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-tags">Thẻ</i></a></li>
+            <li class="breadcrumb-item active" aria-current="page">Danh sách</li>
         </ol>
     </nav>
 
-   
+   {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Quản lý Thẻ</h2>
-        <a href="{{route('tags.add')}}"><i class="bi bi-plus-circle"></i>Thêm Thẻ</a>
+         <div class="d-flex align-items-center">
+            <h3 class="mb-0 me-3">Quản lý Thẻ</h3>
+            <span class="badge bg-primary rounded-pill">{{ $totalTags}}</span>
+            <small class="text-muted ms-2">
+                <i class="bi bi-info-circle me-1"></i>Click vào dòng để xem chi tiết
+            </small>
+         </div>
+        <a href="{{route('tags.add')}}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle me-1"></i>Thêm Thẻ</a>
     </div>
     
 
@@ -93,7 +100,7 @@
             <table class="table  table-bordered  table-hover align-middle">
                 <thead class="table-light">
                     <tr>
-                        <th width="30">ID</th>
+                        <th width="30">Số thứ tự</th>
                         <th width="150">Tên Thẻ</th>
                         {{-- <th width="150">Trạng thái</th> --}}
                         <th width="100">Số món ăn</th>
@@ -103,10 +110,10 @@
                 </thead>
                 <tbody class="text-center">
                     @if (count($item)>0)
-                        @foreach ($item as $phanTu)
+                        @foreach ($item as $key => $phanTu)
                             <tr onclick="window.location='{{route('tags.show',$phanTu->id)}}'" style="cursor: pointer;">
                                 <td class="align-middle text-center">
-                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$phanTu->id ?? 1}} </span>
+                                    <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$startIndex - $key}} </span>
                                 </td>
                                 <td>
                                     {{$phanTu->name}}
@@ -221,10 +228,15 @@
                         <tr>
                             <td><strong>{{ $tag->name }}</strong></td>
                             <td>
+                                @php
+                                    $meals = $tag->meals->take(3); // Lấy 3 món đầu tiên
+                                @endphp
                                 @if($tag->meals->count())
-                                    @foreach($tag->meals as $meal)
+                                    @foreach($tag->meals->take(3) as $meal)
                                         <span class="badge bg-primary me-1">{{ $meal->name }}</span>
+                                        
                                     @endforeach
+                                    <span class=" badge bg-primary me-1 text-white fw-bold">...</span>
                                 @else
                                     <span class="text-muted">Chưa gán món ăn</span>
                                 @endif

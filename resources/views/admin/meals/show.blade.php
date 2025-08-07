@@ -84,10 +84,19 @@
                         @endif
 
                         @if ($meal->preparation)
-                            <div class="mt-3">
-                                <h6>Cách chế biến:</h6>
-                                <div class="bg-light p-3 rounded">
-                                    <pre class="mb-0" style="white-space: pre-wrap;">{{ $meal->preparation }}</pre>
+                            <div class="mt-4">
+                                <h6 class="mb-2"><i class="bi bi-clipboard-check me-1"></i>Cách chế biến:</h6>
+                                <div class="bg-white border rounded shadow-sm p-3">
+                                    @foreach (explode("\n", $meal->preparation) as $step)
+                                        @if (trim($step) !== '')
+                                            <div class="d-flex align-items-start mb-2">
+                                                <span class="badge bg-primary me-2" style="min-width: 32px;">
+                                                    <i class="bi bi-check2-circle"></i>
+                                                </span>
+                                                <span style="white-space: pre-line;">{{ $step }}</span>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
                             </div>
                         @endif
