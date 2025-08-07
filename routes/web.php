@@ -16,7 +16,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 // Group Admin
 Route::prefix('admin')->group(function () {
     // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
