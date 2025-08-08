@@ -3,7 +3,7 @@
     {{-- Breadcrumb --}}
     <nav aria-label="breadcrumb breadcrumb-compact" class="mb-4">
         <ol class="breadcrumb breadcrumb-compact">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
             <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-tags">Thẻ</i></a></li>
             <li class="breadcrumb-item active" aria-current="page">Danh sách</li>
         </ol>
@@ -90,10 +90,11 @@
             <small>
                 {{--  Tổng số tag thỏa query tìm kiếm --}}
                 @if ($item->total() > 0)
-                Tổng: {{$item->total()}} mục
+                Tổng: {{ $item->count()}}/ {{$item->total()}} mục
                 @else
                     Không có kết quả nào
                 @endif
+                
             </small>
         </div>
         <div class="card-body   text-center">
@@ -197,10 +198,11 @@
                     @endif
                 </tbody>
              </table>
+            <div class="mt-3 text-end">
+                {{$item->appends(request()->except('tags'))->links('pagination::bootstrap-5')}}
+            </div>
         </div>
-        <div class="d-flex justify-content-center mt-3">
-            {{$item->links('pagination::bootstrap-5')}}
-        </div>
+       
     </div>
     
     {{-- Mapping tag-meal --}}
@@ -209,10 +211,11 @@
             <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Thẻ</h5>
             <small>
                 @if ($tagMeal->total() > 0)
-                    Tổng: {{ $tagMeal->total() }} mục
+                    Tổng: {{ $tagMeal->count()}} / {{$tagMeal->total() }} mục
                 @else
                     0
                 @endif
+                
             </small>
         </div>
         <div class="card-body  text-center">
@@ -229,14 +232,17 @@
                             <td><strong>{{ $tag->name }}</strong></td>
                             <td>
                                 @php
-                                    $meals = $tag->meals->take(3); // Lấy 3 món đầu tiên
+                                    $totalmeals = $tag->meals;
+                                    $total = $totalmeals->count();
                                 @endphp
-                                @if($tag->meals->count())
-                                    @foreach($tag->meals->take(3) as $meal)
+                                @if($total)
+                                    @foreach($totalmeals->take(2) as $meal)
                                         <span class="badge bg-primary me-1">{{ $meal->name }}</span>
                                         
                                     @endforeach
-                                    <span class=" badge bg-primary me-1 text-white fw-bold">...</span>
+                                    @if ($total > 2)
+                                        <span class=" badge bg-primary me-1 text-white ">...</span>
+                                    @endif
                                 @else
                                     <span class="text-muted">Chưa gán món ăn</span>
                                 @endif
@@ -245,8 +251,8 @@
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-center mt-3">
-                {{$tagMeal->links('pagination::bootstrap-5')}}
+            <div class="mt-3 text-end">
+                {{$tagMeal->appends(request()->except('mappingmeal'))->links('pagination::bootstrap-5')}} 
             </div>
         </div>
     </div>
