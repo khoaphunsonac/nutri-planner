@@ -119,7 +119,7 @@ class AllergenController extends BaseController
          $selectedMeals = [];
          if($item){
             foreach($item->meals as $meal){
-                $selectedMeals = $meal->id; //lay id cua tung mon an gan
+                $selectedMeals[] = $meal->id; 
             }
          }
         return view($this->pathViewController.'form',[
@@ -176,36 +176,5 @@ class AllergenController extends BaseController
         return redirect()->route('allergens.index')->with('success', "Cập nhật món ăn Dị ứng  cho '{$allergen->name}' thành công!"); 
     }
 
-    // public function createMap(Request $request){
-        
-    //      $meals = MealModel::all();
-    //     $allergens = AllergenModel::all();
-        
-    //     // return $allergen;
-    //     return view($this->pathViewController.'formMap',[
-    //         'meals'=>$meals,
-    //         'allergens'=>$allergens,
-    //     ]);
-        
-    // }
-
-    // public function storeMap(Request $request){
-        
-    //      $params = $request->only(['meal_id','allergen_id']);
-    //      MealAllergenModel::create($params);
-        
-    //     // return $allergen;
-    //     return redirect()->route('allergens.index')->with('success', 'Tạo Mapping thành công');
-        
-    // }
-
-    // public function destroyMap($id){
-        
-    //      $mapping = MealAllergenModel::findOrFail($id);
-    //      $mapping->delete();
-        
-    //     // return $allergen;
-    //     return redirect()->route('allergens.index')->with('success', 'Xóa Mapping thành công');
-        
-    // }
+    
 }
