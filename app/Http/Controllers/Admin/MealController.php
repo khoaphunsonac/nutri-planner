@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MealRequest;
 use App\Models\MealModel;
 use App\Models\DietTypeModel;
 use App\Models\MealTypeModel;
@@ -81,57 +82,25 @@ class MealController extends Controller
         ]);
     }
 
-    public function save(Request $request)
+    public function save(MealRequest $request)
     {
-        // Enhanced validation
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'diet_type_id' => 'required|exists:diet_type,id',
-            'meal_type_id' => 'required|exists:meal_type,id',
-            'preparation' => 'nullable|string',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
-            'tags' => 'nullable|array',
-            'tags.*' => 'exists:tags,id',
-            'allergens' => 'nullable|array',
-            'allergens.*' => 'exists:allergens,id',
-            'ingredients' => 'nullable|array',
-            'ingredients.*.ingredient_id' => 'required|exists:ingredients,id',
-            'ingredients.*.quantity' => 'required|numeric|min:0.1',
-            'preparation_steps' => 'nullable|array',
-            'preparation_steps.*' => 'string|max:1000'
-        ]);
-
+        // Validated data từ MealRequest
+        $validatedData = $request->validated();
         $id = $request->input('id');
-
-        // Process preparation steps into single text field
-        $preparation = '';
-        if ($request->has('preparation_steps')) {
-            $steps = array_filter($request->preparation_steps, function ($step) {
-                return trim($step) !== '';
-            });
-            $preparation = implode("\n", $steps);
-        } elseif ($request->has('preparation')) {
-            $preparation = $request->input('preparation');
-        }
-
-        $validatedData['preparation'] = $preparation;
 
         try {
             DB::beginTransaction();
 
             // Handle image upload
-            $imageName = null;
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                // Create directory if not exists
+                
                 $uploadPath = public_path('uploads/meals');
                 if (!file_exists($uploadPath)) {
                     mkdir($uploadPath, 0755, true);
                 }
-
+                
                 $image->move($uploadPath, $imageName);
                 $validatedData['image_url'] = $imageName;
             }
@@ -148,9 +117,7 @@ class MealController extends Controller
                     }
                 }
 
-                // Update meal data
                 $meal->update($validatedData);
-
                 $message = 'Đã cập nhật món ăn thành công.';
             } else {
                 // Create new meal
@@ -158,31 +125,22 @@ class MealController extends Controller
                 $message = 'Thêm món ăn mới thành công.';
             }
 
-            // Update tags relationship
-            if ($request->has('tags')) {
-                $meal->tags()->sync($request->input('tags', []));
-            } else {
-                $meal->tags()->sync([]);
-            }
-
-            // Update allergens relationship
-            if ($request->has('allergens')) {
-                $meal->allergens()->sync($request->input('allergens', []));
-            } else {
-                $meal->allergens()->sync([]);
-            }
+            // Update relationships
+            $meal->tags()->sync($validatedData['tags'] ?? []);
+            $meal->allergens()->sync($validatedData['allergens'] ?? []);
 
             // Update recipe ingredients
-            $this->updateRecipeIngredients($meal, $request->input('ingredients', []));
+            $this->updateRecipeIngredients($meal, $validatedData['ingredients'] ?? []);
 
             DB::commit();
 
             return redirect()->route('meals.index')->with('success', $message);
+
         } catch (\Exception $e) {
             DB::rollback();
 
             // Delete uploaded image if transaction failed
-            if ($imageName) {
+            if (isset($imageName)) {
                 $imagePath = public_path('uploads/meals/' . $imageName);
                 if (file_exists($imagePath)) {
                     unlink($imagePath);
@@ -195,6 +153,7 @@ class MealController extends Controller
                 ->withInput()
                 ->withErrors(['error' => 'Có lỗi xảy ra khi lưu món ăn. Vui lòng thử lại.']);
         }
+        
     }
 
     public function show($id)

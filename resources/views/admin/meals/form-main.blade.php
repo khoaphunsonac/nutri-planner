@@ -27,15 +27,86 @@
             </a>
         </div>
 
+        {{-- Error Messages Section - Thay thế phần @if ($errors->any()) hiện tại --}}
         @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-start">
+                    <i class="bi bi-exclamation-triangle-fill me-2 mt-1"></i>
+                    <div class="flex-grow-1">
+                        <strong>Có {{ $errors->count() }} lỗi cần được khắc phục:</strong>
+                        <hr class="my-2">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        {{-- Custom error message cho specific errors --}}
+        {{-- @if ($errors->has('error'))
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    <strong>Lỗi hệ thống:</strong>
+                </div>
+                <div class="mt-1">{{ $errors->first('error') }}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif --}}
+
+        {{-- Ingredients Errors với chi tiết hơn --}}
+        {{-- @error('ingredients')
             <div class="alert alert-danger">
-                <ul class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
+                <i class="bi bi-exclamation-circle me-1"></i>
+                <strong>Lỗi nguyên liệu:</strong> {{ $message }}
+            </div>
+        @enderror
+
+        @if ($errors->has('ingredients.*'))
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                <strong>Chi tiết lỗi nguyên liệu:</strong>
+                <ul class="mb-0 mt-1">
+                    @foreach ($errors->get('ingredients.*') as $field => $messages)
+                        @foreach ($messages as $message)
+                            <li>
+                                @if (str_contains($field, 'ingredient_id'))
+                                    <strong>Nguyên liệu:</strong> {{ $message }}
+                                @elseif (str_contains($field, 'quantity'))
+                                    <strong>Số lượng:</strong> {{ $message }}
+                                @else
+                                    {{ $message }}
+                                @endif
+                            </li>
+                        @endforeach
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif --}}
+
+        {{-- Preparation Steps Errors --}}
+        {{-- @if ($errors->has('preparation_steps.*'))
+            <div class="alert alert-danger">
+                <i class="bi bi-exclamation-circle me-1"></i>
+                <strong>Lỗi bước chế biến:</strong>
+                <ul class="mb-0 mt-1">
+                    @foreach ($errors->get('preparation_steps.*') as $field => $messages)
+                        @foreach ($messages as $message)
+                            @php
+                                // Extract step number from field name like "preparation_steps.0"
+                                preg_match('/preparation_steps\.(\d+)/', $field, $matches);
+                                $stepNumber = isset($matches[1]) ? $matches[1] + 1 : '?';
+                            @endphp
+                            <li><strong>Bước {{ $stepNumber }}:</strong> {{ $message }}</li>
+                        @endforeach
+                    @endforeach
+                </ul>
+            </div>
+        @endif --}}
 
         <div class="card shadow-sm">
             <div class="card-body">
@@ -48,19 +119,25 @@
                     <div class="row">
                         {{-- Left Column --}}
                         <div class="col-md-6">
-                            {{-- Meal Name --}}
+                            {{-- Meal Name với error styling --}}
                             <div class="mb-3">
                                 <label for="name" class="form-label">Tên món ăn <span
                                         class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    value="{{ old('name', $meal->name ?? '') }}" required>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    id="name" name="name" value="{{ old('name', $meal->name ?? '') }}" >
+                                @error('name')
+                                    <div class="invalid-feedback">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
-                            {{-- Meal Type --}}
+                            {{-- Meal Type với error styling --}}
                             <div class="mb-3">
                                 <label for="meal_type_id" class="form-label">Loại bữa ăn <span
                                         class="text-danger">*</span></label>
-                                <select class="form-select" id="meal_type_id" name="meal_type_id" required>
+                                <select class="form-select @error('meal_type_id') is-invalid @enderror" id="meal_type_id"
+                                    name="meal_type_id" >
                                     <option value="">Chọn loại bữa ăn</option>
                                     @foreach ($mealTypes as $mealType)
                                         <option value="{{ $mealType->id }}"
@@ -69,13 +146,19 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('meal_type_id')
+                                    <div class="invalid-feedback">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
-                            {{-- Diet Type --}}
+                            {{-- Diet Type với error styling --}}
                             <div class="mb-3">
                                 <label for="diet_type_id" class="form-label">Chế độ ăn <span
                                         class="text-danger">*</span></label>
-                                <select class="form-select" id="diet_type_id" name="diet_type_id" required>
+                                <select class="form-select @error('diet_type_id') is-invalid @enderror" id="diet_type_id"
+                                    name="diet_type_id" >
                                     <option value="">Chọn chế độ ăn</option>
                                     @foreach ($dietTypes as $dietType)
                                         <option value="{{ $dietType->id }}"
@@ -84,14 +167,25 @@
                                         </option>
                                     @endforeach
                                 </select>
+                                @error('diet_type_id')
+                                    <div class="invalid-feedback">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
-                            {{-- Image Upload --}}
+                            {{-- Image Upload với error styling --}}
                             <div class="mb-3">
                                 <label for="image" class="form-label">Hình ảnh món ăn</label>
-                                <input type="file" class="form-control" id="image" name="image" accept="image/*"
-                                    onchange="previewImage(this)">
-                                <div class="form-text">Chọn file hình ảnh (JPG, PNG, GIF) - Tối đa 2MB</div>
+                                <input type="file" class="form-control @error('image') is-invalid @enderror"
+                                    id="image" name="image" accept="image/*" onchange="previewImage(this)">
+                                <div class="form-text">Chọn file hình ảnh (JPG, PNG, GIF, WEBP) - Tối đa 2MB, kích thước
+                                    100x100px đến 2000x2000px</div>
+                                @error('image')
+                                    <div class="invalid-feedback">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
 
                                 {{-- Current Image Preview --}}
                                 @if (isset($meal) && $meal && $meal->image_url)
@@ -99,7 +193,8 @@
                                         <small class="text-muted">Hình ảnh hiện tại:</small>
                                         <div class="border rounded p-2 mt-1">
                                             <img src="{{ asset('uploads/meals/' . $meal->image_url) }}"
-                                                alt="{{ $meal->name }}" class="img-thumbnail" style="max-height: 100px;">
+                                                alt="{{ $meal->name }}" class="img-thumbnail"
+                                                style="max-height: 100px;">
                                         </div>
                                     </div>
                                 @endif
@@ -117,10 +212,17 @@
 
                         {{-- Right Column --}}
                         <div class="col-md-6">
-                            {{-- Description --}}
+                            {{-- Description với error styling --}}
                             <div class="mb-3">
                                 <label for="description" class="form-label">Mô tả</label>
-                                <textarea class="form-control" id="description" name="description" rows="12" placeholder="Mô tả về món ăn...">{{ old('description', $meal->description ?? '') }}</textarea>
+                                @csrf
+                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                    rows="12" placeholder="Mô tả về món ăn...">{{ old('description', $meal->description ?? '') }}</textarea>
+                                @error('description')
+                                    <div class="invalid-feedback">
+                                        <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                    </div>
+                                @enderror
                             </div>
 
                             {{-- Preparation --}}
@@ -132,17 +234,29 @@
                         </div>
                     </div>
 
-                    {{-- Tags Section --}}
+                    {{-- Tags Section với error styling --}}
                     <div class="row mt-4">
                         <div class="col-12">
                             <h6 class="border-bottom pb-2">Tags món ăn</h6>
+                            @error('tags')
+                                <div class="alert alert-danger py-2">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
+                            @error('tags.*')
+                                <div class="alert alert-danger py-2">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
                             <div class="row">
                                 @foreach ($tags as $tag)
                                     <div class="col-md-3 col-sm-4 col-6 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="tags[]"
-                                                value="{{ $tag->id }}" id="tag{{ $tag->id }}"
-                                                {{ isset($meal) && $meal->tags->contains($tag->id) ? 'checked' : '' }}>
+                                            <input
+                                                class="form-check-input @error('tags') is-invalid @enderror @error('tags.*') is-invalid @enderror"
+                                                type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                                                id="tag{{ $tag->id }}"
+                                                {{ (isset($meal) && $meal->tags->contains($tag->id)) || (is_array(old('tags')) && in_array($tag->id, old('tags'))) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="tag{{ $tag->id }}">
                                                 {{ $tag->name }}
                                             </label>
@@ -153,17 +267,29 @@
                         </div>
                     </div>
 
-                    {{-- Allergens Section --}}
+                    {{-- Allergens Section với error styling --}}
                     <div class="row mt-4">
                         <div class="col-12">
                             <h6 class="border-bottom pb-2">Chất gây dị ứng</h6>
+                            @error('allergens')
+                                <div class="alert alert-danger py-2">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
+                            @error('allergens.*')
+                                <div class="alert alert-danger py-2">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
                             <div class="row">
                                 @foreach ($allergens as $allergen)
                                     <div class="col-md-3 col-sm-4 col-6 mb-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="allergens[]"
-                                                value="{{ $allergen->id }}" id="allergen{{ $allergen->id }}"
-                                                {{ isset($meal) && $meal->allergens->contains($allergen->id) ? 'checked' : '' }}>
+                                            <input
+                                                class="form-check-input @error('allergens') is-invalid @enderror @error('allergens.*') is-invalid @enderror"
+                                                type="checkbox" name="allergens[]" value="{{ $allergen->id }}"
+                                                id="allergen{{ $allergen->id }}"
+                                                {{ (isset($meal) && $meal->allergens->contains($allergen->id)) || (is_array(old('allergens')) && in_array($allergen->id, old('allergens'))) ? 'checked' : '' }}>
                                             <label class="form-check-label" for="allergen{{ $allergen->id }}">
                                                 {{ $allergen->name }}
                                             </label>
@@ -190,6 +316,35 @@
                                     </button>
                                 </div>
                             </div>
+
+                            {{-- Ingredients Errors --}}
+                            @error('ingredients')
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    <strong>Lỗi nguyên liệu:</strong> {{ $message }}
+                                </div>
+                            @enderror
+                            @if ($errors->has('ingredients.*'))
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    <strong>Chi tiết lỗi nguyên liệu:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        @foreach ($errors->get('ingredients.*') as $field => $messages)
+                                            @foreach ($messages as $message)
+                                                <li>
+                                                    @if (str_contains($field, 'ingredient_id'))
+                                                        <strong>Nguyên liệu:</strong> {{ $message }}
+                                                    @elseif (str_contains($field, 'quantity'))
+                                                        <strong>Số lượng:</strong> {{ $message }}
+                                                    @else
+                                                        {{ $message }}
+                                                    @endif
+                                                </li>
+                                            @endforeach
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             <div class="row">
                                 {{-- Ingredients Library Panel --}}
@@ -348,8 +503,7 @@
                         </div>
                     </div>
 
-                    {{-- Preparation Section --}}
-                    {{-- Preparation Section --}}
+                    {{-- Preparation Section với error styling --}}
                     <div class="row mt-4">
                         <div class="col-12">
                             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
@@ -365,6 +519,31 @@
                                     </button>
                                 </div>
                             </div>
+
+                            {{-- Preparation Errors --}}
+                            @error('preparation')
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
+                            @error('preparation_steps')
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
+                                </div>
+                            @enderror
+                            @if ($errors->has('preparation_steps.*'))
+                                <div class="alert alert-danger">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    <strong>Lỗi bước chế biến:</strong>
+                                    <ul class="mb-0 mt-1">
+                                        @foreach ($errors->get('preparation_steps.*') as $error)
+                                            @foreach ($error as $message)
+                                                <li>{{ $message }}</li>
+                                            @endforeach
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             <div id="preparation-steps-container">
                                 @if (isset($meal) && $meal->preparation)
@@ -439,23 +618,71 @@
     </div>
 
     <script>
+        // Simplified JavaScript - focus on UI interactions
         let ingredientIndex = {{ isset($meal) ? $meal->recipeIngredients->count() : 0 }};
         let stepIndex = {{ isset($meal) && $meal->preparation ? count(explode("\n", trim($meal->preparation))) : 0 }};
 
-        // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Initializing meal form...');
 
-            // Initialize drag and drop
             initializeDragAndDrop();
-
-            // Initialize existing ingredients với timeout để đảm bảo DOM đã load xong
             setTimeout(() => {
                 initializeExistingIngredients();
                 updateTotalNutrition();
-                console.log('Existing ingredients initialized');
             }, 100);
+
+            // Remove client-side validation, let server handle it
+            const form = document.getElementById('mealForm');
+            form.addEventListener('submit', function(e) {
+                // Just show loading message
+                showAlert('Đang lưu món ăn...', 'info');
+
+                // Update preparation field before submission
+                updatePreparationField();
+
+                // Let form submit naturally - no preventDefault
+            });
+
+            // Real-time error removal when user fixes input
+            document.getElementById('name').addEventListener('input', function() {
+                if (this.value.trim() !== '') {
+                    this.classList.remove('is-invalid');
+                    removeFieldError('name');
+                }
+            });
+
+            document.getElementById('meal_type_id').addEventListener('change', function() {
+                if (this.value !== '') {
+                    this.classList.remove('is-invalid');
+                    removeFieldError('meal_type_id');
+                }
+            });
+
+            document.getElementById('diet_type_id').addEventListener('change', function() {
+                if (this.value !== '') {
+                    this.classList.remove('is-invalid');
+                    removeFieldError('diet_type_id');
+                }
+            });
+
+            // Auto-resize existing textareas
+            document.querySelectorAll('.step-content').forEach(textarea => {
+                textarea.style.height = 'auto';
+                textarea.style.height = textarea.scrollHeight + 'px';
+            });
         });
+
+        // Helper function to remove field errors
+        function removeFieldError(fieldId) {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.classList.remove('is-invalid');
+                const errorDiv = field.parentNode.querySelector('.invalid-feedback');
+                if (errorDiv) {
+                    errorDiv.remove();
+                }
+            }
+        }
 
         // Recipe ingredient management
         function initializeDragAndDrop() {
@@ -1034,57 +1261,7 @@
                 textarea.style.height = textarea.scrollHeight + 'px';
             });
         });
-        // Form validation
-        document.getElementById('mealForm').addEventListener('submit', function(e) {
-            const name = document.getElementById('name').value.trim();
-            const mealType = document.getElementById('meal_type_id').value;
-            const dietType = document.getElementById('diet_type_id').value;
-
-            if (!name || !mealType || !dietType) {
-                e.preventDefault();
-                showAlert('Vui lòng điền đầy đủ thông tin bắt buộc!', 'danger');
-                return;
-            }
-
-            // Check if at least one ingredient is added
-            const ingredients = document.querySelectorAll('.recipe-ingredient-row');
-            if (ingredients.length === 0) {
-                if (!confirm('Bạn chưa thêm nguyên liệu nào. Bạn có muốn tiếp tục không?')) {
-                    e.preventDefault();
-                    return;
-                }
-            }
-
-            showAlert('Đang lưu món ăn...', 'info');
-        });
-
-        // Add some CSS for better UX
-        const style = document.createElement('style');
-        style.textContent = `
-        .ingredient-item {
-            cursor: grab;
-            transition: all 0.2s ease;
-        }
-        .ingredient-item:active {
-            cursor: grabbing;
-        }
-        .ingredient-item.dragging {
-            opacity: 0.5;
-            transform: rotate(5deg);
-        }
-        .cursor-pointer {
-            cursor: pointer;
-        }
-        #recipe-drop-zone {
-            transition: all 0.3s ease;
-        }
-        .recipe-ingredient-row {
-            transition: all 0.3s ease;
-        }
-        .recipe-ingredient-row:hover {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-    `;
-        document.head.appendChild(style);
     </script>
 @endsection
+
+<script> alert('Hello'); </script>
