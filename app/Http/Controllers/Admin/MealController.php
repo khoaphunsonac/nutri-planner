@@ -84,9 +84,8 @@ class MealController extends Controller
 
     public function save(MealRequest $request)
     {
-        // Sử dụng method getValidatedData() thay vì validated()
-        $validatedData = $request->getValidatedData();
-
+        // Validated data từ MealRequest
+        $validatedData = $request->validated();
         $id = $request->input('id');
 
         try {
@@ -96,13 +95,12 @@ class MealController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-                // Create directory if not exists
+                
                 $uploadPath = public_path('uploads/meals');
                 if (!file_exists($uploadPath)) {
                     mkdir($uploadPath, 0755, true);
                 }
-
+                
                 $image->move($uploadPath, $imageName);
                 $validatedData['image_url'] = $imageName;
             }
@@ -119,7 +117,6 @@ class MealController extends Controller
                     }
                 }
 
-                // Update meal data
                 $meal->update($validatedData);
                 $message = 'Đã cập nhật món ăn thành công.';
             } else {
@@ -129,15 +126,16 @@ class MealController extends Controller
             }
 
             // Update relationships
-            $meal->tags()->sync($validatedData['tags']);
-            $meal->allergens()->sync($validatedData['allergens']);
+            $meal->tags()->sync($validatedData['tags'] ?? []);
+            $meal->allergens()->sync($validatedData['allergens'] ?? []);
 
             // Update recipe ingredients
-            $this->updateRecipeIngredients($meal, $validatedData['ingredients']);
+            $this->updateRecipeIngredients($meal, $validatedData['ingredients'] ?? []);
 
             DB::commit();
 
             return redirect()->route('meals.index')->with('success', $message);
+
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -155,6 +153,7 @@ class MealController extends Controller
                 ->withInput()
                 ->withErrors(['error' => 'Có lỗi xảy ra khi lưu món ăn. Vui lòng thử lại.']);
         }
+        
     }
 
     public function show($id)
