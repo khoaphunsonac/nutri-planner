@@ -48,7 +48,7 @@ class AllergenController extends BaseController
 
         $totalMealsModel = MealModel::count();
         $totalAllergenWithTrashed = AllergenModel::withTrashed()->get();
-        $totalAllergenWithTrashedCount = AllergenModel::withTrashed()->count();
+        // $totalAllergenWithTrashedCount = AllergenModel::withTrashed()->count();
        
         // tổng số tag
         $totalAllergens = count($totalAllergenWithTrashed);
@@ -65,13 +65,12 @@ class AllergenController extends BaseController
                 $deletedAllergens++ ;
             }
         }
-        // Lấy kết quả phân trang
-        $mappingPaginate = $mappingQuery->paginate(10, ['*'], 'allergens_page');
+        
         $totalMeals = count($meals);
         // $totalMappings = count($mealAllergens);
         $usageRate =  $totalAllergens > 0 ? round(($activeAllergens/$totalAllergens) *100) . '%' : '0%';
-        // $item = $query->orderBy('id','desc')->get();
-        $item = $query->orderBy('id','desc')->paginate(10);
+        
+        $item = $query->orderBy('id','desc')->paginate(10 );
         // Clone để đếm số mục sau lọc
         $totalMappings = MealAllergenModel::count();
         //  return $item;
@@ -94,7 +93,6 @@ class AllergenController extends BaseController
             'usageRate' =>$usageRate,
             'search'=>$search,
             'item'=>$item,
-            'mappingPaginate'=>$mappingPaginate,
             'mealSearch'=>$mealSearch,
             'allergenSearch'=>$allergenSearch,
             'startIndex'=>$startIndex,
@@ -113,9 +111,20 @@ class AllergenController extends BaseController
 
     public function form(Request $request){
         $id=$request->id;
-         $item = $id ? AllergenModel::findOrFail($id) : null;
+         $item = $id ? AllergenModel::with('meals')->findOrFail($id) : null;
+         // lay ds mon an co phan trang
+         $meals = MealModel::orderBy('name','asc')->paginate(20,['*'],'meals_page');
+
+         //neu dang edit lay mang ID mon an da duoc gan
+         $selectedMeals = [];
+         if($item){
+            foreach($item->meals as $meal){
+                $selectedMeals = $meal->id; //lay id cua tung mon an gan
+            }
+         }
         return view($this->pathViewController.'form',[
-            
+            'meals'=>$meals,
+            'selectedMeals'=>$selectedMeals,
             'item'=>$item,
         ]);
     }
@@ -123,15 +132,22 @@ class AllergenController extends BaseController
     public function save(AllergenRequest $request){
         $id = $request->id;
         $params = $request->all();
+        $mealIds = $request->input('meals',[]); // ds mon duoc chon, con k chọn là mảng rỗng
+
         if($id){
             // update
             $allergen = AllergenModel::findOrFail($id);
             $allergen->update($params);
+            //cap nhat mapping
+            $allergen->meals()->sync($mealIds);
             return redirect()->route('allergens.index',['id'=>$allergen->id])->with('success',"Cập nhật Dị ứng '{$allergen->name}' thành công");
         }
         else{
             // create
             $allergen = AllergenModel::create($params);
+            if(!empty($mealIds)){
+                $allergen->meals()->sync($mealIds);
+            }
             return redirect()->route('allergens.index')->with('success', "Thêm mới Dị ứng '{$allergen->name}' thành công");
         }
         

@@ -2,8 +2,8 @@
 @section('content')
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb breadcrumb-compact">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"><i class="bi bi-exclamation-triangle">Dị ứng</i></a></li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"><i class="bi bi-exclamation-triangle"> Dị ứng</i></a></li>
             <li class="breadcrumb-item active" active> Danh sách</li>
         </ol>
     </nav>
@@ -120,7 +120,7 @@
                 <small class="text-end">
                     {{--  Tổng số Allergen thỏa query tìm kiếm --}}
                     @if ($item->total() > 0)
-                    Tổng: {{$item->total()}} mục
+                    Tổng: {{ $item->count() }} / {{ $item->total() }} mục
                     @else
                         0 mục
                     @endif
@@ -160,7 +160,7 @@
                                             <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
                                         @endforeach
                                         @if ($total > 2)
-                                            <span class=" badge bg-success me-1 text-white fw-bold">...</span>
+                                            <span class=" badge bg-success me-1 text-white ">...</span>
                                         @endif
                                     @else
                                         0
@@ -258,11 +258,19 @@
                     @endif
                 </tbody>
             </table>
+
+            <div class="text-end">
+            
+            <div>
+                {{ $item->links('pagination::bootstrap-5') }}
+            </div>
+        </div>
         </div>
 
-        <div class="d-flex justify-content-center mt-3">
+        {{-- <div class="d-flex justify-content-center mt-3">
             {{$item->links('pagination::bootstrap-5')}}
-        </div>
+        </div> --}}
+        
     </div>
 
 

@@ -50,7 +50,7 @@
         <a href="{{ route('meals.index') }}"><i class="bi bi-egg-fried"></i> Meals</a>
         <a href="{{ route('ingredients.index') }}"><i class="bi bi-basket"></i> Ingredients</a>
         <a href="{{ route('users.index') }}"><i class="bi bi-people"></i> Users</a>
-        <a href="{{ route('allergens.index') }}"><i class="bi bi-exclamation-triangle"></i> Dị ứng</a>
+        <a href="{{ route('allergens.index') }}"><i class="bi bi-exclamation-triangle"></i>Allergens</a>
         <a href="{{ route('tags.index') }}"><i class="bi bi-tags"></i> Thẻ</a> <!-- Đã thêm mục này -->
         <a href="{{ route('contact.index') }}"><i class="bi bi-envelope"></i> Contacts</a>
         <a href="{{route('feedbacks.index')}}"><i class="bi bi-chat-dots"></i> Feedbacks</a>

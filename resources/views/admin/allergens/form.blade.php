@@ -3,8 +3,8 @@
     {{-- Breadcrumb --}}
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb breadcrumb-compact">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"><i class="bi bi-exclamation-triangle">Dị ứng</i></a></li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"><i class="bi bi-exclamation-triangle"> Dị ứng</i></a></li>
             <li class="breadcrumb-item active ">  {{  isset($item) && $item ? 'Cập nhật Dị ứng: ' . $item->name : 'Thêm Dị ứng mới' }} </li>
         </ol>
     </nav>
@@ -19,61 +19,96 @@
         <div class="alert alert-success mt-2 text-center" style="width:300px">{{session('success')}}</div>
     @endif
 
+
+     
     <div class="row mt-4">
-        <div class="col-md-8">
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-body">
-                        <form action="{{ route('allergens.save' )}}" method="POST">
-                            @csrf
-                            @if ($item)
-                                <input type="hidden" name="id" value="{{$item->id}}">
-                            @endif
-                            <div class=" mb-3">
-                                <h3 for="name" class=" form-label fw-bold my-3">Tên Dị ứng</h3>
-                                <input type="text" name="name" class="form-control" id="" value="{{$item->name ?? old('name')}}">
-                                @error('name')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                                <div class="mt-4 d-flex gap-2">
-                                    
-                                        <button type="submit" class="btn btn-primary">
-                                            <i class="fas fa-save"></i>{{$item ? 'Cập nhật Dị ứng' : 'Thêm Dị ứng'}}
-                                        </button>
-                                        {{-- nút xóa --}}
-                                        <button type="reset" class="btn btn-secondary" onclick="clearForm()">
-                                            <i class="fas fa-undo"></i> Làm lại
-                                        </button>
-                                        
-                                        <a href="{{route('allergens.index')}}" class="btn btn-outline-secondary"> Hủy</a>
-                                    
-                                </div>
+    {{-- Form nhập Dị ứng --}}
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body shadow-lg">
+                <form action="{{ route('allergens.save') }}" method="POST">
+                    @csrf
+                    @if ($item)
+                        <input type="hidden" name="id" value="{{ $item->id }}">
+                    @endif
+
+                    {{-- Tên dị ứng --}}
+                    <div class="mb-4">
+                        <h5 class="form-label fw-bold mb-2">Tên Dị ứng</h5>
+                        <input type="text" name="name" class="form-control" 
+                               value="{{ $item->name ?? old('name') }}" placeholder="Nhập tên dị ứng"  style="cursor: pointer">
+                        @error('name')
+                            <div class="text-danger mt-1">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Danh sách món ăn --}}
+                    <div class="mb-4" >
+                        <h5 class="form-label fw-bold mb-2">Chọn món ăn liên quan</h5>
+                        <div class="border rounded p-3" style="max-height: 1000px; overflow-y: auto;">
+                            <div class="row">
+                                @foreach($meals as $meal)
+                                    <div class="col-md-4 col-sm-6 col-12 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input"
+                                                   type="checkbox"
+                                                   name="meals[]"
+                                                   value="{{ $meal->id }}"
+                                                   id="meal_{{ $meal->id }}"
+                                                   {{ (isset($item) && $item->meals->contains($meal->id)) ? 'checked' : '' }} style="cursor: pointer">
+                                            <label class="form-check-label" for="meal_{{ $meal->id }}"  style="cursor: pointer">
+                                                {{ $meal->name }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
+                        </div>
 
-                        </form>
+                        {{-- Phân trang --}}
+                        <div class="mt-3">
+                            {{ $meals->links('pagination::bootstrap-5') }}
+                        </div>
                     </div>
-                </div>
+
+                    {{-- Nút submit --}}
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i> {{ isset($item) ? 'Cập nhật Dị ứng' : 'Thêm Dị ứng' }}
+                        </button>
+                        <button type="reset" class="btn btn-secondary" onclick="clearForm()">
+                            <i class="fas fa-undo me-1"></i> Làm lại
+                        </button>
+                        <a href="{{ route('allergens.index') }}" class="btn btn-outline-secondary">
+                            Hủy
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-       <div class="col-md-4">
-                <div class="card border-1 shadow-sm">
-                
-                    <div class="card-body">
-                        <h5 class="fw-bold text-primary mb-3">📝 Gợi ý đặt tên Dị ứng</h5> <hr>
-                        <p class="mb-2"><strong>📌 Gợi ý:</strong> Tên Dị ứng nên ngắn gọn, dễ đọc, tên dạng danh từ, <span class="text-danger">không thêm từ “Dị ứng”</span> phía sau.</p>
-                        <p class="mb-2"><strong>🎯 Mẹo:</strong> Hãy chọn tên dễ hiểu để người dùng không bị nhầm lẫn khi xem danh sách.</p>
-                        <p class="mb-0">
-                            <strong>✅ Ví dụ:</strong><br>
-                            <code>Peanuts</code>, 
-                            <code>Tree Nuts</code>, 
-                            <code>Milk</code>, 
-                            <code>Eggs</code>, 
-                            <code>Wheat</code>.
-                        </p>
-                    </div>
-                </div>
-           
-        </div>   
     </div>
+
+    {{-- Gợi ý đặt tên --}}
+    <div class="col-lg-4">
+        <div class="card border-1 shadow-sm">
+            <div class="card-body">
+                <h5 class="fw-bold text-primary mb-3">📝 Gợi ý đặt tên Dị ứng</h5>
+                <hr>
+                <p class="mb-2"><strong>📌 Gợi ý:</strong> Tên Dị ứng nên ngắn gọn, dễ đọc, tên dạng danh từ, 
+                    <span class="text-danger">không thêm từ “Dị ứng”</span> phía sau.</p>
+                <p class="mb-2"><strong>🎯 Mẹo:</strong> Hãy chọn tên dễ hiểu để người dùng không bị nhầm lẫn khi xem danh sách.</p>
+                <p class="mb-0">
+                    <strong>✅ Ví dụ:</strong><br>
+                    <code>Peanuts</code>, 
+                    <code>Tree Nuts</code>, 
+                    <code>Milk</code>, 
+                    <code>Eggs</code>, 
+                    <code>Wheat</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
     <script>
@@ -101,5 +136,17 @@
                 });
             }
         }
+
+
+        // Chỉ là ví dụ JS: click checkbox -> đổi màu row
+    document.querySelectorAll('input[type="checkbox"]').forEach(function (checkbox) {
+        checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                this.parentNode.style.color = 'green';
+            } else {
+                this.parentNode.style.color = 'black';
+            }
+        });
+    });
     </script>
 @endsection
