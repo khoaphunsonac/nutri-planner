@@ -120,15 +120,15 @@
                             {{-- Description --}}
                             <div class="mb-3">
                                 <label for="description" class="form-label">Mô tả</label>
-                                <textarea class="form-control" id="description" name="description" rows="4" placeholder="Mô tả về món ăn...">{{ old('description', $meal->description ?? '') }}</textarea>
+                                <textarea class="form-control" id="description" name="description" rows="12" placeholder="Mô tả về món ăn...">{{ old('description', $meal->description ?? '') }}</textarea>
                             </div>
 
                             {{-- Preparation --}}
-                            <div class="mb-3">
+                            {{-- <div class="mb-3">
                                 <label for="preparation" class="form-label">Cách chế biến</label>
                                 <textarea class="form-control" id="preparation" name="preparation" rows="6"
                                     placeholder="Hướng dẫn cách chế biến món ăn...">{{ old('preparation', $meal->preparation ?? '') }}</textarea>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
 
