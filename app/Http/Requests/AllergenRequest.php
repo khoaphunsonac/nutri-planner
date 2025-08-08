@@ -22,14 +22,13 @@ class AllergenRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->input('id');
         return [
             'name' => [
                 'required',
                 'string',
                 'min:2',
                 'max:255',
-                'unique:allergens,name,'. $id . ',id',
+                'unique:allergens,name,'. $this->id,
             ],
             
         ];

@@ -2,8 +2,8 @@
 @section('content')
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"> <a href="">Dashboard</a></li>
-            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}">Dị ứng</a></li>
+            <li class="breadcrumb-item"> <a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"> <a href="{{route('allergens.index')}}"> Dị ứng</a></li>
             <li class="breadcrumb-item active" aria-current="page"> Thêm mới liên kết món ăn với Dị ứng</li>
         </ol>
     </nav>
