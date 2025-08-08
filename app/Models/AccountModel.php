@@ -20,6 +20,8 @@ class AccountModel extends Authenticatable
         'email',
         'password',
         'role',
+        'status',
+        'note'
     ];
 
     protected $hidden = [
