@@ -29,10 +29,10 @@ class TagRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:255',
-               'unique:tags,name,' . $this->id, // Bỏ qua tag hiện tại
+               'unique:tags,name,' . $this->id, // Bỏ qua id hiện tại
                
             ],
-            'meals'=> 'nullable|string',
+            
             
         ];
     }

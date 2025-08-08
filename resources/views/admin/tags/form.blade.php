@@ -56,7 +56,7 @@
                                                     name="meals[]"
                                                     value="{{ $meal->id }}"
                                                     id="meal_{{ $meal->id }}"
-                                                    {{  $item->meals->contains($meal->id) ? 'checked' : '' }} style="cursor: pointer">
+                                                    {{  in_array($meal->id, $selectedMeals) ? 'checked' : ''  }} style="cursor: pointer">
                                                 <label class="form-check-label" for="meal_{{ $meal->id }}" >
                                                     {{ $meal->name }}
                                                 </label>

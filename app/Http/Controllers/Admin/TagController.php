@@ -120,15 +120,15 @@ class TagController extends BaseController
             //cap nhat mapping
             $tag->meals()->sync($mealIds);
            
-            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Dị ứng '{$tag->name}' thành công");
+            return redirect()->route('tags.index',['id'=>$tag->id])->with('success',"Cập nhật Thẻ '{$tag->name}' thành công");
         }else{
             
             $tag =TagModel::create($params);
             if(!empty($mealIds)){
                 $tag->meals()->sync($mealIds);
             }
-             return $tag;
-            return redirect()->route('tags.index')->with('success', "Thêm mới Dị ứng '{$tag->name}' thành công");
+            //  return $tag;
+            return redirect()->route('tags.index')->with('success', "Thêm mới Thẻ '{$tag->name}' thành công");
         }
     }
     
