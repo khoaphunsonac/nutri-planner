@@ -61,13 +61,19 @@
                             <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
                             <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('contact.show', $item->id) }}" class="btn btn-sm btn-info">
-                                    <i class="bi bi-eye"></i> Chi tiết
-                                </a>
-                                <a href="{{ route('contact.delete', $item->id) }}" class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Xác nhận xoá?')">
-                                    <i class="bi bi-trash"></i> Xoá
-                                </a>
+                                <a href="{{ route('contact.show', $item->id) }}" 
+                                    class="btn btn-sm btn-info" 
+                                    title="Chi tiết" aria-label="Chi tiết">
+                                     <i class="bi bi-eye"></i>
+                                 </a>
+                                 
+                                 <a href="{{ route('contact.delete', $item->id) }}" 
+                                    class="btn btn-sm btn-danger" 
+                                    onclick="return confirm('Xác nhận xoá?')" 
+                                    title="Xoá" aria-label="Xoá">
+                                     <i class="bi bi-trash"></i>
+                                 </a>
+                                 
                             </td>
                         </tr>
                     @empty
@@ -78,6 +84,19 @@
                 </tbody>
             </table>
         </div>
+
+        {{-- ===== Pagination (thêm mới) ===== --}}
+        @if($items instanceof \Illuminate\Contracts\Pagination\Paginator && $items->hasPages())
+            <div class="d-flex justify-content-between align-items-center mt-3">
+                <div class="small text-muted">
+                    Hiển thị {{ $items->firstItem() }}–{{ $items->lastItem() }} / {{ $items->total() }}
+                </div>
+                {{-- Cách 1: dùng Bootstrap paginator --}}
+                {{ $items->onEachSide(1)->links('pagination::bootstrap-5') }}
+                {{-- Cách 2 (nếu chưa cấu hình view bootstrap): {{ $items->links() }} --}}
+            </div>
+        @endif
+        {{-- ===== /Pagination ===== --}}
 
         <!-- Địa chỉ trung tâm và bản đồ -->
         <hr>
