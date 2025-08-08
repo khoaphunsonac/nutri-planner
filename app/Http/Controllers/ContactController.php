@@ -17,14 +17,18 @@ class ContactController extends Controller
     }
 
     public function index()
-    {
-        $items = ContactModel::orderBy('id', 'desc')->get();
+{
+    $perPage = 10; // số dòng mỗi trang
+    $items = ContactModel::orderBy('id', 'desc')
+                ->paginate($perPage)              // <-- quan trọng
+                ->appends(request()->query());    // giữ lại query khi chuyển trang (nếu có filter/search)
 
-        return view($this->pathViewController . "index", [
-            'items' => $items,
-            'selectedItem' => null
-        ]);
-    }
+    return view($this->pathViewController . "index", [
+        'items' => $items,
+        'selectedItem' => null
+    ]);
+}
+
 
     public function show($id)
     {
