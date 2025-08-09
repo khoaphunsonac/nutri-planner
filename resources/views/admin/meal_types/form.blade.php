@@ -5,7 +5,7 @@
         <h4 class="mb-0">
             {{ $mode === 'create' ? 'Thêm loại bữa ăn' : 'Sửa loại bữa ăn' }}
         </h4>
-        <a href="{{ route('admin.meal-types.index') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.meal_types.index') }}" class="btn btn-secondary">
             <i class="bi bi-arrow-left"></i> Quay lại
         </a>
     </div>
@@ -16,10 +16,10 @@
 
     <form method="post"
           action="{{ $mode === 'create'
-                    ? route('admin.meal-types.store')
-                    : route('admin.meal-types.update', $item->id) }}">
+                    ? route('admin.meal_types.store')
+                    : route('admin.meal_types.update', $item->id) }}">
         @csrf
-        @if($mode === 'edit') @method('PUT') @endif
+        {{-- Route update dùng POST nên KHÔNG spoof PUT --}}
 
         <div class="mb-3">
             <label class="form-label">Tên loại bữa ăn</label>
@@ -33,7 +33,7 @@
             <button class="btn btn-primary">
                 {{ $mode === 'create' ? 'Lưu' : 'Cập nhật' }}
             </button>
-            <a href="{{ route('admin.meal-types.index') }}" class="btn btn-outline-secondary">Huỷ</a>
+            <a href="{{ route('admin.meal_types.index') }}" class="btn btn-outline-secondary">Huỷ</a>
         </div>
     </form>
 </div>

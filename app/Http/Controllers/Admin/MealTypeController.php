@@ -24,7 +24,7 @@ class MealTypeController extends Controller
     // GET /admin/meal_types/create
     public function create()
     {
-        return view('admin.meal_types.form-main', [
+        return view('admin.meal_types.form', [
             'mode' => 'create',
             'item' => null,
         ]);
@@ -54,7 +54,7 @@ class MealTypeController extends Controller
     public function edit($id)
     {
         $item = MealTypeModel::findOrFail($id);
-        return view('admin.meal_types.form-main', [
+        return view('admin.meal_types.form', [
             'mode' => 'edit',
             'item' => $item,
         ]);

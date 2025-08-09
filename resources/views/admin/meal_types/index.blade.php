@@ -24,9 +24,9 @@
     @endif
 
     <!-- Search -->
-    <form method="get" class="mb-3">
+    <form method="get" class="mb-3" role="search" aria-label="Tìm loại bữa ăn">
         <div class="input-group">
-            <input name="q" class="form-control" placeholder="Tìm theo tên…" value="{{ $q }}">
+            <input name="q" class="form-control" placeholder="Tìm theo tên…" value="{{ $q ?? '' }}">
             <button class="btn btn-outline-secondary" type="submit">Tìm</button>
         </div>
     </form>
@@ -39,37 +39,46 @@
                     <th style="width:80px">ID</th>
                     <th>Tên loại</th>
                     <th style="width:220px">Ngày tạo</th>
-                    <th style="width:120px">Hành động</th>
+                    <th style="width:160px">Hành động</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($items as $it)
                     <tr onclick="window.location='{{ route('admin.meal_types.show', $it->id) }}'" style="cursor:pointer;">
                         <td>{{ $it->id }}</td>
-                        <td>{{ $it->name }}</td>
+                        <td class="text-start">{{ $it->name }}</td>
                         <td>{{ $it->created_at?->format('d/m/Y H:i') }}</td>
                         <td>
                             <a href="{{ route('admin.meal_types.show', $it->id) }}"
-                               class="btn btn-sm btn-secondary" title="Xem" aria-label="Xem">
+                               class="btn btn-sm btn-secondary"
+                               title="Xem" aria-label="Xem"
+                               onclick="event.stopPropagation()">
                                 <i class="bi bi-eye"></i>
                             </a>
-                        
+
                             <a href="{{ route('admin.meal_types.edit', $it->id) }}"
-                               class="btn btn-sm btn-info" title="Sửa" aria-label="Sửa">
+                               class="btn btn-sm btn-info"
+                               title="Sửa" aria-label="Sửa"
+                               onclick="event.stopPropagation()">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                        
-                            {{-- Bạn dùng route GET /{id}/delete, nên không dùng form DELETE --}}
+
+                            {{-- Route xoá dùng GET /{id}/delete theo định nghĩa hiện tại --}}
                             <a href="{{ route('admin.meal_types.delete', $it->id) }}"
                                class="btn btn-sm btn-danger"
-                               onclick="return confirm('Xác nhận xoá?')" title="Xoá" aria-label="Xoá">
+                               title="Xoá" aria-label="Xoá"
+                               onclick="event.stopPropagation(); return confirm('Xác nhận xoá?')">
                                 <i class="bi bi-trash"></i>
                             </a>
                         </td>
-                        
                     </tr>
                 @empty
-                    <tr><td colspan="4">Chưa có dữ liệu</td></tr>
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            Chưa có dữ liệu.
+                            <a href="{{ route('admin.meal_types.create') }}" class="ms-1">Thêm mới ngay</a>.
+                        </td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
@@ -81,7 +90,6 @@
             <div class="small text-muted">
                 Hiển thị {{ $items->firstItem() }}–{{ $items->lastItem() }} / {{ $items->total() }}
             </div>
-            {{-- Nếu không bật Bootstrap paginator, đổi thành: {{ $items->links() }} --}}
             {{ $items->onEachSide(1)->links('pagination::bootstrap-5') }}
         </div>
     @endif

@@ -4,19 +4,20 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">Chi tiết loại bữa ăn</h4>
         <div class="d-flex gap-2">
-            <a href="{{ route('admin.meal-types.index') }}" class="btn btn-secondary" title="Danh sách">
+            <a href="{{ route('admin.meal_types.index') }}" class="btn btn-secondary" title="Danh sách">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <a href="{{ route('admin.meal-types.edit', $item->id) }}" class="btn btn-info" title="Sửa" aria-label="Sửa">
+
+            <a href="{{ route('admin.meal_types.edit', $item->id) }}" class="btn btn-info" title="Sửa" aria-label="Sửa">
                 <i class="bi bi-pencil-square"></i>
             </a>
-            <form action="{{ route('admin.meal-types.destroy', $item->id) }}" method="post" class="d-inline"
-                  onsubmit="return confirm('Xác nhận xoá?')">
-                @csrf @method('DELETE')
-                <button class="btn btn-danger" title="Xoá" aria-label="Xoá">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </form>
+
+            {{-- Route xoá hiện tại là GET /{id}/delete --}}
+            <a href="{{ route('admin.meal_types.delete', $item->id) }}"
+               class="btn btn-danger"
+               onclick="return confirm('Xác nhận xoá?')" title="Xoá" aria-label="Xoá">
+                <i class="bi bi-trash"></i>
+            </a>
         </div>
     </div>
 
