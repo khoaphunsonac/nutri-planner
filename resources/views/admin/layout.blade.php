@@ -16,6 +16,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ asset('assets/admin/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/ingredients.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/admin/css/dashboard.css') }}">
 </head>
 
 <body>
@@ -35,24 +36,26 @@
     <!-- Overlay for mobile -->
     <div class="overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
+
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
-        <a href="" class="text-decoration-none text-dark">
+        <a href="{{ route('dashboard') }}" class="text-decoration-none text-dark">
             <div class="sidebar-header p-3">
                 <h5 class="m-0">🍴 Fitfood</h5>
-                <small>Fitfood Panel</small>
+                <small>Fitfood Quản trị</small>
             </div>
         </a>
         {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
-        <a href=""><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a href="#"><i class="bi bi-egg-fried"></i> Meals</a>
-        <a href="#"><i class="bi bi-basket"></i> Ingredients</a>
-        <a href="#"><i class="bi bi-people"></i> Users</a>
-        <a href="#"><i class="bi bi-tags"></i> Tags</a> <!-- Đã thêm mục này -->
-        <a href="#"><i class="bi bi-envelope"></i> Contacts</a>
-        <a href="#"><i class="bi bi-chat-dots"></i> Feedbacks</a>
-        <a href="#"><i class="bi bi-grid-1x2"></i> Meal type</a>
-        <a href="#"><i class="bi bi-heart-pulse"></i> Diet type</a>
+        <a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+        <a href="{{ route('meals.index') }}"><i class="bi bi-egg-fried"></i> Món ăn</a>
+        <a href="{{ route('ingredients.index') }}"><i class="bi bi-basket"></i> Nguyên liệu</a>
+        <a href="{{ route('users.index') }}"><i class="bi bi-people"></i> Người dùng</a>
+        <a href="{{ route('allergens.index') }}"><i class="bi bi-exclamation-triangle"></i> Dị ứng</a>
+        <a href="{{ route('tags.index') }}"><i class="bi bi-tags"></i> Thẻ</a> <!-- Đã thêm mục này -->
+        <a href="{{ route('contact.index') }}"><i class="bi bi-envelope"></i> Liên hệ</a>
+        <a href="{{route('feedbacks.index')}}"><i class="bi bi-chat-dots"></i> Phản hồi</a>
+        <a href=""><i class="bi bi-list-ul"></i> Loại chế độ ăn</a>
+        <a href=""><i class="bi bi-grid"></i> Loại món ăn</a>
     </aside>
 
     <!-- Main content mọi content kế thừa của anh em sẽ vô đây -->
@@ -65,7 +68,7 @@
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
+            const overlay = document.getElementById('sidebarOverlay');   
             sidebar.classList.toggle('show');
             overlay.classList.toggle('show');
         }
