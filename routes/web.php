@@ -11,10 +11,18 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\UserController;
+# user UI
+use App\Http\Controllers\Site\HomeController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+# Group user
+$controller = HomeController::class;
+Route::prefix('home')->as('home.')->group(function () use($controller){
+    Route::get('/', [$controller, 'index'])->name('index');        
 });
 
 // Group Admin
@@ -143,7 +151,3 @@ Route::prefix('admin')->group(function () {
 
 
 
-# test 
-Route::get('/test', function(){
-    return view('site.home.home');
-});
