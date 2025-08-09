@@ -1,13 +1,13 @@
 <?php
 
-
+use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
-use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\UserController;
