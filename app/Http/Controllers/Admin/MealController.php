@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MealRequest;
 use App\Models\MealModel;
 use App\Models\DietTypeModel;
 use App\Models\MealTypeModel;
@@ -11,6 +12,8 @@ use App\Models\AllergenModel;
 use App\Models\IngredientModel;
 use App\Models\RecipeIngredientModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MealController extends Controller
 {
@@ -61,7 +64,13 @@ class MealController extends Controller
 
     public function edit($id)
     {
-        $meal = MealModel::with(['tags', 'allergens', 'recipeIngredients.ingredient'])->findOrFail($id);
+        $meal = MealModel::with([
+            'dietType',
+            'mealType',
+            'tags',
+            'allergens',
+            'recipeIngredients.ingredient'
+        ])->findOrFail($id);
 
         return view('admin.meals.form-main', [
             'meal' => $meal,
@@ -73,79 +82,78 @@ class MealController extends Controller
         ]);
     }
 
-    public function save(Request $request)
+    public function save(MealRequest $request)
     {
-        // Basic validation
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'diet_type_id' => 'required|exists:diet_type,id',
-            'meal_type_id' => 'required|exists:meal_type,id',
-            'preparation' => 'nullable|string',
-            'description' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048'
-        ]);
-
+        // Validated data từ MealRequest
+        $validatedData = $request->validated();
         $id = $request->input('id');
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/meals'), $imageName);
-            $validatedData['image_url'] = $imageName;
-        }
+        try {
+            DB::beginTransaction();
 
-        if ($id) {
-            // Update existing meal
-            $meal = MealModel::findOrFail($id);
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                
+                $uploadPath = public_path('uploads/meals');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+                
+                $image->move($uploadPath, $imageName);
+                $validatedData['image_url'] = $imageName;
+            }
 
-            // Delete old image if new image is uploaded
-            if (isset($validatedData['image_url']) && $meal->image_url) {
-                $oldImagePath = public_path('uploads/meals/' . $meal->image_url);
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+            if ($id) {
+                // Update existing meal
+                $meal = MealModel::findOrFail($id);
+
+                // Delete old image if new image is uploaded
+                if (isset($validatedData['image_url']) && $meal->image_url) {
+                    $oldImagePath = public_path('uploads/meals/' . $meal->image_url);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                $meal->update($validatedData);
+                $message = 'Đã cập nhật món ăn thành công.';
+            } else {
+                // Create new meal
+                $meal = MealModel::create($validatedData);
+                $message = 'Thêm món ăn mới thành công.';
+            }
+
+            // Update relationships
+            $meal->tags()->sync($validatedData['tags'] ?? []);
+            $meal->allergens()->sync($validatedData['allergens'] ?? []);
+
+            // Update recipe ingredients
+            $this->updateRecipeIngredients($meal, $validatedData['ingredients'] ?? []);
+
+            DB::commit();
+
+            return redirect()->route('meals.index')->with('success', $message);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            // Delete uploaded image if transaction failed
+            if (isset($imageName)) {
+                $imagePath = public_path('uploads/meals/' . $imageName);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
                 }
             }
 
-            $meal->update($validatedData);
+            Log::error('Error saving meal: ' . $e->getMessage());
 
-            // Update tags
-            if ($request->has('tags')) {
-                $meal->tags()->sync($request->input('tags'));
-            } else {
-                $meal->tags()->sync([]);
-            }
-
-            // Update allergens
-            if ($request->has('allergens')) {
-                $meal->allergens()->sync($request->input('allergens'));
-            } else {
-                $meal->allergens()->sync([]);
-            }
-
-            // Update recipe ingredients
-            $this->updateRecipeIngredients($meal, $request->input('ingredients', []));
-
-            return redirect()->route('meals.index')->with('success', 'Đã cập nhật món ăn thành công.');
-        } else {
-            // Create new meal
-            $meal = MealModel::create($validatedData);
-
-            // Add tags
-            if ($request->has('tags')) {
-                $meal->tags()->sync($request->input('tags'));
-            }
-
-            // Add allergens
-            if ($request->has('allergens')) {
-                $meal->allergens()->sync($request->input('allergens'));
-            }
-
-            // Add recipe ingredients
-            $this->updateRecipeIngredients($meal, $request->input('ingredients', []));
-
-            return redirect()->route('meals.index')->with('success', 'Thêm món ăn mới thành công.');
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['error' => 'Có lỗi xảy ra khi lưu món ăn. Vui lòng thử lại.']);
         }
+        
     }
 
     public function show($id)

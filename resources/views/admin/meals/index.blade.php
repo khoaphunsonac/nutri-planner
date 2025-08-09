@@ -8,8 +8,11 @@
                 <li class="breadcrumb-item">
                     <a href="#"><i class="bi bi-house-door"></i></a>
                 </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ route('meals.index') }}">Món ăn</a>
+                </li>
                 <li class="breadcrumb-item active">
-                    <i class="bi bi-egg-fried me-1"></i>Món ăn
+                    Danh sách
                 </li>
             </ol>
         </nav>
@@ -76,16 +79,27 @@
 
         {{-- Meals Table --}}
         <div class="card shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-hover table-sm mb-0">
-                    <thead class="table-dark">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Danh sách món ăn</h5>
+                <small>
+                    {{--  Tổng số món ăn thỏa query tìm kiếm --}}
+                    @if ($meals->total() > 0)
+                        Tổng: {{ $meals->total() }} mục
+                    @else
+                        Không có kết quả nào
+                    @endif
+                </small>
+            </div>
+            <div class="card-body text-center">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
                         <tr>
                             <th width="50">#</th>
                             <th>Tên món ăn</th>
                             <th width="120" class="text-center">Loại bữa ăn</th>
                             <th width="120" class="text-center">Chế độ ăn</th>
-                            <th width="80" class="text-center">Tags</th>
-                            <th width="80" class="text-center">Nguyên liệu</th>
+                            <th width="80" class="text-center">Thẻ</th>
+                            <th width="120" class="text-center">Nguyên liệu</th>
                             <th width="80" class="text-center">Calo</th>
                             <th width="130" class="text-center">Thao tác</th>
                         </tr>
