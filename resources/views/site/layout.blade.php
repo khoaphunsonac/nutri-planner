@@ -14,11 +14,16 @@
             <div class="col-md-12">
                 <nav>
                     <ul>
+                        <li>
+                            <a href="">
+                                <img src="{{ asset('') }}" alt="">
+                            </a>
+                        </li>
                         <li>TRANG CHỦ</li>
                         <li>tHỰC ĐƠN</li>
                         <li>ĐÁNH GIÁ</li>
                         <li>LIÊN HỆ</li>
-                        <li></li>
+                        <li>PHẢN HỒI</li>
                     </ul>
                 </nav>
             </div>
