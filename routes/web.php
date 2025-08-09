@@ -135,24 +135,24 @@ Route::prefix('admin')->group(function () {
         Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
-    
-// MealType MODULE
+
+    // MealType MODULE
 
 
 
 
 
 
-// MealType MODULE
-Route::prefix('meal_types')->group(function () {
-    Route::get('/',                 [MealTypeController::class, 'index'])->name('admin.meal_types.index');
-    Route::get('/create',           [MealTypeController::class, 'create'])->name('admin.meal_types.create');
-    Route::post('/store',           [MealTypeController::class, 'store'])->name('admin.meal_types.store');
-    Route::get('/{id}',             [MealTypeController::class, 'show'])->whereNumber('id')->name('admin.meal_types.show');
-    Route::get('/{id}/edit',        [MealTypeController::class, 'edit'])->whereNumber('id')->name('admin.meal_types.edit');
-    Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
-    Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
-});
+    // MealType MODULE
+    Route::prefix('meal_types')->group(function () {
+        Route::get('/',                 [MealTypeController::class, 'index'])->name('admin.meal_types.index');
+        Route::get('/create',           [MealTypeController::class, 'create'])->name('admin.meal_types.create');
+        Route::post('/store',           [MealTypeController::class, 'store'])->name('admin.meal_types.store');
+        Route::get('/{id}',             [MealTypeController::class, 'show'])->whereNumber('id')->name('admin.meal_types.show');
+        Route::get('/{id}/edit',        [MealTypeController::class, 'edit'])->whereNumber('id')->name('admin.meal_types.edit');
+        Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
+        Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
+    });
 
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
