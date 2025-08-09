@@ -142,10 +142,7 @@ Route::prefix('admin')->group(function () {
 // tạm thời không dùng middlewarem thời bỏ middlleware để test
 
 
-# UI USER
-Route::get('/home', function(){
-    return view('site.layout');
-});
+
 // # test kế thừa
 // Route::get('/test', function(){
 //     return view('site.test');
