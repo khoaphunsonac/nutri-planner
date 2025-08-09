@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
+use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
@@ -123,6 +124,23 @@ Route::prefix('admin')->group(function () {
         Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
+    
+// MealType MODULE
+
+
+
+
+
+
+Route::get('/admin/meal_types',                      [MealTypeController::class, 'index'])->name('admin.meal_types.index');
+Route::get('/admin/meal_types/create',               [MealTypeController::class, 'create'])->name('admin.meal_types.create');
+Route::post('/admin/meal_types/store',               [MealTypeController::class, 'store'])->name('admin.meal_types.store');
+Route::get('/admin/meal_types/{id}',                 [MealTypeController::class, 'show'])->name('admin.meal_types.show');
+Route::get('/admin/meal_types/{id}/edit',            [MealTypeController::class, 'edit'])->name('admin.meal_types.edit');
+Route::post('/admin/meal_types/{id}/update',         [MealTypeController::class, 'update'])->name('admin.meal_types.update');
+Route::get('/admin/meal_types/{id}/delete',          [MealTypeController::class, 'delete'])->name('admin.meal_types.delete');
+
+
     // Các controller khác có thể cấu trúc y hệt như vậy:
     // Route::prefix('meals')->as('meals.')->group(function () {
     //     Route::get('/', [...])->name('index');
