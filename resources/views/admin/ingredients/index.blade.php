@@ -1,150 +1,152 @@
 @extends('admin.layout')
-
 @section('content')
-    <div class="container-fluid">
-        {{-- Compact Breadcrumb --}}
-        <nav aria-label="breadcrumb" class="mb-3">
-            <ol class="breadcrumb breadcrumb-compact">
-                <li class="breadcrumb-item">
-                    <a href="#"><i class="bi bi-house-door"></i></a>
-                </li>
-                <li class="breadcrumb-item active">
-                    <i class="bi bi-basket me-1"></i>Nguyên liệu
-                </li>
-            </ol>
-        </nav>
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb breadcrumb-compact">
+            <li class="breadcrumb-item">
+                <a href="#"><i class="bi bi-house-door"></i></a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ route('ingredients.index') }}">Nguyên liệu</a>
+            </li>
+            <li class="breadcrumb-item active">
+                Danh sách
+            </li>
+        </ol>
+    </nav>
 
-        {{-- Compact Header --}}
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="d-flex align-items-center">
-                <h4 class="mb-0 me-3">Nguyên liệu</h4>
-                <span class="badge bg-primary rounded-pill">{{ $ingredients->total() }}</span>
-                <small class="text-muted ms-2">
-                    <i class="bi bi-info-circle me-1"></i>Click vào dòng để xem chi tiết
-                </small>
-            </div>
-            <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus me-1"></i>Thêm mới
-            </a>
-        </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Quản lý nguyên liệu</h2>
+        <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-circle"></i> Thêm
+            nguyên liệu mới</a>
+    </div>
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
-                <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-                <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
-            </div>
-        @endif
 
-        {{-- Compact Table --}}
-        <div class="card shadow-sm">
-            <div class="table-responsive">
-                <table class="table table-hover table-sm mb-0">
-                    <thead class="table-dark">
-                        <tr>
-                            <th width="50">#</th>
-                            <th>Tên nguyên liệu</th>
-                            <th width="70" class="text-center">Đơn vị</th>
-                            <th width="70" class="text-center">Protein</th>
-                            <th width="70" class="text-center">Carb</th>
-                            <th width="70" class="text-center">Fat</th>
-                            <th width="80" class="text-center">Calo</th>
-                            <th width="110" class="text-center">Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($ingredients as $ingredient)
-                            <tr class="clickable-row" data-href="{{ route('ingredients.show', $ingredient->id) }}"
-                                style="cursor: pointer;">
-                                <td class="text-muted small">
-                                    {{ $loop->iteration + ($ingredients->currentPage() - 1) * $ingredients->perPage() }}
-                                </td>
-                                <td class="fw-medium">{{ $ingredient->name }}</td>
-                                <td class="text-center">
-                                    <span class="badge bg-light text-dark small">{{ $ingredient->unit ?: '100g' }}</span>
-                                </td>
-                                <td class="text-center small">{{ number_format($ingredient->protein ?? 0, 1) }}</td>
-                                <td class="text-center small">{{ number_format($ingredient->carb ?? 0, 1) }}</td>
-                                <td class="text-center small">{{ number_format($ingredient->fat ?? 0, 1) }}</td>
-                                <td class="text-center">
-                                    <strong
-                                        class="text-primary small">{{ number_format($ingredient->calo ?? 0, 0) }}</strong>
-                                </td>
-                                <td class="text-center" onclick="event.stopPropagation();">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('ingredients.show', $ingredient->id) }}"
-                                            class="btn btn-outline-info btn-sm px-2" title="Xem chi tiết">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="{{ route('ingredients.form', $ingredient->id) }}"
-                                            class="btn btn-outline-warning btn-sm px-2" title="Sửa">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-outline-danger btn-sm px-2"
-                                            onclick="confirmDelete({{ $ingredient->id }})" title="Xóa">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                    <form id="delete-form-{{ $ingredient->id }}" method="POST"
-                                        action="{{ route('ingredients.delete', $ingredient->id) }}" class="d-none">
-                                        @csrf
-                                    </form>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="8" class="text-center py-4 text-muted">
-                                    <i class="bi bi-basket3 fs-3 d-block mb-2"></i>
-                                    <p class="mb-2 small">Chưa có nguyên liệu nào</p>
-                                    <a href="{{ route('ingredients.add') }}" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-plus me-1"></i>Thêm nguyên liệu
-                                    </a>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
-
-            {{-- Compact Pagination in Footer --}}
-            @if ($ingredients->hasPages())
-                <div class="card-footer bg-light py-2">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">
-                            {{ $ingredients->firstItem() }}-{{ $ingredients->lastItem() }} / {{ $ingredients->total() }}
-                        </small>
-                        <div class="pagination-sm">
-                            {{ $ingredients->links() }}
-                        </div>
-                    </div>
+    @if (session('success'))
+        <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{ session('success') }}</div>
+    @endif
+    {{-- Dashboard summary --}}
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center -shadow-sm">
+                <div class="card-body">
+                    <h4>{{ $totalIngredients ?? 0 }}</h4>
+                    <p class="text-muted mb-0">Tổng Nguyên liệu</p>
                 </div>
-            @endif
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center -shadow-sm">
+                <div class="card-body">
+                    <h4>{{ $activeIngredients ?? 0 }}</h4>
+                    <p class="text-muted mb-0">Đang hoạt động</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center -shadow-sm">
+                <div class="card-body">
+                    <h4>{{ $usageRate ?? 0 }}</h4>
+                    <p class="text-muted mb-0">Sử dụng</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <script>
-        function confirmDelete(id) {
-            if (confirm('Xóa nguyên liệu này?')) {
-                document.getElementById('delete-form-' + id).submit();
-            }
-        }
+    {{-- fillter form --}}
+    <form action="" method="GET" class="row g-2 align-items-center mb-5">
+        <div class="col-md-8">
+            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm nguyên liệu..."
+                value="{{ $search ?? old('search') }}">
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-primary w-100" type="submit">Lọc</button>
+        </div>
 
-        // Make table rows clickable
-        document.addEventListener('DOMContentLoaded', function() {
-            const clickableRows = document.querySelectorAll('.clickable-row');
-            clickableRows.forEach(row => {
-                row.addEventListener('click', function() {
-                    window.location.href = this.dataset.href;
-                });
+    </form>
+    {{-- Ingredient table --}}
+    <div class="table-reponsive">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Danh sách Nguyên liệu</h5>
+            <small>
+                {{--  Tổng số ingredient thỏa query tìm kiếm --}}
+                @if ($ingredients->total() > 0)
+                    Tổng: {{ $ingredients->total() }} mục
+                @else
+                    Không có kết quả nào
+                @endif
+            </small>
+        </div>
+        <div class="card-body text-center">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th width="50">ID</th>
+                        <th width="200">Tên Nguyên liệu</th>
+                        <th width="80">Đơn vị</th>
+                        <th width="80">Protein</th>
+                        <th width="80">Carb</th>
+                        <th width="80">Fat</th>
+                        <th width="80">Calo</th>
+                        <th width="200" class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center">
+                    @if (count($ingredients) > 0)
+                        @foreach ($ingredients as $ingredient)
+                            <tr style="cursor: pointer;"
+                                onclick="window.location='{{ route('ingredients.show', ['id' => $ingredient->id]) }}'">
+                                <td class="align-middle text-center">
+                                    <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
+                                        style="width:50px">{{ $ingredient->id }} </span>
+                                </td>
+                                <td class="text-start">
+                                    <span>{{ $ingredient->name }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ $ingredient->unit }}</span>
+                                </td>
+                                <td>
+                                    <span class="text-warning">{{ $ingredient->protein }}g</span>
+                                </td>
+                                <td>
+                                    <span class="text-success">{{ $ingredient->carb }}g</span>
+                                </td>
+                                <td>
+                                    <span class="text-danger">{{ $ingredient->fat }}g</span>
+                                </td>
+                                <td>
+                                    <span class="text-primary">{{ $ingredient->calo }} kcal</span>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
+                                            class="btn btn-sm btn-info rounded me-3" title="Chi tiết"><i
+                                                class="bi bi-eye"></i></a>
+                                        <a href="{{ route('ingredients.form', ['id' => $ingredient->id]) }}"
+                                            class="btn btn-sm btn-warning rounded me-3" title="Sửa"><i
+                                                class="bi bi-pencil-square"></i></a>
+                                        <form action="{{ route('ingredients.delete', ['id' => $ingredient->id]) }}"
+                                            method="POST" style="display:inline-block"
+                                            onsubmit="return confirm('Bạn có chắc chắn muốn xóa nguyên liệu này không?')">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-danger rounded me-3"
+                                                title="Xóa"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td class="text-center text-muted" colspan="8">Không có nguyên liệu nào</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mt-3">
+            {{ $ingredients->links('pagination::bootstrap-5') }}
+        </div>
+    </div>
 
-                // Add hover effect
-                row.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = 'rgba(23, 162, 184, 0.1)';
-                });
-
-                row.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '';
-                });
-            });
-        });
-    </script>
 @endsection
