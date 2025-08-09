@@ -146,7 +146,7 @@ Route::prefix('admin')->group(function () {
 Route::get('/home', function(){
     return view('site.layout');
 });
-# test kế thừa
-Route::get('/test', function(){
-    return view('site.test');
-});
+// # test kế thừa
+// Route::get('/test', function(){
+//     return view('site.test');
+// });
