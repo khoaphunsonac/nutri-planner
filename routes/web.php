@@ -143,7 +143,7 @@ Route::prefix('admin')->group(function () {
 
 
 
-// # test kế thừa
-// Route::get('/test', function(){
-//     return view('site.test');
-// });
+# test 
+Route::get('/test', function(){
+    return view('site.home.home');
+});
