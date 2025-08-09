@@ -5,12 +5,13 @@ use App\Http\Controllers\AuthController;
 use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
+use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\MealController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DietTypeController;
+
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
@@ -45,6 +46,17 @@ Route::prefix('admin')->group(function () {
         Route::post('/save/{id}', [$controller, 'destroy'])->name('delete'); // Xoá
     });
 
+    // DIET TYPE MODULE
+
+Route::prefix('diet-types')->name('diettypes.')->group(function () {
+    Route::get('/', [DietTypeController::class, 'index'])->name('index');
+    Route::get('/create', [DietTypeController::class, 'create'])->name('create');
+    Route::post('/', [DietTypeController::class, 'store'])->name('store');
+    Route::get('/{id}', [DietTypeController::class, 'show'])->name('show'); // Xem chi tiết
+    Route::get('/{id}/edit', [DietTypeController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [DietTypeController::class, 'update'])->name('update');
+    Route::get('/{id}/delete', [DietTypeController::class, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+});
     # USER MODULE
     $controller = UserController::class;
     Route::prefix('users')->as('users.')->group(function () use ($controller) {

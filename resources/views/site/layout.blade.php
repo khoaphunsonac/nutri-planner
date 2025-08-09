@@ -63,19 +63,6 @@
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-let index = 0;
-const slides = document.querySelectorAll('.slide');
-const totalSlides = slides.length;
-
-function showSlide() {
-    index++;
-    if (index >= totalSlides) index = 0;
-    document.querySelector('.sliders').style.transform = `translateX(-${index * 100}%)`;
-}
-
-setInterval(showSlide, 3000); // 3 giây đổi 1 ảnh
-</script>
 
 </body>
 </html>
