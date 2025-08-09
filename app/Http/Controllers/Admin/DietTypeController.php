@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\DietTypeRequest;
 use App\Models\DietTypeModel;
+use Illuminate\Http\Request;
 
 class DietTypeController extends Controller
 {
@@ -19,8 +20,8 @@ class DietTypeController extends Controller
 
         $dietTypes = $query->orderByDesc('id')->paginate(10);
 
-        return view('Admin.diettypes.index',[
-            'dietTypes'=> $dietTypes,
+        return view('Admin.diettypes.index', [
+            'dietTypes' => $dietTypes,
         ]);
     }
 
@@ -31,12 +32,8 @@ class DietTypeController extends Controller
     }
 
     // Lưu bản ghi mới
-    public function store(Request $request)
+    public function store(DietTypeRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
         DietTypeModel::create([
             'name' => $request->name
         ]);
@@ -54,12 +51,8 @@ class DietTypeController extends Controller
     }
 
     // Cập nhật bản ghi
-    public function update(Request $request, $id)
+    public function update(DietTypeRequest $request, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
         $dietType = DietTypeModel::findOrFail($id);
         $dietType->update([
             'name' => $request->name
@@ -76,7 +69,8 @@ class DietTypeController extends Controller
 
         return redirect()->route('diettypes.index')->with('success', 'Đã xóa thành công!');
     }
-    // Xem chi tiết (nếu cần)
+
+    // Xem chi tiết
     public function show($id)
     {
         $diet = DietTypeModel::with('meals')->findOrFail($id);
