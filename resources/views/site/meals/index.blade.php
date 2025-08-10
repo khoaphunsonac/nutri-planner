@@ -22,13 +22,13 @@
                     <div class="col-md-3">
                         <select name="mealType" id="" class="form-control">
                             <option value="">-- Loại bữa ăn --</option>
-                            <option value="1" {{$mealType ==1 ? 'selected' : ''}}>Bữa sáng</option>
-                            <option value="1" {{$mealType ==2 ? 'selected' : ''}}>Bữa trưa</option>
-                            <option value="1" {{$mealType ==3 ? 'selected' : ''}}>Bữa chiều</option>
-                            <option value="1" {{$mealType ==4 ? 'selected' : ''}}>Bữa tối</option>
-                            <option value="1" {{$mealType ==5 ? 'selected' : ''}}>Bữa khuya</option>
-                            <option value="1" {{$mealType ==6 ? 'selected' : ''}}>Bữa ăn nhẹ</option>
-                            <option value="1" {{$mealType ==7 ? 'selected' : ''}}>Sinh tố</option>
+                            <option value="1" {{$mealType == 1 ? 'selected' : ''}}>Bữa sáng</option>
+                            <option value="2" {{$mealType == 2 ? 'selected' : ''}}>Bữa trưa</option>
+                            <option value="3" {{$mealType == 3 ? 'selected' : ''}}>Bữa chiều</option>
+                            <option value="4" {{$mealType == 4 ? 'selected' : ''}}>Bữa tối</option>
+                            <option value="5" {{$mealType == 5 ? 'selected' : ''}}>Bữa khuya</option>
+                            <option value="6" {{$mealType == 6 ? 'selected' : ''}}>Bữa ăn nhẹ</option>
+                            <option value="7" {{$mealType == 7 ? 'selected' : ''}}>Sinh tố</option>
                         </select>
                     </div>
                     <div class="col-md-2">
