@@ -39,6 +39,18 @@ class MealsController extends BaseController
             $meals = $meals->where('meal_type_id','like',"%$mealType%");
         }
 
+        $mealTypeNames = [
+            1 => 'Bữa sáng',
+            2 => 'Bữa trưa',
+            3 => 'Bữa chiều',
+            4 => 'Bữa tối',
+            5 => 'Bữa khuya',
+            6 => 'Bữa ăn nhẹ',
+            7 => 'Sinh tố'
+        ];
+
+        $mealTypeName = $mealTypeNames[$mealType] ?? '';
+
         // lay du lieu phan trang
         $meals = $meals->paginate(9,'*','meals_page');
 
@@ -47,7 +59,8 @@ class MealsController extends BaseController
             'search'=>$search,
             'mealType'=>$mealType,
             'tab'=>$tab,
-            'data'=>$data
+            'data'=>$data,
+            'mealTypeName'=>$mealTypeName,
         ]);
     }
 

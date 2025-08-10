@@ -57,12 +57,13 @@
                 
             </div>
             <div class="card shadow-sm p-3">
-                @if($tab == 'thuc-don')
-                    <div class=" mb-3 d-flex justify-content-around">
-                        <a href="#" class="btn btn-outline-secondary">&laquo; Tuần rước</a>
-                        <p>11.08 <span>-</span> 17.08</p>
-                        <a href="#" class="btn btn-outline-secondary">Tuần Sau &raquo; </a>
-                    </div>
+                <div class=" mb-3 d-flex justify-content-around">
+                    <a href="#" class="btn btn-outline-secondary">&laquo; Tuần rước</a>
+                    <p>11.08 <span>-</span> 17.08</p>
+                    <a href="#" class="btn btn-outline-secondary">Tuần Sau &raquo; </a>
+                </div>
+                @if( $meals->count() > 0)
+                    
                     <div class="row g-4">
                             @foreach ($meals as $meal)
                             @php
@@ -130,6 +131,17 @@
                             </p>
                         @endforeach
                     @endif --}}
+                    @else
+                        <div class="alert alert-warning text-center mx-auto" style="width: 40%">
+                            
+                             @if(!empty($search)&& !empty($mealTypeName))
+                               Không có kết quả tìm kiếm nào  "<strong>{{ $search }}</strong>" và loại "<strong>{{ $mealTypeName }}</strong>"
+                            @elseif(!empty($mealTypeName))
+                                Không có món ăn nào cho loại "<strong>{{ $mealTypeName }}</strong>"
+                            @elseif(!empty($search))
+                                Không có kết quả tìm kiếm cho "<strong>{{ $search }}</strong>".
+                            @endif
+                        </div>
                     @endif
                 
             </div>
