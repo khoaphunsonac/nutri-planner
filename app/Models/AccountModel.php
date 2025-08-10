@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class AccountModel extends Authenticatable
+class AccountModel extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, SoftDeletes;
 
@@ -61,5 +62,29 @@ class AccountModel extends Authenticatable
     public function feedback()
     {
         return $this->hasMany(FeedbackModel::class, 'account_id');
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [
+            'role' => $this->role,
+            'username' => $this->username,
+            'email' => $this->email
+        ];
     }
 }
