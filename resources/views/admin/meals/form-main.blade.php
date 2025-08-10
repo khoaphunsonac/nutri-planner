@@ -1263,5 +1263,3 @@
         });
     </script>
 @endsection
-
-<script> alert('Hello'); </script>
