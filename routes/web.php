@@ -1,7 +1,9 @@
 <?php
 
-use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\DietTypeController;
@@ -19,8 +21,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// Group Admin
-Route::prefix('admin')->group(function () {
+// FORM LOGIN (Hiển thị giao diện)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+
+// XỬ LÝ LOGIN
+Route::post('/login', [AuthController::class, 'webLogin'])->name('login.submit');
+
+// LOGOUT
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Admin Authentication Routes
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
+    Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+});
+
+// Group Admin (Protected with JWT)
+Route::prefix('admin')->middleware('admin')->group(function () {
     // Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::get('/', [DashboardController::class, 'dashboard'])->name('dashboard');
 
@@ -38,15 +56,15 @@ Route::prefix('admin')->group(function () {
 
     // DIET TYPE MODULE
 
-Route::prefix('diet-types')->name('diettypes.')->group(function () {
-    Route::get('/', [DietTypeController::class, 'index'])->name('index');
-    Route::get('/create', [DietTypeController::class, 'create'])->name('create');
-    Route::post('/', [DietTypeController::class, 'store'])->name('store');
-    Route::get('/{id}', [DietTypeController::class, 'show'])->name('show'); // Xem chi tiết
-    Route::get('/{id}/edit', [DietTypeController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [DietTypeController::class, 'update'])->name('update');
-    Route::get('/{id}/delete', [DietTypeController::class, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
-});
+    Route::prefix('diet-types')->name('diettypes.')->group(function () {
+        Route::get('/', [DietTypeController::class, 'index'])->name('index');
+        Route::get('/create', [DietTypeController::class, 'create'])->name('create');
+        Route::post('/', [DietTypeController::class, 'store'])->name('store');
+        Route::get('/{id}', [DietTypeController::class, 'show'])->name('show'); // Xem chi tiết
+        Route::get('/{id}/edit', [DietTypeController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [DietTypeController::class, 'update'])->name('update');
+        Route::get('/{id}/delete', [DietTypeController::class, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+    });
     # USER MODULE
     $controller = UserController::class;
     Route::prefix('users')->as('users.')->group(function () use ($controller) {
@@ -137,24 +155,17 @@ Route::prefix('diet-types')->name('diettypes.')->group(function () {
         Route::get('/show/{id}', [FeedbackController::class, 'show'])->name('show');        // Xem chi tiết
         Route::post('/delete/{id}', [FeedbackController::class, 'destroy'])->name('destroy'); // Xoá
     });
-    
-// MealType MODULE
 
-
-
-
-
-
-// MealType MODULE
-Route::prefix('meal_types')->group(function () {
-    Route::get('/',                 [MealTypeController::class, 'index'])->name('admin.meal_types.index');
-    Route::get('/create',           [MealTypeController::class, 'create'])->name('admin.meal_types.create');
-    Route::post('/store',           [MealTypeController::class, 'store'])->name('admin.meal_types.store');
-    Route::get('/{id}',             [MealTypeController::class, 'show'])->whereNumber('id')->name('admin.meal_types.show');
-    Route::get('/{id}/edit',        [MealTypeController::class, 'edit'])->whereNumber('id')->name('admin.meal_types.edit');
-    Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
-    Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
-});
+    // MealType MODULE
+    Route::prefix('meal_types')->group(function () {
+        Route::get('/',                 [MealTypeController::class, 'index'])->name('admin.meal_types.index');
+        Route::get('/create',           [MealTypeController::class, 'create'])->name('admin.meal_types.create');
+        Route::post('/store',           [MealTypeController::class, 'store'])->name('admin.meal_types.store');
+        Route::get('/{id}',             [MealTypeController::class, 'show'])->whereNumber('id')->name('admin.meal_types.show');
+        Route::get('/{id}/edit',        [MealTypeController::class, 'edit'])->whereNumber('id')->name('admin.meal_types.edit');
+        Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
+        Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
+    });
 
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
