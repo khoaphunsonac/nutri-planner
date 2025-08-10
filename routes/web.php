@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\MealsController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -181,6 +182,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 //     Route::get('/', [...])->name('index');
 //     ...
 // });
+
+    // Meal site
+    $mealController = MealsController::class;
+    Route::prefix('meals')->as('meals.')->group(function () use ($mealController) {
+        Route::get('/', [$mealController, 'index'])->name('index');                  
+        Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
+
+    });
 
 
 // tạm thời không dùng middlewarem thời bỏ middlleware để test
