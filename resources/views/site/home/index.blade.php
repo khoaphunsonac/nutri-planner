@@ -116,11 +116,34 @@
     </div>
   </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <h2>Chung tay bảo vệ Môi trường</h2>
-        <p>lorem100</p>
+<div style="background-color: #ebebeb; padding: 50px 0;">
+    <div class="container text-center my-5">
+    <h2 style="letter-spacing: 2px;">
+        CHUNG TAY BẢO VỆ <br><span style="font-size: 40px; font-weight: bold">MÔI TRƯỜNG</span>
+    </h2>
+    <div style="width: 50px; height: 5px; background-color: red; margin: 8px auto;"></div>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <img src="https://fitfood.vn/img/346x288/uploads/dsc04248-15668117116574.JPG" alt="Túi" class="img-fluid rounded">
+            <p class="mt-3 text-muted">
+                Nhà cung cấp duy nhất sử dụng túi Nylon sinh học tự hủy thân thiện với môi trường
+            </p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://fitfood.vn/img/346x288/uploads/dsc04268-15668122623444.JPG" alt="Hộp nhựa" class="img-fluid rounded">
+            <p class="mt-3 text-muted">
+                Rửa sạch lại hộp nhựa đen để nhận hoàn tiền 5,000 vnd cho mỗi 10 hộp
+            </p>
+        </div>
+        <div class="col-md-4">
+            <img src="https://fitfood.vn/img/346x288/uploads/dsc04263-15668117777881.JPG" alt="Muỗng nĩa" class="img-fluid rounded">
+            <p class="mt-3 text-muted">
+                Fitfood chỉ cung cấp 01 bộ muỗng nĩa mỗi ngày để giảm thiểu rác thải nhựa
+            </p>
+        </div>
     </div>
+</div>
 </div>
 {{----------- sau nhớ xem lại footer vì đag coppy từ bản gốc đang link lung tung -----------}}
 <div class="row">
