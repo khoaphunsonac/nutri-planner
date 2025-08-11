@@ -15,12 +15,8 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -130,16 +126,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 
     // DIET TYPE MODULE
-    // $controller = DietTypeController::class;
-    // Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
-    //     Route::get('/', [$controller, 'index'])->name('index');
-    //     Route::get('/create', [$controller, 'create'])->name('create');
-    //     Route::post('/', [$controller, 'store'])->name('store');
-    //     Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
-    //     Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
-    //     Route::post('/{id}', [$controller, 'update'])->name('update');
-    //     Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
-    // });
+    $controller = DietTypeController::class;
+    Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
+        Route::get('/', [$controller, 'index'])->name('index');
+        Route::get('/create', [$controller, 'create'])->name('create');
+        Route::post('/', [$controller, 'store'])->name('store');
+        Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
+        Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
+        Route::post('/{id}', [$controller, 'update'])->name('update');
+        Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+    });
     // CONTACT MODULE
 
     $controller = ContactController::class;
@@ -167,21 +163,9 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
         Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
     });
-
-
-    // Các controller khác có thể cấu trúc y hệt như vậy:
-    // Route::prefix('meals')->as('meals.')->group(function () {
-    //     Route::get('/', [...])->name('index');
-    //     ...
-    // });
 });
 
 
-// Các controller khác có thể cấu trúc y hệt như vậy:
-// Route::prefix('meals')->as('meals.')->group(function () {
-//     Route::get('/', [...])->name('index');
-//     ...
-// });
 
     // Meal site
     $mealController = MealsController::class;
@@ -191,12 +175,15 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     });
 
+// Home
+// Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/', function(){
+    return view('site.layout');
+});
 
-// tạm thời không dùng middlewarem thời bỏ middlleware để test
+//Contact
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 
 
-// # test kế thừa
-// Route::get('/test', function(){
-//     return view('site.test');
-// });

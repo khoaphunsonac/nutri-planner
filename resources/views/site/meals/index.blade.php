@@ -75,8 +75,14 @@
                             <div class="col-md-4">
                                 <div class="card h-100 shadow-sm">
                                     <div class="card-body">
-                                        <img src="{{ $meal->image_url ?? 'https://via.placeholder.com/400x300' }}" class="card-img-top" alt="{{ $meal->name }}">
-                                    
+                                        @php
+                                            $image = $meal->image_url ?? '';
+                                            $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                        @endphp
+
+                                        <div >
+                                            <img src="{{ $imageURL }}" alt="{{ $meal->name }}" class="card-img-top" style="display: flex; justify-content: center; align-items: center; height: 250px; background-color: #000;">
+                                        </div>
                                         <h5 class="card-title">{{ $meal->name }}</h5>
                                         <p class="card-text text-muted">{{ Str::limit($meal->description, 80) }}</p>
                                         <p class="mb-2">
