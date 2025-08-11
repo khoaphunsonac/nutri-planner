@@ -95,7 +95,7 @@
         <h4>Bước thực hiện: </h4>
         <pre>{{$meal->preparation}}</pre>
 
-        <a href="{{ route('meals.index') }}" class="btn btn-outline-primary mb-3 text-center gap-2" style="width:200px;">
+        <a href="{{ route('meal.index') }}" class="btn btn-outline-primary mb-3 text-center gap-2" style="width:200px;">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
     </div>

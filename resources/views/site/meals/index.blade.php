@@ -6,15 +6,15 @@
     <section style="background-img: url(https://example.com/images/scrambled-eggs.jpg)">
         <div class="align-self-center text-center">
             <div class="container mb-3">
-                <div>Kế hoạch món ăn trong tuần</div>
-                <p>11.08 <span>-</span> 17.08</p>
+                <div>Kế hoạch món ăn mỗi bữa</div>
+                <!-- <p>11.08 <span>-</span> 17.08</p> -->
             </div>
         </div>
     </section>
     <div class="card shadow-sm">
         <div class="card-body">
              {{-- form lọc --}}
-            <form action="{{route('meals.index')}}" class="mb-4" method="GET">
+            <form action="{{route('meal.index')}}" class="mb-4" method="GET">
                 <div class="row">
                     <div class="col-md-4">
                         <input type="text" name="search" value{{$search}} class="form-control" value="{{$search ?? old($search)}}" placeholder="Tìm món ăn...">
@@ -41,27 +41,18 @@
             <div class="d-flex align-items-center mb-4">
                 <ul class="nav nav-tabs mb-4">
                     <li class="nav-item">
-                        <a href="{{ route('meals.index', ['tab' => 'thuc-don']) }}" class="nav-link active fw-bold text-dark" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Thực đơn</a>
+                        <a href="{{ route('meal.index', ['tab' => 'thuc-don']) }}" class="nav-link active fw-bold text-dark" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Thực đơn</a>
                         
                     </li>
-                    {{-- <li class="nav-item">
-                        <a href="#" class="nav-link  text-dark">Món ăn khác</a>
-                    </li> --}}
-                    {{-- <li class="nav-item">
-                        <a href="{{ route('meals.index', ['tab' => 'tags']) }}" class="nav-link  {{$tab === 'tags' ? 'active fw-bold text-dark' : 'text-dark'}}">Thẻ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{ route('meals.index', ['tab' => 'allergens']) }}" class="nav-link  {{$tab === 'allergens' ? 'active fw-bold text-dark' : 'text-dark'}}">Dị ứng</a>
-                    </li> --}}
                 </ul>
                 
             </div>
             <div class="card shadow-sm p-3">
-                <div class=" mb-3 d-flex justify-content-around">
+                <!-- <div class=" mb-3 d-flex justify-content-around">
                     <a href="#" class="btn btn-outline-secondary">&laquo; Tuần rước</a>
                     <p>11.08 <span>-</span> 17.08</p>
                     <a href="#" class="btn btn-outline-secondary">Tuần Sau &raquo; </a>
-                </div>
+                </div> -->
                 @if( $meals->count() > 0)
                     
                     <div class="row g-4">
@@ -94,7 +85,7 @@
                                             C: {{$totalCarbs}} g |
                                             F: {{$totalFat}} g 
                                         </p>
-                                        <a href="{{route('meals.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a>
+                                        <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a>
                                     </div>
                                     
                                 </div>
@@ -102,35 +93,6 @@
                             </div>
                         @endforeach
                     </div>
-                    {{-- @elseif($tab === 'tags')
-                        <h5 class="mb-3 text-info fw-bold">Danh sách Thẻ</h5>
-                        @foreach($data as $meal)
-                            <p>
-                                <strong>{{ $meal->name }}:</strong>
-                                @foreach($meal->tags as $index => $tag)
-                                    {{ $tag->name }}@if($index + 1 < count($meal->tags)), @endif
-                                @endforeach
-                            </p>
-                        @endforeach
-                    @elseif($tab === 'allergens')
-                        <h5 class="mb-3 text-danger fw-bold">Món ăn và Dị ứng</h5>
-                        @foreach($data as $meal)
-                            <p>
-                                <strong>{{ $meal->name }}:</strong>
-                                <?php
-                                    $count = count($meal->allergens);
-                                    $i = 0;
-                                    foreach ($meal->allergens as $allergen) {
-                                        echo $allergen->name;
-                                        $i++;
-                                        if ($i < $count) {
-                                            echo ', ';
-                                        }
-                                    }
-                                ?>
-                            </p>
-                        @endforeach
-                    @endif --}}
                     @else
                         <div class="alert alert-warning text-center mx-auto" style="width: 40%">
                             

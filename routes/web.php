@@ -185,7 +185,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
     // Meal site
     $mealController = MealsController::class;
-    Route::prefix('meals')->as('meals.')->group(function () use ($mealController) {
+    Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
         Route::get('/', [$mealController, 'index'])->name('index');                  
         Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
 
