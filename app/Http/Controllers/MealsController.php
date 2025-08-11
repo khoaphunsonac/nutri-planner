@@ -17,17 +17,10 @@ class MealsController extends BaseController
     public function index(Request $request){
         $params = $request->all();
         $search = $params['search'] ?? '';
-        $mealType = $params['mealType'] ?? '';
         $tab  = $params['tab'] ?? 'thuc-don';
-        if ($tab === 'thuc-don') {
-            $data = MealModel::where('meal_type_id', 1)->get();
-        } elseif ($tab === 'tags') {
-            $data = MealModel::with('tags')->get();
-        } elseif ($tab === 'allergens') {
-            $data = MealModel::with('allergens')->get();
-        } else {
-            $data = [];
-        }
+        $mealType = $params['meal_type'] ?? '';
+
+        
         // khởi tạo query  lấy từ model gốc
         $meals = MealModel::with('recipeIngredients.ingredient')->orderBy('id','desc');
         //lọc theo tên
@@ -39,17 +32,8 @@ class MealsController extends BaseController
             $meals = $meals->where('meal_type_id','like',"%$mealType%");
         }
 
-        $mealTypeNames = [
-            1 => 'Bữa sáng',
-            2 => 'Bữa trưa',
-            3 => 'Bữa chiều',
-            4 => 'Bữa tối',
-            5 => 'Bữa khuya',
-            6 => 'Bữa ăn nhẹ',
-            7 => 'Sinh tố'
-        ];
 
-        $mealTypeName = $mealTypeNames[$mealType] ?? '';
+        
 
         // lay du lieu phan trang
         $meals = $meals->paginate(9,'*','meals_page');
@@ -57,10 +41,7 @@ class MealsController extends BaseController
         return view($this->pathViewController.'index',[
             'meals'=>$meals,
             'search'=>$search,
-            'mealType'=>$mealType,
             'tab'=>$tab,
-            'data'=>$data,
-            'mealTypeName'=>$mealTypeName,
         ]);
     }
 
@@ -71,10 +52,15 @@ class MealsController extends BaseController
                                 'allergens',
                                 'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
                             ])->findOrFail($id);
-        
+        // lấy 8 món mới nhất (k có món đang xem)
+        $latestMeals = MealModel::where('id','!=',$id)
+                                ->orderBy('created_at','desc')
+                                ->take(8)
+                                ->get();
 
         return view($this->pathViewController.'show',[
             'meal'=>$meal,
+            'latestMeals'=>$latestMeals,
         ]);
     }
 }

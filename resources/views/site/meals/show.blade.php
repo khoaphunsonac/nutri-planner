@@ -1,12 +1,36 @@
 @extends('site.layout')
 
 @section('content')
-<div class="container my-4">
+
+<style>
+    .card.meal-card {
+        transition: transform 0.3s;
+    }
+    .card.meal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .card-img-top {
+        border-bottom: 1px solid #eee;
+    }
+    .card.meal-card:hover img {
+        filter: brightness(70%);
+    }
+    .new{
+        margin-top: 300px;
+    }
+</style>
+
+<div class="container  my-4">
     <div class="card shadow-sm p-4">
         <div class="row">
             {{-- Ảnh món ăn --}}
-            <div class="col-md-5">
-                <img src="{{ $meal->image_url ?? 'https://via.placeholder.com/600x400' }}" alt="{{ $meal->name }}" class="img-fluid rounded">
+            <div class="col-md-5 ">
+                 @php
+                    $image = $meal->image_url ?? '';
+                    $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                @endphp
+                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
             </div>
             
             {{-- Thông tin chính --}}
@@ -98,6 +122,55 @@
         <a href="{{ route('meal.index') }}" class="btn btn-outline-primary mb-3 text-center gap-2" style="width:200px;">
             <i class="fas fa-arrow-left"></i> Quay lại
         </a>
+    </div>
+</div>
+
+{{-- hiển thị 8 món mới nhất --}}
+<div class="container new ">
+    <h4 class="mb-4" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Món ăn mới nhất</h4>
+    <div class="row">
+        @foreach ($latestMeals as $latest)
+            @php
+                //tính toán dinh dưỡng
+                $totalKcal = 0;
+                foreach ($latest->recipeIngredients as$pri) {
+                    $ingredient = $pri->ingredient;
+                    if($ingredient){
+                        $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                    }
+                }
+                $image = $meal->image_url ?? '';
+                $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                              
+            @endphp
+            <div class="col-md-3 mb-4" >
+                <div class="card meal-card shadow-sm h-100" >
+                        @php
+                            $image = $latest->image_url ?? '';
+                            $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                        @endphp
+                    
+                
+                    <a href="{{ route('meal.show', $latest->id) }}" class="text-decoration-none text-dark">
+                        
+                        <img src="{{ $imageURL }}" alt="{{ $latest->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                        
+                        <div class="card-body ">
+                            <h4 class="card-title my-3">{{ $latest->name }}</h4>
+                            <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
+                            <p class="mb-2 my-4">
+                                <strong>{{$totalKcal}} kcal</strong> | 
+                                P: {{$totalPro}} g |
+                                C: {{$totalCarbs}} g |
+                                F: {{$totalFat}} g 
+                            </p>
+                            {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
+                    
+                        </div>
+                    </a>
+                </div>
+            </div>
+        @endforeach
     </div>
 </div>
 @endsection
