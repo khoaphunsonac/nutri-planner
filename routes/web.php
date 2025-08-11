@@ -178,7 +178,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 // Home
 // Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/', function(){
-    return view('site.layout');
+    return view('site.layout'); # test layout
 });
 
 //Contact
