@@ -95,12 +95,12 @@ class MealController extends Controller
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-                
+
                 $uploadPath = public_path('uploads/meals');
                 if (!file_exists($uploadPath)) {
                     mkdir($uploadPath, 0755, true);
                 }
-                
+
                 $image->move($uploadPath, $imageName);
                 $validatedData['image_url'] = $imageName;
             }
@@ -135,7 +135,6 @@ class MealController extends Controller
             DB::commit();
 
             return redirect()->route('meals.index')->with('success', $message);
-
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -153,7 +152,6 @@ class MealController extends Controller
                 ->withInput()
                 ->withErrors(['error' => 'Có lỗi xảy ra khi lưu món ăn. Vui lòng thử lại.']);
         }
-        
     }
 
     public function show($id)
