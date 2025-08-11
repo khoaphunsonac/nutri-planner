@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Admin\Controllers\ContactController as ControllersContactController;
+
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\DietTypeController;
@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\ContactController as ControllersContactController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -169,5 +169,5 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 // Home
 
 //Contact
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contact', [ControllersContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ControllersContactController::class, 'store'])->name('contact.store');

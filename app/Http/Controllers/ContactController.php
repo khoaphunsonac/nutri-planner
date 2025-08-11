@@ -13,7 +13,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return view('site.contact'); // Giao diện form liên hệ
+        return view('site.contact.index'); // Giao diện form liên hệ
     }
 
     /**
