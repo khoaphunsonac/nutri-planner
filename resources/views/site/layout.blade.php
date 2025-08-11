@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
+
+    {{-- custom css --}}
+    <link rel="stylesheet" href="{{ asset('assets/user/css/home.css') }}">
+
     <title>Fitfood VN</title>
 </head>
 <body>
@@ -34,10 +38,7 @@
                     <a class="nav-link" href="">ĐÁNH GIÁ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">LIÊN HỆ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">FAQS</a>
+                    <a class="nav-link" href="">MÁY TÍNH DINH DƯỠNG</a>
                 </li>
             </ul>
 
@@ -50,10 +51,6 @@
                 </div>
             </div>
         </div>
-        <!-- icon message -->
-        <a href="" class="message-icon" title="Chao đổi với chúng tôi">
-            <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" alt="message">
-        </a>
     </div>
     </nav>
     

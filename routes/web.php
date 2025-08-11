@@ -15,11 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
