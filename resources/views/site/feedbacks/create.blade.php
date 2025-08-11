@@ -3,7 +3,7 @@
 @section('content')
 <div class="container my-5">
     <div class="card shadow-lg border-0 rounded-4 p-4 bg-dark text-light form-wrapper">
-        <h3 class="mb-4 text-center fw-bold text-primary-custom">💬 Gửi phản hồi của bạn</h3>
+        <h3 class="mb-4 text-center fw-bold text-primary-custom"> Gửi phản hồi của bạn</h3>
 
         <form method="POST" action="{{ route('site.feedbacks.store') }}">
             @csrf
@@ -41,7 +41,7 @@
             {{-- Nút hành động --}}
             <div class="d-flex gap-3">
                 <button type="submit" class="btn btn-main flex-grow-1">
-                    🚀 Gửi phản hồi
+                     Gửi phản hồi
                 </button>
                 <a href="/" class="btn btn-outline-cancel flex-grow-1">Hủy</a>
             </div>
@@ -67,7 +67,7 @@
 
     /* Tiêu đề */
     .text-primary-custom {
-        color: #ff4b2b;
+        color: #eb3131;
         letter-spacing: 1px;
     }
 
@@ -91,7 +91,7 @@
 
     /* Nút gửi */
     .btn-main {
-        background-color: #ff4b2b;
+        background-color: #eb3131;
         border: none;
         color: white;
         font-weight: bold;
@@ -100,21 +100,21 @@
         transition: all 0.3s ease;
     }
     .btn-main:hover {
-        background-color: #e63e1f;
+        background-color: #eb3131;
         transform: translateY(-2px) scale(1.02);
         box-shadow: 0 6px 20px rgba(255,75,43,0.4);
     }
 
     /* Nút hủy */
     .btn-outline-cancel {
-        border: 2px solid #ff4b2b;
-        color: #ff4b2b;
+        border: 2px solid #eb3131;
+        color: #eb3131;
         font-weight: bold;
         border-radius: 12px;
         transition: all 0.3s ease;
     }
     .btn-outline-cancel:hover {
-        background: #ff4b2b;
+        background: #eb3131;
         color: white;
         transform: translateY(-2px);
         box-shadow: 0 6px 15px rgba(255,75,43,0.3);
@@ -126,7 +126,7 @@
         transition: all 0.3s ease;
     }
     .form-control:focus {
-        border-color: #ff4b2b;
+        border-color: #eb3131;
         box-shadow: 0 0 8px rgba(255,75,43,0.4);
     }
 </style>
