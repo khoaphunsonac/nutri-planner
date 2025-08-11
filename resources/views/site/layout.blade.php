@@ -32,13 +32,16 @@
                     <a class="nav-link highlight" href="">THỰC ĐƠN</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="">NUTRI-CALC</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">TDEE</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link " href="">PHẢN HỒI</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">ĐÁNH GIÁ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">MÁY TÍNH DINH DƯỠNG</a>
+                    <a class="nav-link" href="">LIÊN HỆ</a>
                 </li>
             </ul>
 
