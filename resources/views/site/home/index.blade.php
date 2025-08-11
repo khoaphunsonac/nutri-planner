@@ -9,21 +9,21 @@
                     <img src="https://fitfood.vn/img/1920x800/images/nen-web-16950958311174.webp?f=jpg" alt="meal">
                     <p>TRẢI NGHIỆM BỮA ĂN SẠCH
                         <br>
-                        <strong>TƯƠI NGON GIÀU DINH DƯỠNG</strong>
+                        <strong style="font-size: 43px; color: aliceblue">TƯƠI NGON GIÀU DINH DƯỠNG</strong>
                     </p>
                 </div>
                 <div class="slide">
                     <img src="https://fitfood.vn/img/1920x800/images/nen-final-1-1695095846415.webp?f=jpg" alt="meal">
                     <p>KẾ HOẠCH BỮA ĂN HÀNG TUẦN
                         <br>
-                        <strong>CHO MỘT LỐI SỐNG LÀNH MẠNH</strong>
+                        <strong style="font-size: 43px; color: aliceblue">CHO MỘT LỐI SỐNG LÀNH MẠNH</strong>
                     </p>
                 </div>
                 <div class="slide">
                     <img src="https://fitfood.vn/img/1920x800/images/nen-final-2-16947528537416.webp?f=jpg" alt="meal">
                     <p>GIẢI PHÁP HEALTHY FOOD
                         <br>
-                        <strong>BỮA ĂN SẠCH</strong>
+                        <strong style="font-size: 43px; color: aliceblue">BỮA ĂN SẠCH</strong>
                     </p>
                 </div>
             </div>
@@ -150,7 +150,7 @@
     <footer class="footer-main">
     <div class="container">
         <a href="/" class="mb-4 d-block">
-            <img src="/images/logo-fitfood.png" alt="fitfoodvn" border="0" />
+            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" style="width: 130px;" />
         </a>
         <div class="widget-footer mb-4">
             <div class="row">
@@ -161,33 +161,19 @@
                     <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br/>
                     <strong>Email</strong> info@fitfood.vn. For business inquiries: business@fitfood.vn<br/>
                     <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
-                </p>
-            {{-- <div class="row">
-        <div class="col-12 form-group">
-        <form action="https://fitfood.vn/search" class="form-search">
-            <div class="search-control s-home">
-                <input type="text" class="form-control s-search" name="s" placeholder="Tìm kiếm" value="">
-            </div>
-        </form>
-    </div>
-</div> --}}
-    </div>
-        <div class="col-md-3 mb-3">
-            <h4>Theo dõi chúng tôi tại</h4>
+                </p>  
+              </div>
+            <div class="col-md-3 mb-3">
+            <h4>Theo dõi chúng tôi tại </h4>
                 <div class="social mb-3">
                     <a href="https://www.facebook.com/fitfoodvietnam" target="_blank">
-                      <img src="/images/ic-fb.png" alt="fitfoodvietnam" border="0"/>
+                      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="fitfoodvietnam" border="0"/>
                         </a>
                         <a href="https://www.instagram.com/fitfoodvn" target="_blank">
-                            <img src="/images/ic-instagram.png" alt="fitfoodvn" border="0"/>
+                            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="fitfoodvn" border="0"/>
                         </a>
                         <a href="https://www.youtube.com/watch?v=CJ6eTsFdd1I" target="_blank">
-                            <img src="/images/ic-youtube.png" alt="fitfoodvn" border="0"/>
-                        </a>
-                    </div>
-                    <div>
-                        <a href="http://online.gov.vn/Home/WebDetails/34281" target="_blank">
-                            <img src="/images/logo-bocongthuong.png?t=123" alt="fitfoodvn" border="0" width="120px"/>
+                            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="fitfoodvn" border="0"/>
                         </a>
                     </div>
                 </div>
