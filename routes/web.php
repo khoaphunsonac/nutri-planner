@@ -16,8 +16,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 
-use App\Http\Controllers\ContactController as SiteContact;
-use App\Http\Controllers\site\ContactController;
+
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -178,7 +177,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-Route::get('/contact-ping', fn () => 'OK');
+
 
 
 
