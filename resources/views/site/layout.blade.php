@@ -51,10 +51,6 @@
                 </div>
             </div>
         </div>
-        <!-- icon message sau link đến chức năng liên hệ -->
-        <a href="" class="message-icon" title="Chao đổi với chúng tôi">
-            <img src="https://fitfood.vn/images/ico-chat-bubble.svg?v=20250806" alt="message">
-        </a>
     </div>
     </nav>
     
