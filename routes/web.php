@@ -129,16 +129,16 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 
     // DIET TYPE MODULE
-    // $controller = DietTypeController::class;
-    // Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
-    //     Route::get('/', [$controller, 'index'])->name('index');
-    //     Route::get('/create', [$controller, 'create'])->name('create');
-    //     Route::post('/', [$controller, 'store'])->name('store');
-    //     Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
-    //     Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
-    //     Route::post('/{id}', [$controller, 'update'])->name('update');
-    //     Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
-    // });
+    $controller = DietTypeController::class;
+    Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
+        Route::get('/', [$controller, 'index'])->name('index');
+        Route::get('/create', [$controller, 'create'])->name('create');
+        Route::post('/', [$controller, 'store'])->name('store');
+        Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
+        Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
+        Route::post('/{id}', [$controller, 'update'])->name('update');
+        Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+    });
     // CONTACT MODULE
 
     $controller = ContactController::class;
@@ -166,28 +166,12 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
         Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
     });
-
-
-    // Các controller khác có thể cấu trúc y hệt như vậy:
-    // Route::prefix('meals')->as('meals.')->group(function () {
-    //     Route::get('/', [...])->name('index');
-    //     ...
-    // });
 });
 
 
-// Các controller khác có thể cấu trúc y hệt như vậy:
-// Route::prefix('meals')->as('meals.')->group(function () {
-//     Route::get('/', [...])->name('index');
-//     ...
-// });
 
+// Home
 
-// tạm thời không dùng middlewarem thời bỏ middlleware để test
-
-
-
-// # test kế thừa
-// Route::get('/test', function(){
-//     return view('site.test');
-// });
+//Contact
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
