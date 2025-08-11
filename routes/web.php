@@ -11,11 +11,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\UserController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 // Group Admin
 Route::prefix('admin')->group(function () {
@@ -98,16 +94,16 @@ Route::prefix('admin')->group(function () {
     });
 
     // DIET TYPE MODULE
-    // $controller = DietTypeController::class;
-    // Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
-    //     Route::get('/', [$controller, 'index'])->name('index');
-    //     Route::get('/create', [$controller, 'create'])->name('create');
-    //     Route::post('/', [$controller, 'store'])->name('store');
-    //     Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
-    //     Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
-    //     Route::post('/{id}', [$controller, 'update'])->name('update');
-    //     Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
-    // });
+    $controller = DietTypeController::class;
+    Route::prefix('diet-types')->name('diettypes.')->group(function () use ($controller) {
+        Route::get('/', [$controller, 'index'])->name('index');
+        Route::get('/create', [$controller, 'create'])->name('create');
+        Route::post('/', [$controller, 'store'])->name('store');
+        Route::get('/{id}', [$controller, 'show'])->name('show'); // Xem chi tiết
+        Route::get('/{id}/edit', [$controller, 'edit'])->name('edit');
+        Route::post('/{id}', [$controller, 'update'])->name('update');
+        Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
+    });
     // CONTACT MODULE
 
     $controller = ContactController::class;
@@ -143,7 +139,3 @@ Route::prefix('admin')->group(function () {
 
 
 
-// # test kế thừa
-// Route::get('/test', function(){
-//     return view('site.test');
-// });
