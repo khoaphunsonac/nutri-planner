@@ -31,11 +31,11 @@ class Collection extends IlluminateCollection
      * Get a Claim instance by it's unique name.
      *
      * @param  string  $name
-     * @param  callable|null  $callback
+     * @param  callable  $callback
      * @param  mixed  $default
      * @return \Tymon\JWTAuth\Claims\Claim
      */
-    public function getByClaimName($name, ?callable $callback = null, $default = null)
+    public function getByClaimName($name, callable $callback = null, $default = null)
     {
         return $this->filter(function (Claim $claim) use ($name) {
             return $claim->getName() === $name;
