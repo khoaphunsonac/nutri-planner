@@ -24,10 +24,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 // });
 
 # Group user
-$controller = HomeController::class;
-Route::prefix('home')->as('home.')->group(function () use($controller){
-    Route::get('/', [$controller, 'index'])->name('index');        
-});
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

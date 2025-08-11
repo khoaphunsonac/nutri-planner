@@ -38,10 +38,7 @@
                     <a class="nav-link" href="">ĐÁNH GIÁ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">LIÊN HỆ</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">FAQS</a>
+                    <a class="nav-link" href="">MÁY TÍNH DINH DƯỠNG</a>
                 </li>
             </ul>
 
@@ -54,19 +51,28 @@
                 </div>
             </div>
         </div>
-        <!-- icon message -->
-        <a href="" class="message-icon" title="Chao đổi với chúng tôi">
-            <img src="https://cdn-icons-png.flaticon.com/512/726/726623.png" alt="message">
+    </div>
+    </nav>
+     <!-- icon message -->
+        <a href="" class="message-icon">
+            <i class="bi bi-house-door"></i>
         </a>
     </div>
     </nav>
-    
     {{-- kế thừa --}}
     <div class="content-wrapper">
         @yield('content')
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+<script>
+document.querySelector('.message-icon').addEventListener('click', function (e) {
+    e.preventDefault(); // chặn nhảy link mặc định
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // hiệu ứng cuộn mượt
+    });
+});
+</script>
 </body>
 </html>

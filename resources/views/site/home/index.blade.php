@@ -162,7 +162,7 @@
                     <strong>Email</strong> info@fitfood.vn. For business inquiries: business@fitfood.vn<br/>
                     <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
                 </p>
-            <div class="row">
+            {{-- <div class="row">
         <div class="col-12 form-group">
         <form action="https://fitfood.vn/search" class="form-search">
             <div class="search-control s-home">
@@ -170,7 +170,7 @@
             </div>
         </form>
     </div>
-</div>
+</div> --}}
     </div>
         <div class="col-md-3 mb-3">
             <h4>Theo dõi chúng tôi tại</h4>
