@@ -11,6 +11,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DietTypeController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
+
+use App\Http\Controllers\ContactController as SiteContact;
+use App\Http\Controllers\site\ContactController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/', function () {
@@ -142,6 +145,17 @@ Route::prefix('meal_types')->group(function () {
     Route::post('/{id}/update',     [MealTypeController::class, 'update'])->whereNumber('id')->name('admin.meal_types.update');
     Route::get('/{id}/delete',      [MealTypeController::class, 'delete'])->whereNumber('id')->name('admin.meal_types.delete');
 });
+
+
+
+
+
+
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contact-ping', fn () => 'OK');
+
 
 
     // Các controller khác có thể cấu trúc y hệt như vậy:
