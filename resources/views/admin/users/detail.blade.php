@@ -52,6 +52,15 @@
                 </button>
             </div>
 
+            {{-- lý do bị khoá --}}
+           <div class="mb-3" id="noteField">
+                <label for="note" class="form-label">Nhập lý do bị khoá nếu có</label>
+                <textarea id="note" name="note" class="form-control" rows="3" placeholder="Nhập lý do khoá...">{{ $item->note ?? old('note') }}</textarea>
+            @error('note')
+                <small class="text-danger">{{ $message }}</small>
+            @enderror
+            </div>
+
             {{-- Submit --}}
             <button type="submit" class="btn btn-primary w-100">
                 {{ $btn }}
@@ -63,26 +72,41 @@
             </a>
         </div>
     </div>
-</div>
+</div>  
 <script>
     function toggleStatus() {
-    const input = document.getElementById('statusInput');
-    const text = document.getElementById('statusText');
-    const btn = event.target;
+        const input = document.getElementById('statusInput');
+        const text = document.getElementById('statusText');
+        const btn = event.target;
+        const noteField = document.getElementById('noteField'); // div chứa textarea
 
-    if (input.value === 'active') {
-        input.value = 'inactive';
-        text.textContent = 'Đã khoá';
-        text.className = 'px-2 py-1 fs-6 text-danger';
-        btn.textContent = 'Mở tài khoản';
-        btn.className = 'btn btn-outline-success';
-    } else {
-        input.value = 'active';
-        text.textContent = 'Hoạt động';
-        text.className = 'px-2 py-1 fs-6 text-success';
-        btn.textContent = 'Khoá tài khoản';
-        btn.className = 'btn btn-outline-danger';
+        if (input.value === 'active') {
+            input.value = 'inactive';
+            text.textContent = 'Đã khoá';
+            text.className = 'px-2 py-1 fs-6 text-danger';
+            btn.textContent = 'Mở tài khoản';
+            btn.className = 'btn btn-outline-success';
+            noteField.style.display = 'block';
+        } else {
+            input.value = 'active';
+            text.textContent = 'Hoạt động';
+            text.className = 'px-2 py-1 fs-6 text-success';
+            btn.textContent = 'Khoá tài khoản';
+            btn.className = 'btn btn-outline-danger';
+            noteField.style.display = 'none';
+        }
     }
-}
+
+    // Ẩn/hiện textarea theo trạng thái lúc load trang
+    document.addEventListener('DOMContentLoaded', function() {
+        const input = document.getElementById('statusInput');
+        const noteField = document.getElementById('noteField');
+        if(input.value === 'active'){
+            noteField.style.display = 'none';
+        } else {
+            noteField.style.display = 'block';
+        }
+    });
 </script>
+
 @endsection

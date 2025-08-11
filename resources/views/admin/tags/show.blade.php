@@ -3,7 +3,7 @@
     {{-- Breadcrumb --}}
      <nav aria-label="breadcrumb breadcrumb-compact" class="mb-4">
         <ol class="breadcrumb breadcrumb-compact">
-            <li class="breadcrumb-item"><a href="#"><i class="bi bi-house-door"></i></a></li>
+            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
             <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-tags">Thẻ</i></a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ $item->name }}</li>
         </ol>

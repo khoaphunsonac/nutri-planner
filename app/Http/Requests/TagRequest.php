@@ -29,10 +29,10 @@ class TagRequest extends FormRequest
                 'string',
                 'min:2',
                 'max:255',
-               'unique:tags,name,' . $this->id, // Bỏ qua tag hiện tại
+               'unique:tags,name,' . $this->id, // Bỏ qua id hiện tại
                
             ],
-            'meals'=> 'nullable|string',
+            
             
         ];
     }
@@ -43,11 +43,11 @@ class TagRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Tên Tag không để trống',
-            'name.string' => 'Tên Tag phải là chuỗi ký tự.',
-            'name.min' => 'Tên Tag tối thiểu 2 ký tự.',
-            'name.max' => 'Tên Tag không được vượt quá 255 ký tự.',
-            'name.unique' => 'Tên Tag này đã tồn tại, vui lòng chọn tên khác.',
+            'name.required' => 'Tên Thẻ không để trống',
+            'name.string' => 'Tên Thẻ phải là chuỗi ký tự.',
+            'name.min' => 'Tên Thẻ tối thiểu 2 ký tự.',
+            'name.max' => 'Tên Thẻ không được vượt quá 255 ký tự.',
+            'name.unique' => 'Tên Thẻ này đã tồn tại, vui lòng chọn tên khác.',
         ];
     }
 

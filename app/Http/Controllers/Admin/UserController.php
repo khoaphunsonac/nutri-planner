@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AdminUserRequest;
+use App\Http\Requests\LockedUserRequest;
 use App\Models\AccountModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash; // mới thêm này
@@ -20,17 +21,25 @@ use Illuminate\Support\Facades\View;
     }
     # sau mở rộng truyền về dashboard
     
-    public function index(){
-        // $accounts = AccountModel::withCount('feedback')->get(); # gộp in ra hết, theo kiểu đếm số lượng quan hệ 
-        $accounts = AccountModel::withCount('feedback')->where('role', 'user')->paginate(7); // chỉ lấy 7 bản ghi mỗi trang
-        $Admin = AccountModel::where('role', 'admin')->first(); # hiển thị mỗi admin
-        $countUser = $accounts->count();
+    public function index(Request $request){ # ko bắt buộc phải có tham số trên route mới chạy đc
+        # chỉ lấy 7 user mỗi trang
+        $keyword = $request->get('keyword');    
+
+        $query = AccountModel::query(); # truy vấn
+        if($keyword){
+            $query->where("username", "like", "%{$keyword}%");
+        }   
+        $accounts = $query->withCount('feedback')->where('role', 'user')->paginate(7); 
+        
+        # hiển thị mỗi admin
+        $Admin = AccountModel::where('role', 'admin')->first(); 
+
         # hiển thị tài khoản bị khoá
-        $lockedUsers = $accounts->where("status", "inactive")->count();
+        $lockedUsers = AccountModel::where("status", "inactive")->count();
         return view($this->viewPath.'user', [
             "accounts" => $accounts,
-            "countUser" => $countUser,
             "Admin" => $Admin,
+
             # hiển thị tk bị lock
             "lockedUsers" => $lockedUsers
         ]);
@@ -49,6 +58,7 @@ use Illuminate\Support\Facades\View;
             "btn" => $btn
         ]);
     }
+
     public function edit(Request $request){ # chỉnh sửa cho admin
         $id = $request->id;
         $adminAccount = AccountModel::where('role', 'admin')->first();
@@ -59,8 +69,7 @@ use Illuminate\Support\Facades\View;
             "btnUpdate" => $btnUpdate
         ]);
     }
-    public function update(AdminUserRequest $request)
-{
+    public function update(AdminUserRequest $request){
     // Tìm tài khoản admin
     $admin = AccountModel::where('role', 'admin')->first();
 
@@ -118,6 +127,15 @@ use Illuminate\Support\Facades\View;
         return redirect(route('users.index', ['id' => $id]));
     }
     public function save(Request $request, $id = null){
+        # validate chung luôn
+        $request->validate([
+            "note" => "nullable|min:4|max:255"
+        ],[
+            "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
+            "note.min" => "Nhập ít nhất :min ký tự",
+            "note.max" => "Nhập tối đa :max ký tự",
+        ]);
+
         $account = $id ? AccountModel::find($id) : new AccountModel();
 
         $account->username = $request->username;
@@ -126,6 +144,7 @@ use Illuminate\Support\Facades\View;
             $account->password = bcrypt($request->password);
         }
         $account->status = $request->status ?? 'inactive';
+        $account->note = $request->note; # lý do khoá
         $account->save();
 
         return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');

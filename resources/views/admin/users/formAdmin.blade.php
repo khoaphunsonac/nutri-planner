@@ -30,7 +30,7 @@
             {{-- chỉ khi muốn đổi mk mới nhập thôi --}}
             <div class="mb-3">
                 <label for="password" class="form-label">Mật khẩu mới nếu muốn</label>
-                <input type="text" name="password" id="password" class="form-control" placeholder="Để trống nếu không đổi">
+                <input type="text" name="password" id="password" class="form-control" placeholder="Để trống nếu không đổi mật khẩu">
                 @error('password')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror

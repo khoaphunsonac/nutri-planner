@@ -37,7 +37,7 @@
     @endif
 
 {{-- Dashboard summary --}}
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 d-flex justify-content-between align-items-center">
     <div class="col-md-6">
         <div class="card shadow-sm">
             <div class="card-body d-flex p-0">
@@ -46,7 +46,6 @@
                     <h5 class="mb-1">{{ $accounts->total() ?? 0 }}</h5>
                     <small>Tổng người dùng</small>
                 </div>
-
                 {{-- Tài khoản bị khoá --}}
                 <div class="w-50 bg-danger-subtle text-danger text-center py-3 rounded-end">
                     <h5 class="mb-1">
@@ -57,6 +56,23 @@
             </div>
         </div>
     </div>
+    {{-- tìm kiếm tài khoản user để lock --}}  
+    <div class="col-md-6">
+    <form action="{{ route($shareUser . 'index') }}" class="d-flex">
+        <input 
+            type="search" 
+            name="keyword" 
+            value="{{ request('keyword') }}" 
+            class="form-control me-2 shadow-sm" 
+            placeholder="Tìm kiếm tài khoản user..."
+            style="border-radius: 50px;"
+        >
+        <button type="submit" class="btn btn-primary px-4" style="border-radius: 50px;">
+            <i class="bi bi-search"></i> Tìm
+        </button>
+    </form> 
+    </div>
+
 </div>
 
 {{-- Table danh sách --}}
