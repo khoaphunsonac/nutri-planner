@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 # user UI
-use App\Http\Controllers\Site\HomeController;
+use App\Http\Controllers\HomeController;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 // Route::get('/', function () {

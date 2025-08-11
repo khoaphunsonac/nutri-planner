@@ -173,20 +173,10 @@
 </div>
     </div>
         <div class="col-md-3 mb-3">
-            <h4>Điều khoản chung</h4>
-                <ul>
-                    {{-- sau sửa lại mấy link này --}}
-                    <li><a href="https://fitfood.vn/page/chinh-sach-quy-dinh-chung">Chính Sách Quy Định Chung</a></li>
-                    <li><a href="https://fitfood.vn/page/quy-dinh-hinh-thuc-thanh-toan">Quy Định Hình Thức Thanh Toán</a></li>
-                    <li><a href="https://fitfood.vn/page/chinh-sach-van-chuyen-giao-hang">Chính Sách Vận Chuyển Giao Hàng</a></li>
-                    <li><a href="https://fitfood.vn/page/chinh-sach-bao-mat-thong-tin">Chính Sách Bảo Mật Thông Tin</a></li>
-                </ul>
-                </div>
-                <div class="col-md-3 mb-3">
-                    <h4>Theo dõi chúng tôi tại</h4>
-                    <div class="social mb-3">
-                        <a href="https://www.facebook.com/fitfoodvietnam" target="_blank">
-                            <img src="/images/ic-fb.png" alt="fitfoodvietnam" border="0"/>
+            <h4>Theo dõi chúng tôi tại</h4>
+                <div class="social mb-3">
+                    <a href="https://www.facebook.com/fitfoodvietnam" target="_blank">
+                      <img src="/images/ic-fb.png" alt="fitfoodvietnam" border="0"/>
                         </a>
                         <a href="https://www.instagram.com/fitfoodvn" target="_blank">
                             <img src="/images/ic-instagram.png" alt="fitfoodvn" border="0"/>
