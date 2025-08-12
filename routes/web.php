@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\ContactController as ControllersContactController;
+
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -166,8 +166,22 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 
 
+    // Meal site
+    $mealController = MealsController::class;
+    Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
+        Route::get('/', [$mealController, 'index'])->name('index');                  
+        Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
+
+    });
+
 // Home
+// Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/', function(){
+    return view('site.layout'); # test layout
+});
+
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 //Contact
-Route::get('/contact', [ControllersContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ControllersContactController::class, 'store'])->name('contact.store');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

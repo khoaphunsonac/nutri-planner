@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'bf61d224369b6a06ea64ce12c9f83634b5036d9e',
+        'reference' => 'fec18ca6bcbfd4c3905cd4600d50d5fd86ffc894',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(
@@ -384,7 +384,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'bf61d224369b6a06ea64ce12c9f83634b5036d9e',
+            'reference' => 'fec18ca6bcbfd4c3905cd4600d50d5fd86ffc894',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(
@@ -1303,9 +1303,9 @@
             'dev_requirement' => false,
         ),
         'tymon/jwt-auth' => array(
-            'pretty_version' => '2.2.1',
-            'version' => '2.2.1.0',
-            'reference' => '42381e56db1bf887c12e5302d11901d65cc74856',
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'reference' => 'b0868a5b00801889a9e0c81a737963d8004e708c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../tymon/jwt-auth',
             'aliases' => array(),
