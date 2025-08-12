@@ -64,7 +64,7 @@
             name="keyword" 
             value="{{ request('keyword') }}" 
             class="form-control me-2 shadow-sm" 
-            placeholder="Tìm kiếm tài khoản user..."
+            placeholder="Tìm kiếm tài khoản người dùng..."
             style="border-radius: 50px;"
         >
         <button type="submit" class="btn btn-primary px-4" style="border-radius: 50px;">
@@ -128,7 +128,7 @@
         <h5 class="mb-0">Danh sách người dùng</h5>
         <small class="text-muted" style="font-size: 20px">
             @if ($accounts->count() > 0)
-                Tổng: <span style="color: blue">{{ $accounts->count() }}</span> mục
+                Tổng: <span style="color: blue">{{ $accounts->count() }}</span> tài khoản trang hiện tại<i></i>
             @else
                 Không có người dùng nào
             @endif
@@ -152,12 +152,13 @@
                 @forelse ($accounts as $item)
                 {{-- hiển thị riêng môi admin --}}
                     <tr style="cursor: pointer;" onclick="window.location='{{ route($shareUser . 'form', ['id' => $item->id]) }}'">
-                        <td class="fw-bold text-primary">
+                       <td class="fw-bold text-primary">
                             <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
                                 style="width:50px">
-                                {{ $item->id }}
+                                {{ ($accounts->currentPage() - 1) * $accounts->perPage() + $loop->iteration }}
                             </span>
                         </td>
+
                         <td class="text-center">
                             <strong>{{ $item->username }}</strong>
                         </td>
