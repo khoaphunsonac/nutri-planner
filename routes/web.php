@@ -168,19 +168,21 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 
 
-    // Meal site
-    $mealController = MealsController::class;
-    Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
-        Route::get('/', [$mealController, 'index'])->name('index');                  
-        Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
-
-    });
+// Meal site
+$mealController = MealsController::class;
+Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
+    Route::get('/', [$mealController, 'index'])->name('index');
+    Route::get('/show/{id}', [$mealController, 'show'])->name('show');
+});
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
 //Nutri Calc
 Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc');
+
+// TDEE Calculator
+Route::view('/tdee', 'site.tdee')->name('tdee');
 
 //Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
