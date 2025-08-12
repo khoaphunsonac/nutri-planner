@@ -49,38 +49,37 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="">
-                {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
-                <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood"
-                    style="width: 80%; height: 37px;">
-            </a>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ route('index') }}">
+            {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
+            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="width: 80%; height: 37px;">
+        </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="">TRANG CHỦ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">THỰC ĐƠN</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('nutri-calc') }}">NUTRI-CALC</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">TDEE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="">PHẢN HỒI</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">LIÊN HỆ</a>
-                    </li>
-                </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">NUTRI-CALC</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">TDEE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="">PHẢN HỒI</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">LIÊN HỆ</a>
+                </li>
+            </ul>
 
                 <div class="right-menu">
                     <a href="" class="nav-link text-light">Đăng Ký</a>
