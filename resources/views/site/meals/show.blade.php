@@ -3,6 +3,10 @@
 @section('content')
 
 <style>
+    .container.my-4 {
+        margin-top: 8rem !important; /* Đè lên mọi margin khác */
+        padding-top: 0 !important;
+    }
     .card.meal-card {
         transition: transform 0.3s;
     }
@@ -21,7 +25,7 @@
     }
 </style>
 
-<div class="container  my-4">
+<div class="container  my-4" >
     <div class="card shadow-sm p-4">
         <div class="row">
             {{-- Ảnh món ăn --}}
