@@ -35,7 +35,6 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/ingredients.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/dashboard.css') }}">
 </head>
-
 <body>
 
     <!-- Navbar -->
