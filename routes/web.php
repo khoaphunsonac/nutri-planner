@@ -179,14 +179,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-// Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/', function () {
-    return view('site.layout'); # test layout
-});
-
 //Nutri Calc
 Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc');
-
 
 //Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
