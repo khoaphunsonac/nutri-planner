@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
-
+use App\Http\Controllers\ContactsController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -183,5 +183,5 @@ Route::get('/', function(){
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
 //Contact
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
+Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.store');

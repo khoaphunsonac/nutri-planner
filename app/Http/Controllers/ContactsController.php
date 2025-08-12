@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ContactRequest; // FormRequest để validate
 use App\Models\ContactModel; // Model admin đã có sẵn
 
-class ContactController extends Controller
+class ContactsController extends Controller
 {
     /**
      * Hiển thị form liên hệ cho người dùng
@@ -30,7 +30,7 @@ class ContactController extends Controller
 
         // Redirect về trang liên hệ + thông báo
         return redirect()
-            ->route('contact.index')
+            ->route('contacts.index')
             ->with('success', 'Gửi thành công!');
     }
 }

@@ -1,6 +1,6 @@
 @extends('site.layout')
 
-@section('title', 'Liên hệ')
+@section('title', 'liên hệ')
 
 {{-- Optional: style nhẹ nhàng cho trang liên hệ --}}
 @push('styles')
@@ -33,7 +33,7 @@
 <div class="container py-5">
 
     {{-- Hero --}}
-    <div class="contact-hero p-4 p-md-5 mb-4">
+    <div class="contacts-hero p-4 p-md-5 mb-4">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle d-flex align-items-center justify-content-center"
                  style="width:56px;height:56px;background:#0d6efd1a;">
@@ -71,12 +71,12 @@
             <div class="card card-glass shadow-lg border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
 
-                    <form action="{{ route('contact.store') }}" method="POST" novalidate>
+                    <form action="{{ route('contacts.store') }}" method="POST" novalidate>
                         @csrf
 
                         {{-- Họ tên --}}
                         <div class="mb-3">
-                            <label for="contact-name" class="form-label contact-label">Họ tên</label>
+                            <label for="contacts-name" class="form-label contact-label">Họ tên</label>
                             <div class="input-group">
                                 <input
                                     id="contact-name"
@@ -93,7 +93,7 @@
 
                         {{-- Email --}}
                         <div class="mb-3">
-                            <label for="contact-email" class="form-label contact-label">Email</label>
+                            <label for="contact-email" class="form-label contactslabel">Email</label>
                             <div class="input-group">
                                 <input
                                     id="contact-email"
@@ -111,7 +111,7 @@
 
                         {{-- Nội dung --}}
                         <div class="mb-3">
-                            <label for="contact-message" class="form-label contact-label">Nội dung</label>
+                            <label for="contacts-message" class="form-label contact-label">Nội dung</label>
                             <div class="position-relative">
                                 <textarea
                                     id="contact-message"
