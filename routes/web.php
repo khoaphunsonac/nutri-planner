@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MealsController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -165,6 +166,14 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 });
 
 
+
+    // Meal site
+    $mealController = MealsController::class;
+    Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
+        Route::get('/', [$mealController, 'index'])->name('index');                  
+        Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
+
+    });
 
 // Home
 // Route::get('/', [HomeController::class, 'index'])->name('index');
