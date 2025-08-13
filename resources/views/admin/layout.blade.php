@@ -26,7 +26,7 @@
     <nav class="navbar navbar-expand-lg shadow-sm bg-dash px-3 py-2">
         <div class="container-fluid d-flex justify-content-between">
             <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()">☰</button>
-            <a class="navbar-brand text-light" href="#">Fitfood Admin</a>
+            <a class="navbar-brand text-light" href="#">Nutri Planner</a>
             <div class="d-flex align-items-center">
                 @auth
                     <span class="text-light me-3">Xin chào, {{ Auth::user()->username }}</span>
@@ -63,8 +63,8 @@
     <aside class="sidebar" id="sidebar">
         <a href="{{ route('dashboard') }}" class="text-decoration-none text-dark">
             <div class="sidebar-header p-3">
-                <h5 class="m-0">🍴 Fitfood</h5>
-                <small>Fitfood Quản trị</small>
+                <h5 class="m-0">🍴 Nutri< Planner/h5>
+                <small>Nutri Planner Admin</small>
             </div>
         </a>
         {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
