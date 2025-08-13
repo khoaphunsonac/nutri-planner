@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchFillterRequest;
+use App\Models\AccountModel;
 use App\Models\AllergenModel;
 use App\Models\DietTypeModel;
 use App\Models\MealModel;
@@ -11,6 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 
 class MealsController extends BaseController
 {
@@ -150,8 +152,8 @@ class MealsController extends BaseController
     }
 
     public function favorite($id){
-        //lấy user hiện tại
-        // $user = auth()->user();
+        // //lấy user hiện tại
+        // // $user = auth()->user();
 
         //lấy meal
         $meal =  MealModel::findOrFail($id);
@@ -185,6 +187,36 @@ class MealsController extends BaseController
         $meal->savemeal = implode('-',$saveMeals);
         $meal->save();
 
+
+        // if (Auth::check()) {
+        //     // --- Có user đăng nhập: lưu vào DB ---
+        //     $favorite = AccountModel::where('user_id', Auth::id())
+        //                         ->where('meal_id', $id)
+        //                         ->first();
+
+        //     if ($favorite) {
+        //         $favorite->delete(); // Bỏ yêu thích
+        //     } else {
+        //         AccountModel::create([
+        //             'user_id' => Auth::id(),
+        //             'meal_id' => $$id
+        //         ]);
+        //     }
+        // } else {
+        //     // --- Chưa đăng nhập: lưu vào Session ---
+        //     $saveMeals = session('saveMeals', []);
+
+        //     if (in_array($id, $saveMeals)) {
+        //         $saveMeals = array_filter($saveMeals, fn($id) => $id != $id);
+        //     } else {
+        //         $saveMeals[] = $id;
+        //     }
+
+        //     session(['saveMeals' => $saveMeals]);
+        // // }
+
         return back();
+
+        
     }
 }

@@ -191,28 +191,14 @@
                                                     $image = $meal->image_url ?? '';
                                                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                                     
-                                                     // kiểm tra đã yêu thích chưa
-                                                    $savedMeals = $meal->savemeal ? explode('-', $meal->savemeal) : [];
-                                                    $isFavorite = in_array($meal->id, $savedMeals);
+                                                     
                                                 @endphp
                                             
                                         
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
                                                 
                                                 <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
-                                                <form action="{{route('meal.favorite',$meal->id)}}" method="POST">
-                                                    @csrf
-                                                    <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
-                                                        data-liked="false" {{-- mặc định chưa thích --}}
-                                                        style="font-size: 24px; background: none; border: none; cursor: pointer;"
-                                                    >
-                                                        @if($isFavorite)
-                                                            <i class="fas fa-heart text-danger fs-4"></i>
-                                                        @else
-                                                            <i class="far fa-heart text-light fs-4"></i>
-                                                        @endif
-                                                    </button>
-                                                </form>
+                                                
 
                                                 <div class="card-body ">
                                                     <h4 class="card-title my-3">{{ $meal->name }}</h4>
@@ -229,6 +215,26 @@
                                             
                                                 </div>
                                             </a>
+
+                                            {{-- Nút yêu thích (POST) --}}
+                                            <form action="{{ route('meal.favorite', $meal->id) }}" 
+                                                method="POST" 
+                                                class="favorite-form" 
+                                                style="position: absolute; top: 10px; right: 10px;"
+                                            >
+                                                @csrf
+                                                <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
+                                                    data-liked="false" {{-- mặc định chưa thích --}}
+                                                    style="font-size: 20px; background: rgba(0,0,0,0.4); border: none; cursor: pointer;"
+                                                >
+                                                @php
+                                                    // kiểm tra đã yêu thích chưa
+                                                    $saved = $meal->savemeal && in_array($meal->id, explode('-', $meal->savemeal));
+                                                @endphp
+                                                     <i class="fas fa-heart" 
+                                                        style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     
                                 </div>
@@ -274,34 +280,9 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.favorite-btn').forEach(btn => {
-            btn.addEventListener('click', function (e) {
-                e.preventDefault(); // Ngăn chặn click nhảy link
-                e.stopPropagation(); // Ngăn chặn sự kiện click lan ra thẻ cha
-
-                let mealId = this.getAttribute('data-id');
-                let icon = this.querySelector('i');
-
-                fetch(`/meals/favorite/${mealId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(res => {
-                    if (res.ok) {
-                        // đổi icon
-                        if (icon.classList.contains('far')) {
-                            icon.classList.remove('far', 'text-light');
-                            icon.classList.add('fas', 'text-danger');
-                        } else {
-                            icon.classList.remove('fas', 'text-danger');
-                            icon.classList.add('far', 'text-light');
-                        }
-                    }
-                })
-                .catch(err => console.error(err));
+    document.querySelectorAll('.favorite-form').forEach(function (form) {
+            form.addEventListener('click', function (event) {
+                event.stopPropagation(); // Ngăn click lan ra ngoài
             });
         });
     });
