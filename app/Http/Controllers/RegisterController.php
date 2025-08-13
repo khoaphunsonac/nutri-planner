@@ -24,7 +24,6 @@ class RegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
-        dd($user);
 
         # với lần đầu đk thì đăng ký xong thì cho vô ngay
         Auth::login($user);
