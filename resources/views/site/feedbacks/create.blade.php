@@ -5,7 +5,7 @@
     <div class="card shadow-lg border-0 rounded-4 p-4 bg-dark text-light form-wrapper">
         <h3 class="mb-4 text-center fw-bold text-primary-custom"> Gửi phản hồi của bạn</h3>
 
-        <form method="POST" action="{{ route('site.feedbacks.store') }}">
+        <form method="POST" action="{{ route('feedbacks.store') }}">
             @csrf
 
             {{-- Thông báo lỗi tổng --}}

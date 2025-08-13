@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\FeedbackController as SiteFeedbackController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -154,13 +155,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 
     // MealType MODULE
-
-
-
-
-
-
-    // MealType MODULE
     Route::prefix('meal_types')->group(function () {
         Route::get('/',                 [MealTypeController::class, 'index'])->name('admin.meal_types.index');
         Route::get('/create',           [MealTypeController::class, 'create'])->name('admin.meal_types.create');
@@ -193,3 +187,6 @@ Route::view('/tdee', 'site.tdee')->name('tdee');
 //Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+//Feedback
+Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
+Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');

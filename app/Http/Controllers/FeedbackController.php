@@ -28,6 +28,6 @@ class FeedbackController extends Controller
             'comment'    => $request->comment,
         ]);
 
-        return redirect()->route('site.feedbacks.create')->with('success', 'Cảm ơn bạn đã gửi phản hồi!');
+        return redirect()->route('feedbacks.create')->with('success', 'Cảm ơn bạn đã gửi phản hồi!');
     }
 }
