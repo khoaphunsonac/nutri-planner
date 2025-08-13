@@ -68,13 +68,13 @@
                     <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">NUTRI-CALC</a>
+                    <a class="nav-link" href="{{route('nutri-calc')}}">NUTRI-CALC</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">TDEE</a>
+                    <a class="nav-link" href="{{route('tdee')}}">TDEE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="">PHẢN HỒI</a>
+                    <a class="nav-link " href="{{route('feedbacks.create')}}">PHẢN HỒI</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">LIÊN HỆ</a>
