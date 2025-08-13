@@ -28,8 +28,9 @@ class RegisterRequest extends FormRequest
                 'email',
                 'min:10',
                 'max:50',
-                'regex:/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9._%+-]+@gmail\.(com\.vn|com|vn)$/'
+                'regex:/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/'
             ],
+
              'password' => [
                 'required',
                 'string',
@@ -44,15 +45,15 @@ class RegisterRequest extends FormRequest
         return [
             # username
             "username.required" => "Vui lòng điền tên đăng nhập",
-            "username.min" => "Tên đăng nhập ít nhất :min ký tự",
-            "username.max" => "Tên đăng nhập tối đa :max ký tự",
+            "username.min" => "tên đăng nhập ít nhất :min ký tự",
+            "username.max" => "tên đăng nhập tối đa :max ký tự",
 
             # email
             'email.required' => 'Vui lòng nhập email',
             'email.email' => 'Email không hợp lệ',
             'email.min' => 'Email phải có ít nhất :min ký tự',
             'email.max' => 'Email không được vượt quá :max ký tự',
-            'email.regex' => 'Phải là gmail, ít nhất 1 chữ cái, 1 số và kết thúc bằng .com .vn hoặc .com.vn',
+            'email.regex' => 'Email chứa ít nhất 1 chữ cái, 1 số và kết thúc bằng .com',
 
             # password
             'password.required' => 'Vui lòng nhập mật khẩu',
@@ -61,4 +62,5 @@ class RegisterRequest extends FormRequest
             'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
         ];
     }
+
 }

@@ -50,7 +50,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('index') }}">
+        <a class="navbar-brand" href="{{ route('home') }}">
             {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
             <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="width: 80%; height: 37px;">
         </a>
@@ -82,7 +82,7 @@
             </ul>
 
                 <div class="right-menu">
-                    <a href="" class="nav-link text-light">Đăng Ký</a>
+                    <a href="{{ route('showRegister') }}" class="nav-link text-light">Đăng Ký</a>
                     <a href="" class="nav-link text-light">Đăng Nhập</a>
                     <div class="cart-icon">
                         <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"

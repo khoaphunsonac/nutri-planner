@@ -169,7 +169,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 });
 
 # register
-
 Route::get('/register', [RegisterController::class, 'showRegister'])->name('showRegister');
 # XỬ LÝ REGISTER
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
@@ -183,7 +182,7 @@ Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
 });
 
 // Home
-Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 //Nutri Calc
 Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc');
@@ -194,9 +193,3 @@ Route::view('/tdee', 'site.tdee')->name('tdee');
 //Contact
 Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
 Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.store');
-
-
-
-Route::get('/', function(){
-    return view('site.register.form');
-});

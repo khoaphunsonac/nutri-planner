@@ -16,15 +16,19 @@ class RegisterController extends Controller
     }
     public function register(RegisterRequest $request)
     {
+            // dd($request->all());
+
         // Create user
         $user = AccountModel::create([
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        dd($user);
+
         # với lần đầu đk thì đăng ký xong thì cho vô ngay
         Auth::login($user);
 
-        return redirect()->route('index')->with('success', 'Đăng ký thành công');
+        return redirect()->route('home')->with('success', 'Đăng ký thành công');
     }
 }
