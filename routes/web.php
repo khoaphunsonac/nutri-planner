@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NutriController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
@@ -16,7 +17,6 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\NutriController;
 use App\Http\Controllers\MealsController;
 
 // FORM LOGIN (Hiển thị giao diện)
