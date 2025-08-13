@@ -157,7 +157,7 @@
                 <div class="col-md-6 mb-3">
                 <h4>Công ty TNHH NUTRI PLANNER</h4>
                 <p>
-                    <strong>Địa chỉ</strong> 33 Đường 14, KDC Bình Hưng, Ấp 2, Huyện Bình Chánh, TPHCM<br/>
+                    <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam<br/>
                     <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br/>
                     <strong>Email</strong> info@fitfood.vn.<br/>
                     <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
