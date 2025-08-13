@@ -145,44 +145,6 @@
     </div>
 </div>
 </div>
-{{----------- sau nhớ xem lại footer vì đag coppy từ bản gốc đang link lung tung -----------}}
-<div class="row">
-    <footer class="footer-main">
-    <div class="container">
-        <a href="/" class="mb-4 d-block">
-            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" style="width: 130px;" />
-        </a>
-        <div class="widget-footer mb-4">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                <h4>Công ty TNHH NUTRI PLANNER</h4>
-                <p>
-                    <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam<br/>
-                    <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br/>
-                    <strong>Email</strong> info@fitfood.vn.<br/>
-                    <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
-                </p>  
-              </div>
-            <div class="col-md-3 mb-3">
-            <h4>Theo dõi chúng tôi tại </h4>
-                <div class="social mb-3">
-                    <a href="https://www.facebook.com/fitfoodvietnam" target="_blank">
-                      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="fitfoodvietnam" border="0"/>
-                        </a>
-                        <a href="https://www.instagram.com/fitfoodvn" target="_blank">
-                            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="fitfoodvn" border="0"/>
-                        </a>
-                        <a href="https://www.youtube.com/watch?v=CJ6eTsFdd1I" target="_blank">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="fitfoodvn" border="0"/>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p class="copyright mb-0">© Copyright 2025 NUTRI PLANNER. All rights reserved.</p>
-    </div>
-</footer>
-</div>
 
 {{-- js --}}
 <script>
