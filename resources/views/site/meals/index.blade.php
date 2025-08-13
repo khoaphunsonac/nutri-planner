@@ -74,12 +74,12 @@
                     </div>
                 </div>
                 <!-- fillter -->
-                <div class="row g-2 mt-2 align-items-center  my-4">
+                <div class="row g-2 mt-2 align-items-center  my-4" >
                     
 
                     {{-- Calories--}}
-                    <div class="col-md-3">
-                        <select name="calories_range" class="form-select text-center" onchange="this.form.submit()">
+                    <div class="col-md-3" >
+                        <select name="calories_range" class="form-select text-center" onchange="this.form.submit()" style="cursor: pointer">
                             <option value="">-- Chọn khoảng calories --</option>
                             <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
                             <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
@@ -91,12 +91,14 @@
                             <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
                             <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
                             <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
+                            <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
+                            <option value="1800-2100" {{ request('calories_range') == '1800-2100' ? 'selected' : '' }}>1800 - 2100</option>
                         </select>
                     </div >
                     
                     {{-- fillter  diettype --}}
-                    <div class="col-md-3">
-                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()">
+                    <div class="col-md-3" >
+                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()" style="cursor: pointer">
                             <option value="">-- Chọn chế độ ăn --</option>
                             @foreach($dietTypes as $diet)
                                 <option value="{{ $diet->id }}" {{ request('diet') == $diet->id ? 'selected' : '' }}>
@@ -109,7 +111,7 @@
 
                     {{-- fillter  mealTypeFill--}}
                     <div class="col-md-3 ">
-                        <select name="meal_type" class="form-select me-2 text-center" onchange="this.form.submit()">
+                        <select name="meal_type" class="form-select me-2 text-center" onchange="this.form.submit()" style="cursor: pointer">
                             <option value="">-- Chọn bữa ăn --</option>
                             @foreach($mealTypes as $mealType)
                                 <option value="{{ $mealType->id }}" {{ request('meal_type') == $mealType->id ? 'selected' : '' }}>
@@ -121,7 +123,7 @@
 
                     {{-- fillter  allergenFill--}}
                     <div class="col-md-3 position-relative">
-                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chọn để loại bỏ món ăn có chất dị ứng bạn không muốn. Ví dụ: đậu phộng, hải sản,...">
+                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chọn để loại bỏ món ăn có chất dị ứng bạn không muốn. Ví dụ: đậu phộng, hải sản,..." style="cursor: pointer">
                             <option value="">-- Chọn chất dị ứng --</option>
                             @foreach($allergens as $allergen)
                                 <option value="{{ $allergen->id }}" {{ request('allergen') == $allergen->id ? 'selected' : '' }}>
