@@ -8401,7 +8401,7 @@
                     "dev-develop": "1.0-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-4": {
                     "Tymon\\JWTAuth\\": "src/"
