@@ -30,7 +30,7 @@
     @endif
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-3">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$totalTags ?? 0}}</h4>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$activeTags ?? 0}}</h4>
@@ -54,22 +54,22 @@
                 </div>
             </div>
         </div> --}}
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$usageRate ?? 0}}</h4>
-                    <p class="text-muted mb-0">Sử dụng</p>
+                    <p class="text-muted mb-0">Thẻ được sử dụng</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>Coming soon</h4>
                     <p class="text-muted mb-0">Thẻ phổ biến</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     {{-- fillter form --}}

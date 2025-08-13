@@ -6,7 +6,7 @@
 
     {{-- Breadcrumb --}}
     <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
+        <ol class="breadcrumb breadcrumb-compact">
            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a></li>
             <li class="breadcrumb-item"> <a href="{{route('tags.index')}}"><i class="bi bi-tags">Thẻ</i></a></li>
             <li class="breadcrumb-item active " aria-current="page">  {{  isset($item) && $item ? 'Cập nhật Thẻ: ' . $item->name : 'Thêm Thẻ mới' }} </li>

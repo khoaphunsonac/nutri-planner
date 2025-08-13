@@ -116,47 +116,58 @@
  <div class="row mt-3">
   <!-- biểu đồ -->
   <div class="col-md-6 d-flex align-items-stretch mb-4">
-    <div class="card shadow-lg border-0 p-3 w-100" style="background-color: #ffffff">
-      <h5 class="text-center mb-3" style="font-size: 25px;">
-        <span class="chart">
-          <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Tỉ lệ Người dùng</span>
-      </h5>
-      <div class="row align-items-center">
-        <div class="col-md-6 d-flex justify-content-center" >
-          {{-- kích cỡ biểu đồ --}}
-          <div style="position: relative; width: 100%; height: 220px;">
-          <canvas id="userGaugeChart"></canvas>
-            <div style="
-              position: absolute; top: 50%; left: 50%;
-              transform: translate(-50%, -40%);
-              font-size: 35px;
-              font-weight: bold;
-              color: #d70c0c;
-              margin-top: 10%;">
-              <i class="bi bi-person-fill-add"></i> +{{ $userPercent }}%
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <p class="mb-0 text-center text-md-start" style="18px; width: 80%; margin-left: 12px;">
-            Phân tích người dùng theo thời gian cho thấy lượng người dùng đã
-            <span class="fw-bold text-danger">tăng {{ $userPercent }}%</span><br>
-            kể từ <span class="fw-semibold text-primary">{{ $lastDay }}</span>.
-          </p>
-        </div>
+  <div class="card shadow-lg border-0 p-3 w-100" style="background-color: #ffffff">
+    <h5 class="text-center mb-3" style="font-size: 25px;">
+      <span class="chart">
+        <i class="bi bi-bar-chart-line-fill me-2 text-primary"></i>Người dùng
+      </span>
+    </h5>
+    <div class="row align-items-center">
+      <div style="position: relative; width: 100%; max-width: 300px; height: 220px; margin: auto;">
+  <canvas id="userGaugeChart" width="300" height="220"></canvas>
+  
+  <div style="
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -40%);
+    font-size: 35px;
+    font-weight: bold;
+    color: #d70c0c;
+    text-align: center;
+    ">
+    <i class="bi bi-people-fill"></i> {{ $totalUsers }}
+    @if($newUsersToday > 0)
+      <div style="font-size: 18px; color: green;">
+        +{{ $newUsersToday }} hôm nay
+      </div>
+    @endif
+  </div>
+</div>
+
+      <div class="col-md-6">
+        <p class="mb-0 text-center text-md-start" style="font-size: 18px; width: 80%; margin-left: 12px;">
+          Hiện tại có tổng cộng 
+          <span class="fw-bold text-primary">{{ $totalUsers }}</span> người dùng.<br>
+          @if($newUsersToday > 0)
+            Hôm nay đã thêm <span class="fw-bold text-success">+{{ $newUsersToday }}</span> người mới.
+          @else
+            Hôm nay chưa có người dùng mới.
+          @endif
+        </p>
       </div>
     </div>
   </div>
+</div>
 
   <!-- bản đồ -->
   <div class="col-md-6 d-flex align-items-stretch mb-4">
     <div class="card shadow-lg border-0 p-3 w-100" style="background-color: #ffffff">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="mb-0" style="font-size: 25px;">
-          <i class="bi bi-geo-alt-fill text-success me-1"></i> Địa chỉ Fitfood
+          <i class="bi bi-geo-alt-fill text-success me-1"></i>Nutri Planner
         </h5>
         {{-- link đến chức năng chỉnh sửa --}}
-        <a href="" class="btn btn-outline-secondary btn-sm">Chỉnh sửa</a>
+        <a href="{{ route('contact.index') }}" class="btn btn-outline-secondary btn-sm">Chỉnh sửa</a>
       </div>
       <div class="ratio ratio-16x9" style="height: 220px;">
         <iframe
@@ -173,36 +184,43 @@
 {{-- nhúng chart để dùng biểu đồ user và món ăn theo chế độ ăn --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const ctx = document.getElementById('userGaugeChart').getContext('2d'); // vẽ 2d với ctx
-  new Chart(ctx, { // ctx
-    type: 'doughnut', // tròn rỗng
+  const ctx = document.getElementById('userGaugeChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
     data: {
-      labels: ['Người dùng', 'còn trống'],
-      datasets: [{
-        data: [{{ $userPercent }}, {{ 100 - $userPercent }}],
-        backgroundColor: ['#FFCA28', '#eed'],
-        borderWidth: 2
-      }]
+        labels: ['User mới hôm nay', 'User cũ'],
+        datasets: [{
+            data: [{{ $newUsersToday }}, {{ $oldUsers }}],
+            backgroundColor: ['#28a745', '#ffc107'], // xanh lá, vàng đậm
+            borderWidth: 0
+        }]
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      rotation: -90,
-      circumference: 180,
-      cutout: '60%',
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top', // Đưa legend lên
-          labels: {
-            font: {
-              size: 17 // cỡ chữ
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '70%',
+        rotation: -90,
+        circumference: 180,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top',
+                labels: {
+                    font: { size: 14 }
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.parsed;
+                        return `${label}: ${value} người`;
+                    }
+                }
             }
-          }
         }
-      }
     }
-  });
+});
 </script>
 {{-- ve cho mốn ăn theo chế độ --}}
 <script>
@@ -281,5 +299,4 @@ new Chart(dietCtx, {
   }
 });
 </script>
-
 @endsection

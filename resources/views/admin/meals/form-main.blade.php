@@ -124,7 +124,7 @@
                                 <label for="name" class="form-label">Tên món ăn <span
                                         class="text-danger">*</span></label>
                                 <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                    id="name" name="name" value="{{ old('name', $meal->name ?? '') }}" >
+                                    id="name" name="name" value="{{ old('name', $meal->name ?? '') }}">
                                 @error('name')
                                     <div class="invalid-feedback">
                                         <i class="bi bi-exclamation-circle me-1"></i>{{ $message }}
@@ -137,7 +137,7 @@
                                 <label for="meal_type_id" class="form-label">Loại bữa ăn <span
                                         class="text-danger">*</span></label>
                                 <select class="form-select @error('meal_type_id') is-invalid @enderror" id="meal_type_id"
-                                    name="meal_type_id" >
+                                    name="meal_type_id">
                                     <option value="">Chọn loại bữa ăn</option>
                                     @foreach ($mealTypes as $mealType)
                                         <option value="{{ $mealType->id }}"
@@ -158,7 +158,7 @@
                                 <label for="diet_type_id" class="form-label">Chế độ ăn <span
                                         class="text-danger">*</span></label>
                                 <select class="form-select @error('diet_type_id') is-invalid @enderror" id="diet_type_id"
-                                    name="diet_type_id" >
+                                    name="diet_type_id">
                                     <option value="">Chọn chế độ ăn</option>
                                     @foreach ($dietTypes as $dietType)
                                         <option value="{{ $dietType->id }}"
@@ -193,8 +193,7 @@
                                         <small class="text-muted">Hình ảnh hiện tại:</small>
                                         <div class="border rounded p-2 mt-1">
                                             <img src="{{ asset('uploads/meals/' . $meal->image_url) }}"
-                                                alt="{{ $meal->name }}" class="img-thumbnail"
-                                                style="max-height: 100px;">
+                                                alt="{{ $meal->name }}" class="img-thumbnail" style="max-height: 100px;">
                                         </div>
                                     </div>
                                 @endif
@@ -1263,5 +1262,3 @@
         });
     </script>
 @endsection
-
-<script> alert('Hello'); </script>
