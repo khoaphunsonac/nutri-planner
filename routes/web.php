@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\RegisterController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -167,6 +168,11 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 });
 
+# register
+
+Route::get('/register', [RegisterController::class, 'showRegister'])->name('showRegister');
+# XỬ LÝ REGISTER
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
 
 
 // Meal site
@@ -191,3 +197,6 @@ Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.s
 
 
 
+Route::get('/', function(){
+    return view('site.register.form');
+});
