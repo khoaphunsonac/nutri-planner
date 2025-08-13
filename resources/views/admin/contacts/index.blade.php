@@ -106,7 +106,7 @@
             <!-- Email -->
             <p id="emailDisplay">
                 <strong>Email:</strong>
-                <span id="currentEmail">support@yourcenter.com</span>
+                <span id="currentEmail">support@nutriplanner.com</span>
                 <button class="btn btn-sm btn-warning ms-2" onclick="enableEmailEdit()">
                     <i class="bi bi-pencil"></i> Sửa
                 </button>

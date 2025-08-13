@@ -39,8 +39,8 @@
       <img src="https://images.pexels.com/photos/17326174/pexels-photo-17326174.jpeg?cs=srgb&dl=pexels-solehuddin-din-147017742-17326174.jpg&fm=jpg" alt="FITFOOD VIETNAM" />
     </div>
     <div class="content">
-      <h1 class="title">FITFOOD VIETNAM</h1>
-      <p>Fitfood VN cung cấp các phần ăn lành mạnh hàng tuần giúp bạn duy trì một lối sống khỏe. Chúng tôi tập trung vào chế độ ăn cân bằng được thiết kế chuyên biệt để hỗ trợ bạn kiểm soát cân nặng một cách hiệu quả nhất.</p>
+      <h1 class="title">NUTRI PLANNER</h1>
+      <p>NUTRI PLANNER cung cấp các phần ăn lành mạnh hàng tuần giúp bạn duy trì một lối sống khỏe. Chúng tôi tập trung vào chế độ ăn cân bằng được thiết kế chuyên biệt để hỗ trợ bạn kiểm soát cân nặng một cách hiệu quả nhất.</p>
       <p>Nếu bạn đang tìm kiếm những bữa ăn ngon và tốt cho sức khỏe được chuẩn bị sẵn ở Saigon thì Fitfood là một lựa chọn tối ưu. Thực đơn đa dạng với hơn 100 món của chúng tôi có thể giúp bạn thưởng thức mà không ngán trong hơn 1 tháng.</p>
     </div>
   </section>
@@ -199,7 +199,7 @@
         <div class="col-md-4">
             <img src="https://fitfood.vn/img/346x288/uploads/dsc04263-15668117777881.JPG" alt="Muỗng nĩa" class="img-fluid rounded">
             <p class="mt-3 text-muted">
-                Fitfood chỉ cung cấp 01 bộ muỗng nĩa mỗi ngày để giảm thiểu rác thải nhựa
+                NUTRI PLANNER chỉ cung cấp 01 bộ muỗng nĩa mỗi ngày để giảm thiểu rác thải nhựa
             </p>
         </div>
     </div>
@@ -215,11 +215,11 @@
         <div class="widget-footer mb-4">
             <div class="row">
                 <div class="col-md-6 mb-3">
-                <h4>Công ty TNHH Fitfood</h4>
+                <h4>Công ty TNHH NUTRI PLANNER</h4>
                 <p>
-                    <strong>Địa chỉ</strong> 33 Đường 14, KDC Bình Hưng, Ấp 2, Huyện Bình Chánh, TPHCM<br/>
+                    <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam<br/>
                     <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br/>
-                    <strong>Email</strong> info@fitfood.vn. For business inquiries: business@fitfood.vn<br/>
+                    <strong>Email</strong> info@fitfood.vn.<br/>
                     <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
                 </p>  
               </div>
@@ -239,7 +239,7 @@
                 </div>
             </div>
         </div>
-        <p class="copyright mb-0">© Copyright 2025 Fitfood. All rights reserved.</p>
+        <p class="copyright mb-0">© Copyright 2025 NUTRI PLANNER. All rights reserved.</p>
     </div>
 </footer>
 </div>
