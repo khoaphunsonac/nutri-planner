@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
 use App\Models\AccountModel;
-use GuzzleHttp\Psr7\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,6 +25,6 @@ class RegisterController extends Controller
         # với lần đầu đk thì đăng ký xong thì cho vô ngay
         Auth::login($user);
 
-        return redirect()->route('showRegister')->with('success', 'Đăng ký thành công');
+        return redirect()->route('index')->with('success', 'Đăng ký thành công');
     }
 }
