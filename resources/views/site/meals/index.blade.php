@@ -76,18 +76,6 @@
                 <!-- fillter -->
                 <div class="row g-2 mt-2 align-items-center  my-4">
                     
-                    
-                    {{-- fillter  diettype --}}
-                    <div class="col-md-3">
-                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()">
-                            <option value="">-- Chọn chế độ ăn --</option>
-                            @foreach($dietTypes as $diet)
-                                <option value="{{ $diet->id }}" {{ request('diet') == $diet->id ? 'selected' : '' }}>
-                                    {{ $diet->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
 
                     {{-- Calories--}}
                     <div class="col-md-3">
@@ -106,6 +94,18 @@
                         </select>
                     </div >
                     
+                    {{-- fillter  diettype --}}
+                    <div class="col-md-3">
+                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()">
+                            <option value="">-- Chọn chế độ ăn --</option>
+                            @foreach($dietTypes as $diet)
+                                <option value="{{ $diet->id }}" {{ request('diet') == $diet->id ? 'selected' : '' }}>
+                                    {{ $diet->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
 
                     {{-- fillter  mealTypeFill--}}
                     <div class="col-md-3 ">
@@ -120,17 +120,19 @@
                     </div>
 
                     {{-- fillter  allergenFill--}}
-                    <div class="col-md-3">
-                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()">
-                            <option value="">-- Chọn chất dị ứng --  
-                            (chọn để bỏ những chất bị dị dứng ra khỏi bữa ăn của bạn)</option>
+                    <div class="col-md-3 position-relative">
+                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chọn để loại bỏ món ăn có chất dị ứng bạn không muốn. Ví dụ: đậu phộng, hải sản,...">
+                            <option value="">-- Chọn chất dị ứng --</option>
                             @foreach($allergens as $allergen)
                                 <option value="{{ $allergen->id }}" {{ request('allergen') == $allergen->id ? 'selected' : '' }}>
                                     {{ $allergen->name }}
                                 </option>
                             @endforeach
+                            
+
                         </select>
                     </div>
+
                 </div>
                 
                 
@@ -231,4 +233,11 @@
 
         </div>
    
+
+<script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+</script>
 @endsection

@@ -309,3 +309,20 @@ body {
 }
 
 /* icon nhấn vào */
+
+
+
+/* home 8 món mới nhất*/
+.card.meal-card {
+    transition: transform 0.3s;
+}
+.card.meal-card:hover {
+    transform: translateY(-5px) !important;;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;;
+}
+.card-img-top {
+    border-bottom: 1px solid #eee;
+}
+.card.meal-card:hover img {
+    filter: brightness(70%) !important;;
+}

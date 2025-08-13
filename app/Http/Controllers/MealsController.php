@@ -70,14 +70,14 @@ class MealsController extends BaseController
            
         }
 
-        //lọc theo allergen
+        //lọc bỏ allergen  lấy món không có allergen
         if(!empty($allergen)){
-            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; // Lấy tên diet từ DB
-            $meals = $meals->whereHas('allergens',function($q) use($allergen){
+            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; 
+            $meals = $meals->whereDoesntHas('allergens',function($q) use($allergen){ 
                         $q->where('allergens.id',$allergen);
                     });
                if($allergentName){
-                    $searchConditions[] = 'chất dị ứng " ' . $allergentName. ' "';
+                    $searchConditions[] = 'loại bỏ món có chất dị ứng " ' . $allergentName. ' "';
 
                 }
 
@@ -86,7 +86,7 @@ class MealsController extends BaseController
 
         //lọc theo mealtype
         if(!empty($mealType)){
-            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; // Lấy tên diet từ DB
+            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; 
             $meals = $meals->where('meals.meal_type_id',$mealType);
             if($mealTypeName){
                     $searchConditions[] = 'chế độ ăn " ' . $mealTypeName. ' "';
