@@ -225,7 +225,7 @@
                                                 @csrf
                                                 <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
                                                     data-liked="false" {{-- mặc định chưa thích --}}
-                                                    style="font-size: 20px; background: rgba(0,0,0,0.4); border: none; cursor: pointer;"
+                                                    style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
                                                 >
                                                 @php
                                                     // kiểm tra đã yêu thích chưa
