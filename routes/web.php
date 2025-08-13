@@ -34,7 +34,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
+
+     // Thêm route cho forgot password
+    Route::post('/password/email', [AdminAuthController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('/password/reset/{token}', [AdminAuthController::class, 'showResetForm'])->name('password.reset');
+    Route::post('/password/reset', [AdminAuthController::class, 'resetPassword'])->name('password.update');
 });
+
+
 
 // Group Admin (Protected with JWT)
 Route::prefix('admin')->middleware('admin')->group(function () {
