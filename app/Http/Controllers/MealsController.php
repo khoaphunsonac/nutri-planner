@@ -72,12 +72,12 @@ class MealsController extends BaseController
 
         //lọc bỏ allergen  lấy món không có allergen
         if(!empty($allergen)){
-            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; 
-            $meals = $meals->whereDoesntHas('allergens',function($q) use($allergen){ 
+            $allergenName = AllergenModel::find($allergen)?->name ?? $allergen; 
+            $meals = $meals->whereDoesntHave('allergens',function($q) use($allergen){ 
                         $q->where('allergens.id',$allergen);
                     });
-               if($allergentName){
-                    $searchConditions[] = 'loại bỏ món có chất dị ứng " ' . $allergentName. ' "';
+               if($allergenName){
+                    $searchConditions[] = 'loại bỏ món có chất dị ứng " ' . $allergenName. ' "';
 
                 }
 
@@ -106,7 +106,7 @@ class MealsController extends BaseController
                 $meals = $meals->having('total_calories','<=',(int)$caloriesMax);
                 
             }
-            $searchConditions[] = 'Calories từ ' . $caloriesMin. ' đến ' . $caloriesMax;
+            $searchConditions[] = 'Calories (đơn vị Kcal) từ ' . $caloriesMin. ' đến ' . $caloriesMax;
         }
         // lay du lieu phan trang
         $meals = $meals->paginate(9,'*','meals_page');
@@ -147,5 +147,44 @@ class MealsController extends BaseController
             'meal'=>$meal,
             'latestMeals'=>$latestMeals,
         ]);
+    }
+
+    public function favorite($id){
+        //lấy user hiện tại
+        // $user = auth()->user();
+
+        //lấy meal
+        $meal =  MealModel::findOrFail($id);
+
+        //lấy giá trị hiện tại từ cột savemeal(chuyển thành mảng)
+        $saveMeals = $meal->savemeal ? explode('-',$meal->savemeal) : [];
+
+        // ktra id đã có chưa
+        $found = false;
+        foreach($saveMeals as $saveId){
+            if($saveId == $id){
+                $found = true;
+                break;
+            }
+        }
+        if($found){
+           // nếu id tồn tại thì xóa bằng cách tạo mảng mới k chứa $id
+           $newMeals = [];
+           foreach($saveMeals as $saveId){
+            if($saveId != $id){
+                $newMeals[] = $saveId;
+            }
+           }
+           $saveMeals = $newMeals;
+        }else{
+            //chưa có thì thêm vào
+            $saveMeals[] = $id;
+        }
+
+        // chuyen mảng thành chuỗi
+        $meal->savemeal = implode('-',$saveMeals);
+        $meal->save();
+
+        return back();
     }
 }

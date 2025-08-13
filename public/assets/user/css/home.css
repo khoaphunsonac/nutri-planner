@@ -326,3 +326,21 @@ body {
 .card.meal-card:hover img {
     filter: brightness(70%) !important;;
 }
+
+  .object-fit-cover {
+    object-fit: cover;
+  }
+  
+  .nutrition-info .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+  }
+  
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 1rem !important;
+    }
+    .nutrition-info .badge {
+      font-size: 0.65rem;
+    }
+  }

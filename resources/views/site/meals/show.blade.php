@@ -174,14 +174,14 @@
                         <div class="card-body ">
                             <h4 class="card-title my-3">{{ $latest->name }}</h4>
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
-                            <p class="mb-2 my-4">
-                            
-                                <strong>{{$totalKcal}} kcal</strong> | 
-                                P: {{$totalPro}} g |
-                                C: {{$totalCarbs}} g |
-                                F: {{$totalFat}} g 
-                            
-                            </p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                              </div>
+                            </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                           
                         </div>

@@ -36,6 +36,13 @@
             filter: brightness(70%);
         }
 
+        .btn-favorite{
+            cursor: pointer;
+        }
+        .btn-favorite{
+            transform: scale(1.1);
+            transition: 0.2s;
+        }
         
     </style>
 
@@ -79,16 +86,23 @@
 
                     {{-- Calories--}}
                     <div class="col-md-3" >
-                        <select name="calories_range" class="form-select text-center" onchange="this.form.submit()" style="cursor: pointer">
-                            <option value="">-- Chọn khoảng calories --</option>
+                        <select name="calories_range" 
+                            class="form-select text-center" 
+                            onchange="this.form.submit()" 
+                            style="cursor: pointer"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom" 
+                            title="1 Calorie (dinh dưỡng) = 1 Kcal =  1000 calories (khoa học)"
+                        >
+                            <option value="">-- Chọn khoảng Calories (Kcal) --</option>
                             <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
                             <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
-                            <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
-                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
                             <option value="200-400" {{ request('calories_range') == '200-400' ? 'selected' : '' }}>200 - 400</option>
                             <option value="400-600" {{ request('calories_range') == '400-600' ? 'selected' : '' }}>400 - 600</option>
                             <option value="600-800" {{ request('calories_range') == '600-800' ? 'selected' : '' }}>600 - 800</option>
+                            <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
                             <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
+                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
                             <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
                             <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
                             <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
@@ -166,6 +180,8 @@
                                             $totalKcal += ($ingredient->protein * 4) + ($ingredient->carb * 4) + ($ingredient->fat * 9);
                                         }
                                     }
+
+                                    
                                 @endphp
                             
                                 <div class="col-md-4 ">
@@ -174,22 +190,41 @@
                                                 @php
                                                     $image = $meal->image_url ?? '';
                                                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                                    
+                                                     // kiểm tra đã yêu thích chưa
+                                                    $savedMeals = $meal->savemeal ? explode('-', $meal->savemeal) : [];
+                                                    $isFavorite = in_array($meal->id, $savedMeals);
                                                 @endphp
                                             
                                         
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
                                                 
-                                                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
-                                                
+                                                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                                                <form action="{{route('meal.favorite',$meal->id)}}" method="POST">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
+                                                        data-liked="false" {{-- mặc định chưa thích --}}
+                                                        style="font-size: 24px; background: none; border: none; cursor: pointer;"
+                                                    >
+                                                        @if($isFavorite)
+                                                            <i class="fas fa-heart text-danger fs-4"></i>
+                                                        @else
+                                                            <i class="far fa-heart text-light fs-4"></i>
+                                                        @endif
+                                                    </button>
+                                                </form>
+
                                                 <div class="card-body ">
                                                     <h4 class="card-title my-3">{{ $meal->name }}</h4>
                                                     <p class="card-text text-muted ">{{ Str::limit($meal->description, 80) }}</p>
-                                                    <p class="mb-2 my-4">
-                                                        <strong>{{$totalKcal}} kcal</strong> | 
-                                                        P: {{$totalPro}} g |
-                                                        C: {{$totalCarbs}} g |
-                                                        F: {{$totalFat}} g 
-                                                    </p>
+                                                    <div class="nutrition-info mt-auto pt-2">
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                                            <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                                            <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                                            <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                                        </div>
+                                                        </div>
                                                     {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                                             
                                                 </div>
@@ -236,6 +271,40 @@
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault(); // Ngăn chặn click nhảy link
+                e.stopPropagation(); // Ngăn chặn sự kiện click lan ra thẻ cha
+
+                let mealId = this.getAttribute('data-id');
+                let icon = this.querySelector('i');
+
+                fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                    }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        // đổi icon
+                        if (icon.classList.contains('far')) {
+                            icon.classList.remove('far', 'text-light');
+                            icon.classList.add('fas', 'text-danger');
+                        } else {
+                            icon.classList.remove('fas', 'text-danger');
+                            icon.classList.add('far', 'text-light');
+                        }
+                    }
+                })
+                .catch(err => console.error(err));
+            });
+        });
+    });
+
 </script>
 @endsection

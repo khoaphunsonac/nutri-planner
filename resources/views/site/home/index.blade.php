@@ -48,12 +48,12 @@
 
 {{-- display sp tiêu biểu --}}
 </div>
-<div class="row" style="margin-top: 2px">
+  <div class="row mt-2" >
   <div class="col-md-12">
     <div class="render-meal">
       <div style=" padding-top: 30px;">
           <h2 class="section-title" style="color: rgb(236, 236, 236);">Sản phẩm tiêu biểu</h2>
-          <hr style="width: 20%; height: 4px; background-color: #ffffff; border: none; border-radius: 2px; margin: 10px auto 0;">
+          <hr style="width: 340px;  height: 4px; background-color: #ffffff; border: none; border-radius: 2px; margin: 10px auto 0;">
       </div>
       <!-- <div class="content-meal">
         <a href="">
@@ -115,23 +115,22 @@
       </div> -->
 
       {{-- hiển thị 8 món mới nhất --}}
-      <div class="container new "> 
-        <div class="section-header" style=" color: white;">
-           <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
+      <div class=" container new "> 
+        <div class="section-header my-5" style=" color: white;">
+          <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
           <hr style="
               display: inline-block;
-              width: 20%; 
+              width: 19%; 
               height: 4px; 
               background-color: #ffffff; 
               border: none; 
               border-radius: 2px; 
-              margin: 0 0 0 10px;
               vertical-align: middle;
           ">
         </div>
-       
-        <div class="row">
-       
+      
+        <div class="row g-4">
+      
           @foreach ($latestMeals as $latest)
             @php
                 
@@ -157,7 +156,7 @@
                 $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                               
             @endphp
-            <div class="col-md-3 mb-4" >
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
                 <div class="card meal-card shadow-sm h-100" >
                         @php
                             $image = $latest->image_url ?? '';
@@ -172,14 +171,14 @@
                         <div class="card-body ">
                             <h4 class="card-title my-3">{{ $latest->name }}</h4>
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
-                            <p class="mb-2 my-4">
-                            
-                                <strong>{{$totalKcal}} kcal</strong> | 
-                                P: {{$totalPro}} g |
-                                C: {{$totalCarbs}} g |
-                                F: {{$totalFat}} g 
-                            
-                            </p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                              </div>
+                            </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                           
                         </div>
@@ -189,11 +188,9 @@
           @endforeach
       </div>
     </div>
+  </div>
 </div>
 
-  </div>
-  </div>
-</div>
 <div style="background-color: #ebebeb; padding: 50px 0;">
     <div class="container text-center my-5">
     <h2 style="letter-spacing: 2px;">

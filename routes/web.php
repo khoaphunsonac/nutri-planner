@@ -173,6 +173,7 @@ $mealController = MealsController::class;
 Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
     Route::get('/', [$mealController, 'index'])->name('index');
     Route::get('/show/{id}', [$mealController, 'show'])->name('show');
+    Route::post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');
 });
 
 // Home
