@@ -133,7 +133,12 @@ class MealsController extends BaseController
                                 'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
                             ])->findOrFail($id);
         // lấy 8 món mới nhất (k có món đang xem)
-        $latestMeals = MealModel::where('id','!=',$id)
+        $latestMeals = MealModel::with(['tags',
+                                'mealType',
+                                'ingredients',
+                                'allergens',
+                                'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
+                            ])->where('id','!=',$id)
                                 ->orderBy('created_at','desc')
                                 ->take(8)
                                 ->get();

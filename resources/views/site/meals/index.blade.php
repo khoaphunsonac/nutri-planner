@@ -157,18 +157,14 @@
                                     
 
                                     foreach ($meal->recipeIngredients as $ing) {
-                                        // Ưu tiên dùng giá trị đã tính sẵn trong DB (nếu có)
-                                        if (isset($ing->total_calo)) {
-                                            $totalKcal += $ing->total_calo;
-                                        } else {
-                                            // Tính thủ công nếu không có sẵn
-                                            $totalKcal += ($ing->ingredient->protein * 4 + $ing->ingredient->carb * 4 + $ing->ingredient->fat * 9) * ($ing->quantity ?? 1);
+                                        $ingredient = $ing->ingredient;
+                                        if ($ingredient) {
+                                            $quantity = $ing->quantity ?? 1;
+                                            $totalPro += $ingredient->protein ;
+                                            $totalCarbs += $ingredient->carb ;
+                                            $totalFat += $ingredient->fat ;
+                                            $totalKcal += ($ingredient->protein * 4) + ($ingredient->carb * 4) + ($ingredient->fat * 9);
                                         }
-                                        
-                                        // Tính protein, carb, fat (bắt buộc tính thủ công nếu không lưu sẵn)
-                                        $totalPro += ($ing->ingredient->protein ?? 0) * ($ing->quantity ?? 1);
-                                        $totalCarbs += ($ing->ingredient->carb ?? 0) * ($ing->quantity ?? 1);
-                                        $totalFat += ($ing->ingredient->fat ?? 0) * ($ing->quantity ?? 1);
                                     }
                                 @endphp
                             
