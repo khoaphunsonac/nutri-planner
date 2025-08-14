@@ -36,7 +36,7 @@
                          {{-- Tên thẻ --}}
                         <div class=" mb-4">
                             <h4 for="name" class="form-label fw-bold mb-2">Tên Thẻ</h4>
-                            <input type="text" name="name" class="form-control" id=""  value="{{ $item->name ?? old('name') }}" style="cursor: pointer">
+                            <input type="text" name="name" class="form-control" id=""  value="{{ $item->name ?? old('name') }}" style="cursor: text">
                             @error('name')
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
@@ -57,7 +57,7 @@
                                                     value="{{ $meal->id }}"
                                                     id="meal_{{ $meal->id }}"
                                                     {{  in_array($meal->id, $selectedMeals) ? 'checked' : ''  }} style="cursor: pointer">
-                                                <label class="form-check-label" for="meal_{{ $meal->id }}" >
+                                                <label class="form-check-label" for="meal_{{ $meal->id }}" style="cursor: pointer">
                                                     {{ $meal->name }}
                                                 </label>
                                             </div>

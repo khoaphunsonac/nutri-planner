@@ -30,7 +30,7 @@ class TagController extends BaseController
         $query = TagModel::withCount('meals')->whereNull('deleted_at');
         $mealSearch = $params['mealSearch'] ?? '';
         $item = null;
-        $meals = MealModel::all();
+        $meals = MealModel::orderBy('id', 'desc')->get();
         if($search){
              $query = $query->where('name','like',"%$search%");
         };
