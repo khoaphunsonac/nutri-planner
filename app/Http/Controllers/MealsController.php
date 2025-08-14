@@ -152,71 +152,68 @@ class MealsController extends BaseController
     }
 
     public function favorite($id){
-        // //lấy user hiện tại
-        // // $user = auth()->user();
-
-        //lấy meal
-        $meal =  MealModel::findOrFail($id);
-
-        //lấy giá trị hiện tại từ cột savemeal(chuyển thành mảng)
-        $saveMeals = $meal->savemeal ? explode('-',$meal->savemeal) : [];
-
-        // ktra id đã có chưa
-        $found = false;
-        foreach($saveMeals as $saveId){
-            if($saveId == $id){
-                $found = true;
-                break;
-            }
-        }
-        if($found){
-           // nếu id tồn tại thì xóa bằng cách tạo mảng mới k chứa $id
-           $newMeals = [];
-           foreach($saveMeals as $saveId){
-            if($saveId != $id){
-                $newMeals[] = $saveId;
-            }
-           }
-           $saveMeals = $newMeals;
-        }else{
-            //chưa có thì thêm vào
-            $saveMeals[] = $id;
-        }
-
-        // chuyen mảng thành chuỗi
-        $meal->savemeal = implode('-',$saveMeals);
-        $meal->save();
-
-
-        // if (Auth::check()) {
-        //     // --- Có user đăng nhập: lưu vào DB ---
-        //     $favorite = AccountModel::where('user_id', Auth::id())
-        //                         ->where('meal_id', $id)
-        //                         ->first();
-
-        //     if ($favorite) {
-        //         $favorite->delete(); // Bỏ yêu thích
-        //     } else {
-        //         AccountModel::create([
-        //             'user_id' => Auth::id(),
-        //             'meal_id' => $$id
-        //         ]);
-        //     }
-        // } else {
-        //     // --- Chưa đăng nhập: lưu vào Session ---
-        //     $saveMeals = session('saveMeals', []);
-
-        //     if (in_array($id, $saveMeals)) {
-        //         $saveMeals = array_filter($saveMeals, fn($id) => $id != $id);
-        //     } else {
-        //         $saveMeals[] = $id;
-        //     }
-
-        //     session(['saveMeals' => $saveMeals]);
-        // // }
-
-        return back();
+        //lấy user hiện tại
+        $account = AccountModel::findOrFail(auth()->id());
 
         
+
+        //lấy danh sách hiện tại từ cột favorite
+        $saveMeals = $account->savemeal ? explode('-',$account->savemeal) : [];
+        // nếu meal này đã có trong ds thì bỏ ra
+        // ktra id đã có chưa
+        $found = false;
+        foreach($saveMeals as $key => $saveId){
+            if($saveId == $id){
+                // nếu đã có thì xóa đi
+                unset($saveMeals[$key]);
+                $found = true;
+            }
+        }
+        //nếu chưa có thì thêm vào
+        if(!$found){
+           $saveMeals[] = $id;
+        }
+
+        // chuyen mảng thành chuỗi va lưu lại
+        $account->savemeal = implode('-',$saveMeals);
+        $account->save();
+
+
+        // //lấy meal
+        // $meal =  MealModel::findOrFail($id);
+        // //lấy giá trị hiện tại từ cột savemeal(chuyển thành mảng)
+        // $saveMeals = $meal->savemeal ? explode('-',$meal->savemeal) : [];
+
+        // ktra id đã có chưa
+        // $found = false;
+        // foreach($saveMeals as $saveId){
+        //     if($saveId == $id){
+        //         $found = true;
+        //         break;
+        //     }
+        // }
+        // if($found){
+        //    // nếu id tồn tại thì xóa bằng cách tạo mảng mới k chứa $id
+        //    $newMeals = [];
+        //    foreach($saveMeals as $saveId){
+        //     if($saveId != $id){
+        //         $newMeals[] = $saveId;
+        //     }
+        //    }
+        //    $saveMeals = $newMeals;
+        // }else{
+        //     //chưa có thì thêm vào
+        //     $saveMeals[] = $id;
+        // }
+
+        // // chuyen mảng thành chuỗi
+        // $meal->savemeal = implode('-',$saveMeals);
+        // $meal->save();
+
+        return back()->with('success', 'Cập nhật món yêu thích thành công');
+
+        
+
+
     }
 }
