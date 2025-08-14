@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
         <h2>{{isset($item) && $item ? ' Cập nhật Thẻ:  '. $item->name  : ' Thêm Thẻ '}}</h2>
-        <a href="{{route('tags.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
+        <a href="{{route('tags.index')}}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Quay lại </a>
     </div>
  
 

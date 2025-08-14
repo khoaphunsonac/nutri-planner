@@ -103,7 +103,7 @@
                     <tr>
                         <th width="30">Số thứ tự</th>
                         <th width="150">Tên Thẻ</th>
-                        {{-- <th width="150">Trạng thái</th> --}}
+                        <th width="150">Món ăn</th>
                         <th width="100">Số món ăn</th>
                         <th width="150">Ngày tạo</th>
                         <th width="150" class="text-center">Thao tác</th>
@@ -119,13 +119,22 @@
                                 <td>
                                     {{$phanTu->name}}
                                 </td>
-                                {{-- <td>
-                                    @if ($phanTu['deleted_at'])
-                                        <span class="badge bg-danger">Đã xóa</span>
+                                <td>
+                                    @php
+                                        $totalmeals = $phanTu->meals;
+                                        $total = $totalmeals->count();
+                                    @endphp
+                                    @if ($total)
+                                        @foreach ($totalmeals->take(2) as $meal)
+                                            <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
+                                        @endforeach
+                                        @if ($total > 2)
+                                            <span class=" badge bg-success me-1 text-white ">...</span>
+                                        @endif
                                     @else
-                                        <span class="badge bg-success">Hoạt động</span>
+                                        0
                                     @endif
-                                </td> --}}
+                                </td>
                                 <td>
                                     {{$phanTu->meals_count}}
                                 </td>
@@ -206,7 +215,7 @@
     </div>
     
     {{-- Mapping tag-meal --}}
-    <div class="card mt-4">
+    {{-- <div class="card mt-4">
         <div class="card-header d-flex justify-content-between align-items-center bg-light">
             <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Thẻ</h5>
             <small>
@@ -255,7 +264,7 @@
                 {{$tagMeal->appends(request()->except('mappingmeal'))->links('pagination::bootstrap-5')}} 
             </div>
         </div>
-    </div>
+    </div> --}}
 
        
 
