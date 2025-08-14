@@ -50,10 +50,10 @@
 </div>
   <div class="row mt-2" >
   <div class="col-md-12">
-    <div class="render-meal">
-      <div style=" padding-top: 30px;">
-          <h2 class="section-title" style="color: rgb(236, 236, 236);">Sản phẩm tiêu biểu</h2>
-          <hr style="width: 340px;  height: 4px; background-color: #ffffff; border: none; border-radius: 2px; margin: 10px auto 0;">
+    <div class="render-meal new-meals-container">
+      <div class="" style=" padding-top: 30px;">
+          <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
+          <hr class="section-title-hr" >
       </div>
       <!-- <div class="content-meal">
         <a href="">
@@ -115,8 +115,8 @@
       </div> -->
 
       {{-- hiển thị 8 món mới nhất --}}
-      <div class=" container new "> 
-        <div class="section-header my-5" style=" color: white;">
+      <div class=" container new  "> 
+        {{-- <div class="section-header my-5" style=" color: white;">
           <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
           <hr style="
               display: inline-block;
@@ -127,7 +127,7 @@
               border-radius: 2px; 
               vertical-align: middle;
           ">
-        </div>
+        </div> --}}
       
         <div class="row g-4">
       

@@ -67,7 +67,7 @@
                     <a class="nav-link active" href="">TRANG CHỦ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
+                    <a class="nav-link " href="{{ route('meal.index') }}">THỰC ĐƠN</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{{route('nutri-calc')}}">NUTRI-CALC</a>
