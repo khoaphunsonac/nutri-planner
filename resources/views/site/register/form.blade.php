@@ -21,16 +21,16 @@
 
 
     {{-- Form --}}
-    <div class="card shadow-lg border-0" style="width: 420px; border-radius: 20px; background-color: #fdfdfd;">
+    <div class="card shadow-lg border-0" style="width: 420px; border-radius: 10px; background-color: #fdfdfd;">
         <div class="card-body p-4">
-            <h3 class="text-center mb-4" style="font-weight: 700; color: #e65100;">
-                🍽️ Đăng ký tài khoản
+            <h3 class="text-center mb-4" style="font-weight: 700; color: #ed4e3c;">
+                Đăng ký tài khoản
             </h3>
 
             <form action="{{ route('register.submit') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                    <label for="username" class="form-label fw-bold" style="color: #ef6c00;">Tên đăng ký</label>
+                    <label for="username" class="form-label fw-bold" style="color:#ef6c00 ;">Tên đăng ký</label>
                     <input type="text" id="username" name="username" value="{{ old('username') }}" 
                            class="form-control border-0 shadow-sm" 
                            style="border-radius: 10px;"
@@ -64,7 +64,7 @@
 
                 <button type="submit" 
                         class="btn w-100 shadow-sm"
-                        style="background-color: #ff7043; 
+                        style="background-color: #ed4e3c; 
                                color: white; 
                                font-weight: 600; 
                                border-radius: 10px; 
