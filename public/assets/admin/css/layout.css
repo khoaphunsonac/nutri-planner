@@ -1,7 +1,11 @@
 body {
     margin: 0;
     /* đẩy trên */
-    padding-top: 60px;
+    /* padding-top: 60px; */
+}
+
+.content-wrapper {
+    padding-top: 61px;
 }
 
 .navbar {
