@@ -22,12 +22,12 @@
     </div>
     
 
-    @if (session('success'))
-    <div class="d-flex justify-content-center">
-        <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
-    </div>
-        
-    @endif
+    {{-- @if (session('success'))
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
+        </div>
+    @endif --}}
+
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-3">
         <div class="col-md-4">
@@ -73,15 +73,24 @@
     </div>
 
     {{-- fillter form --}}
-    <form action="" method="GET" class="row g-2 align-items-center mb-5" >
-        <div class="col-md-8"> 
-            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tên Thẻ..." value="{{$search ?? old($search)}}"  >
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary w-100" type="submit">Lọc</button>
-        </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+             <div class=" card mb-3 px-3 py-3 shadow-sm ">
+                <form action="" method="GET" class="row g-3 align-items-center" >
+                    <div class="col-md-5"> 
+                        <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tên Thẻ..." value="{{$search ?? old($search)}}"  >
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Lọc</button>
+                    </div>
 
-    </form>
+                </form>
+            </div>
+        </div>
+    </div>
 
     
     <div class="card shadow-sm mb-5">
@@ -201,9 +210,25 @@
                                 </div>
                             @endforeach
                     @else
-                        <tr>
-                            <td class="text-center text-muted" colspan="6">Không có thẻ nào</td>
-                        </tr>
+                       @if (count($item)>0)
+                            @foreach ($item as $key => $phanTu)
+                                {{-- Phần hiển thị danh sách thẻ như cũ --}}
+                            @endforeach
+                        @else
+                            <tr>
+                                <td class="text-center text-muted" colspan="6">
+                                    @if(!empty($search) && !empty($mealSearch))
+                                        Không tìm thấy thẻ nào phù hợp với tên thẻ "<strong>{{ $search }}</strong>" và món ăn "<strong>{{ $mealSearch }}</strong>"
+                                    @elseif(!empty($search))
+                                        Không tìm thấy thẻ nào phù hợp với tên thẻ "<strong>{{ $search }}</strong>"
+                                    @elseif(!empty($mealSearch))
+                                        Không tìm thấy thẻ nào có món ăn phù hợp với "<strong>{{ $mealSearch }}</strong>"
+                                    @else
+                                        Hiện không có thẻ nào trong hệ thống
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     @endif
                 </tbody>
              </table>
@@ -266,6 +291,59 @@
         </div>
     </div> --}}
 
+    {{-- Overview --}}
+    
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-white  d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan thẻ của món ăn</h5>
+            <small class="text-end">
+                {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                @if ($item->total() > 0)
+                Tổng: giới hạn {{$totalMeals }} mục
+                @else
+                    0 mục
+                @endif
+            </small>
+        </div>
+        <div class="card-body">
+        <div class="row">
+            @foreach($meals->take(10) as $meal)
+                <div class="col-md-6 mb-4">
+                     <a href="{{ route('meals.show', $meal->id) }}" class="text-decoration-none text-dark">
+                        <div class=" list-group-item border-start border-success border-4 p-3 bg-light rounded shadow-sm h-100 hover-shadow">
+                            <h6 class="fw-bold text-dark mb-2 text-truncate" title="{{ $meal->name }}">
+                                <i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}
+                            </h6>
+
+                            <div class="d-flex flex-wrap gap-1">
+                                <strong class="me-2">Thẻ được gán:</strong>
+                                @if($meal->allergens->isEmpty())
+                                    <span class="text-muted">Không thẻ</span>
+                                @else
+                                    @php
+                                        $maxTagsToShow = 3;
+                                        $totalTags = $meal->tags->count();
+                                        $tagsToShow = $meal->tags->take($maxTagsToShow);
+                                    @endphp
+                                    @foreach($tagsToShow as $t)
+                                         <span class="badge bg-danger text-truncate" title="{{ $t->name }}" style="max-width: 120px;">
+                                            {{ $t->name }}
+                                        </span>
+                                    @endforeach
+                                    
+                                    @if($totalTags > $maxTagsToShow)
+                                        <span class="badge bg-danger" title="Còn {{ $totalTags - $maxTagsToShow }} thẻ khác">
+                                            ...
+                                        </span>
+                                    @endif
+                                @endif
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+        </div>
+    </div>
        
 
 

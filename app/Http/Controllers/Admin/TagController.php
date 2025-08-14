@@ -20,7 +20,7 @@ class TagController extends BaseController
     public $pathViewController = "admin.tags.";
 
     public function index(Request $request){
-        $id = $request->id;
+
         $tags = TagModel::all();
         $tagMeal  = TagModel::with('meals')->paginate(10,['*'],'mappingmeal');
         $itemMeal = TagModel::with('meals')->get();
@@ -28,10 +28,14 @@ class TagController extends BaseController
         $params = $request->all();
         $search = $params['search'] ?? '';
         $query = TagModel::withCount('meals')->whereNull('deleted_at');
+        $mealSearch = $params['mealSearch'] ?? '';
         $item = null;
         $meals = MealModel::all();
         if($search){
              $query = $query->where('name','like',"%$search%");
+        };
+        if($mealSearch){
+             $query = $query->whereHas('meals', function ($query) use($mealSearch) { $query->where('name', 'like', "%$mealSearch%");});
         };
         
         $totalTagsWithTrashed = TagModel::withTrashed()->get();
@@ -50,6 +54,9 @@ class TagController extends BaseController
                 $deletedTags++ ;
             }
         }
+
+        $totalMeals = $itemMeal->take(10)->count();
+
         $usageRate =  $totalTags > 0 ? round(($activeTags/$totalTags) *100) . '%' : '0%';
         // $item = $query->orderBy('id','desc')->get();
         $item = $query->orderBy('id','desc')->paginate(10,['*'],'tags');
@@ -73,6 +80,8 @@ class TagController extends BaseController
             'meals'=>$meals,
             'itemMeal' =>$itemMeal,
             'startIndex'=>$startIndex,
+            'totalMeals'=>$totalMeals,
+            'mealSearch'=>$mealSearch,
         ]);
     }
 
