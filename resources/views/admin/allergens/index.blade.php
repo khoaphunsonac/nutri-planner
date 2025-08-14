@@ -22,11 +22,11 @@
     </div>
     
 
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="d-flex justify-content-center">
-            <div class="alert alert-success my-4 text-center" style="max-width: 300px; margin: 0 auto;">{{session('success')}}</div>
+            <div class="alert alert-success my-4 text-center" style="max-width: 500px; margin: 0 auto;">{{session('success')}}</div>
         </div>
-    @endif
+    @endif --}}
     {{-- Dashboard summary --}}
     <div>
         <div class="row g-3 mb-4">
@@ -81,16 +81,6 @@
     <div class="row mt-5">
         <div class="col-md-12">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
-                {{-- fillter form --}}
-                {{-- <form action="" method="GET" class="row g-2 align-items-center" >
-                    <div class="col-md-8"> 
-                        <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm Allergen..." value="{{$search ?? old($search)}}">
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-primary w-100" type="submit">Lọc</button>
-                    </div>
-
-                </form> --}}
                     
                         <form action="" method="GET" class="row g-2 align-items-center">
                             
