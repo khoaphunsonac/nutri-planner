@@ -60,6 +60,13 @@ class TagController extends BaseController
         $usageRate =  $totalTags > 0 ? round(($activeTags/$totalTags) *100) . '%' : '0%';
         // $item = $query->orderBy('id','desc')->get();
         $item = $query->orderBy('id','desc')->paginate(10,['*'],'tags');
+
+        // Query cho Tổng quan (luôn lấy 10 món mới nhất, không bị ảnh hưởng bởi tìm kiếm)
+        $mealsForOverview = MealModel::with('tags')
+                            ->orderBy('created_at', 'desc')
+                            ->take(10)
+                            ->get();
+    
         // Tính chỉ số bắt đầu đếm ngược (số lớn nhất trên trang hiện tại)
         $total = $item->total();
         $perPage = $item->perPage();
@@ -82,6 +89,7 @@ class TagController extends BaseController
             'startIndex'=>$startIndex,
             'totalMeals'=>$totalMeals,
             'mealSearch'=>$mealSearch,
+            'mealsForOverview'=>$mealsForOverview,
         ]);
     }
 

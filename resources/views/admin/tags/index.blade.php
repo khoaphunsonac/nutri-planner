@@ -101,7 +101,7 @@
                 @if ($item->total() > 0)
                 Tổng: {{ $item->count()}}/ {{$item->total()}} mục
                 @else
-                    Không có kết quả nào
+                    0 mục
                 @endif
                 
             </small>
@@ -239,57 +239,7 @@
        
     </div>
     
-    {{-- Mapping tag-meal --}}
-    {{-- <div class="card mt-4">
-        <div class="card-header d-flex justify-content-between align-items-center bg-light">
-            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Thẻ</h5>
-            <small>
-                @if ($tagMeal->total() > 0)
-                    Tổng: {{ $tagMeal->count()}} / {{$tagMeal->total() }} mục
-                @else
-                    0
-                @endif
-                
-            </small>
-        </div>
-        <div class="card-body  text-center">
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Thẻ</th>
-                        <th>Món Ăn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($tagMeal as $tag)
-                        <tr>
-                            <td><strong>{{ $tag->name }}</strong></td>
-                            <td>
-                                @php
-                                    $totalmeals = $tag->meals;
-                                    $total = $totalmeals->count();
-                                @endphp
-                                @if($total)
-                                    @foreach($totalmeals->take(2) as $meal)
-                                        <span class="badge bg-primary me-1">{{ $meal->name }}</span>
-                                        
-                                    @endforeach
-                                    @if ($total > 2)
-                                        <span class=" badge bg-primary me-1 text-white ">...</span>
-                                    @endif
-                                @else
-                                    <span class="text-muted">Chưa gán món ăn</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="mt-3 text-end">
-                {{$tagMeal->appends(request()->except('mappingmeal'))->links('pagination::bootstrap-5')}} 
-            </div>
-        </div>
-    </div> --}}
+    
 
     {{-- Overview --}}
     
@@ -298,8 +248,8 @@
             <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan thẻ của món ăn</h5>
             <small class="text-end">
                 {{--  Tổng số Allergen thỏa query tìm kiếm --}}
-                @if ($item->total() > 0)
-                Tổng: giới hạn {{$totalMeals }} mục
+                @if ($mealsForOverview->count() > 0)
+                Tổng: giới hạn {{$mealsForOverview->count() }} mục
                 @else
                     0 mục
                 @endif
