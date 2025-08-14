@@ -35,41 +35,46 @@
     <link rel="stylesheet" href="{{ asset('assets/admin/css/ingredients.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/dashboard.css') }}">
 </head>
-
 <body>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm bg-dash px-3 py-2">
-        <div class="container-fluid d-flex justify-content-between">
-            <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()">☰</button>
-            <a class="navbar-brand text-light" href="#">Fitfood Admin</a>
-            <div class="d-flex align-items-center">
-                @auth
-                    <span class="text-light me-3">Xin chào, {{ Auth::user()->username }}</span>
-                    <div class="dropdown">
-                        <a href="#" class="me-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="{{ asset('assets/admin/img/avatar/default.jpg') }}" alt="admin" width="30"
-                                class="d-block rounded-circle">
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Hồ sơ</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li>
-                                <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item text-danger">
-                                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                @endauth
-            </div>
+    <div class="container-fluid">
+        <!-- Nút menu mobile -->
+        <button class="btn btn-outline-light d-lg-none me-2" onclick="toggleSidebar()">☰</button>
+
+        <!-- Logo -->
+        <a class="navbar-brand text-light" href="{{ route('dashboard') }}">
+            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="height: 37px;">
+        </a>
+
+        <!-- Phần bên phải -->
+        <div class="d-flex align-items-center ms-auto">
+            @auth
+                <span class="text-light me-3 d-none d-sm-inline">Xin chào, {{ Auth::user()->username }}</span>
+                <div class="dropdown">
+                    <a href="#" class="d-flex align-items-center text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{{ asset('assets/admin/img/avatar/admin.jpg') }}" alt="admin" width="36" height="36"
+                             class="rounded-circle border border-light">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                        {{-- <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Hồ sơ</a></li> --}}
+                        {{-- <li><hr class="dropdown-divider"></li> --}}
+                        <li>
+                            <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
+                                @csrf
+                                <button type="submit" class="dropdown-item text-danger">
+                                    <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            @endauth
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <!-- Overlay for mobile -->
     <div class="overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -79,9 +84,7 @@
     <aside class="sidebar" id="sidebar">
         <a href="{{ route('dashboard') }}" class="text-decoration-none text-dark">
             <div class="sidebar-header p-3">
-                {{-- <h5 class="m-0">🍴 Fitfood</h5>
-                <small>Fitfood Quản trị</small> --}}
-                    <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="width: 100%; height: 40px;">
+                <h5 class="m-0">🍴 Nutri Planner</h5>
             </div>
         </a>
         {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
@@ -93,8 +96,8 @@
         <a href="{{ route('tags.index') }}"><i class="bi bi-tags"></i> Thẻ</a> <!-- Đã thêm mục này -->
         <a href="{{ route('contact.index') }}"><i class="bi bi-envelope"></i> Liên hệ</a>
         <a href="{{ route('feedbacks.index') }}"><i class="bi bi-chat-dots"></i> Phản hồi</a>
-        <a href=""><i class="bi bi-list-ul"></i> Loại chế độ ăn</a>
-        <a href=""><i class="bi bi-grid"></i> Loại món ăn</a>
+        <a href="{{ route('diettypes.index') }}"><i class="bi bi-list-ul"></i> Loại chế độ ăn</a>
+        <a href="{{ route('admin.meal_types.index') }}"><i class="bi bi-grid"></i> Loại món ăn</a>
     </aside>
 
     <!-- Main content mọi content kế thừa của anh em sẽ vô đây -->

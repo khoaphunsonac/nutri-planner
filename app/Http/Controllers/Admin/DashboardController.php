@@ -19,31 +19,37 @@ class DashboardController extends Controller
 
 
     public function dashboard() {
-    $accounts = AccountModel::all();
-    $user = $accounts->where('role', 'user')->count();
+        $accounts = AccountModel::all();
+        $user = $accounts->where('role', 'user')->count();
 
-    $meals = MealModel::all();
-    $feedbacks = FeedbackModel::all();
-    $contacts = ContactModel::all();
-    # ngày tạo
-    $lastDay = AccountModel::orderBy('created_at', 'desc')->first(); // user mới nhất
-    $onlyDay = $lastDay ? $lastDay->created_at->format('d-m-Y') : null; // chỉ lấy ngày với format
-    # lấy data để vẽ biểu đồ (method quan hệ nhiều)
-    $DietTypeCount = DietTypeModel::withCount('meals')->get();
-    return view('admin.dashboard', [
-        # đếm
-        'user' => $user, # đếm mỗi user
-        'mealsCount' => $meals->count(),
-        'feedbacks' => $feedbacks->count(),
-        'contacts' => $contacts->count(),
-        # ngày tạo
-        'lastDay' => $onlyDay,
+        // ===== BỔ SUNG =====
+        $totalUsers = $user; // Tổng số user hiện tại
+        $today = now()->startOfDay(); # now biến thành múi giờ, còn startOfDay là biến now() đó thành 00:00:00 hiện tại
+        $newUsersToday = AccountModel::where('role', 'user')
+        ->where('created_at', '>=', $today)->count(); # trả về số user hôm hay (CÓ THỂ WHERE NHIỀU LẦN)
+        $oldUsers = $totalUsers - $newUsersToday;
+        // ====================
 
-        # information
-        'allAccounts' => $accounts,
+        $meals = MealModel::all();
+        $feedbacks = FeedbackModel::all();
+        $contacts = ContactModel::all();
 
-        # DietTypeCount
-        'DietTypeCount' => $DietTypeCount
-    ]);
-}
+        # lấy data để vẽ biểu đồ (method quan hệ nhiều)
+        $DietTypeCount = DietTypeModel::withCount('meals')->get();
+
+        return view('admin.dashboard', [
+            # đếm
+            'user' => $user, # đếm mỗi user
+            'totalUsers' => $totalUsers, // tổng user
+            'newUsersToday' => $newUsersToday, // user mới hôm nay
+            'oldUsers' => $oldUsers, // user cũ
+
+            'mealsCount' => $meals->count(),
+            'feedbacks' => $feedbacks->count(),
+            'contacts' => $contacts->count(),
+
+            # DietTypeCount
+            'DietTypeCount' => $DietTypeCount
+        ]);
+    }
 }

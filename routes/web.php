@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NutriController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
@@ -12,11 +13,11 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\AllergenController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
-
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
+use App\Http\Controllers\FeedbackController as SiteFeedbackController;
 
 // FORM LOGIN (Hiển thị giao diện)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -167,25 +168,25 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 
 
 
-    // Meal site
-    $mealController = MealsController::class;
-    Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
-        Route::get('/', [$mealController, 'index'])->name('index');                  
-        Route::get('/show/{id}', [$mealController, 'show'])->name('show');  
-
-    });
-
-// Home
-// Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/', function(){
-    return view('site.layout'); # test layout
+// Meal site
+$mealController = MealsController::class;
+Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
+    Route::get('/', [$mealController, 'index'])->name('index');
+    Route::get('/show/{id}', [$mealController, 'show'])->name('show');
 });
 
+// Home
 Route::get('/', [HomeController::class, 'index'])->name('index');
+
+//Nutri Calc
+Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc');
+
+// TDEE Calculator
+Route::view('/tdee', 'site.tdee')->name('tdee');
 
 //Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-
-
+//Feedback
+Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
+Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');

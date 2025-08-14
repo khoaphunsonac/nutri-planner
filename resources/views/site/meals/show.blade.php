@@ -3,6 +3,10 @@
 @section('content')
 
 <style>
+    .container.my-4 {
+        margin-top: 8rem !important; /* Đè lên mọi margin khác */
+        padding-top: 0 !important;
+    }
     .card.meal-card {
         transition: transform 0.3s;
     }
@@ -21,7 +25,7 @@
     }
 </style>
 
-<div class="container  my-4">
+<div class="container  my-4" >
     <div class="card shadow-sm p-4">
         <div class="row">
             {{-- Ảnh món ăn --}}
@@ -133,12 +137,21 @@
             @php
                 //tính toán dinh dưỡng
                 $totalKcal = 0;
-                foreach ($latest->recipeIngredients as$pri) {
-                    $ingredient = $pri->ingredient;
-                    if($ingredient){
-                        $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
-                    }
-                }
+                $totalPro = 0;
+                $totalCarbs = 0;
+                $totalFat = 0;
+                foreach ($latest->recipeIngredients as $pri) {
+                          $ingredient = $pri->ingredient;
+                          if ($ingredient) {
+                              $quantity = $pri->quantity ?? 1;
+
+                              $totalPro += ($ingredient->protein ?? 0) * $quantity;
+                              $totalCarbs += ($ingredient->carb ?? 0) * $quantity;
+                              $totalFat += ($ingredient->fat ?? 0) * $quantity;
+
+                              $totalKcal += (($ingredient->protein ?? 0) * 4 + ($ingredient->carb ?? 0) * 4 + ($ingredient->fat ?? 0) * 9) * $quantity;
+                          }
+                      }
                 $image = $meal->image_url ?? '';
                 $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                               
