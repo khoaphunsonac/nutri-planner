@@ -364,8 +364,8 @@
             <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan chất gây dị ứng của món ăn</h5>
             <small class="text-end">
                 {{--  Tổng số Allergen thỏa query tìm kiếm --}}
-                @if ($item->total() > 0)
-                Tổng: giới hạn {{$totalMeals }} mục
+                @if ($meals->count() > 0)
+                Tổng: giới hạn {{$meals->count() }} mục
                 @else
                     0 mục
                 @endif
