@@ -36,7 +36,7 @@
                     <div class="mb-4">
                         <h5 class="form-label fw-bold mb-2">Tên Dị ứng</h5>
                         <input type="text" name="name" class="form-control" 
-                               value="{{ $item->name ?? old('name') }}" placeholder="Nhập tên dị ứng"  style="cursor: pointer">
+                               value="{{ $item->name ?? old('name') }}" placeholder="Nhập tên dị ứng"  style="cursor: text">
                         @error('name')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
