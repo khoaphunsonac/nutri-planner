@@ -40,6 +40,8 @@ class RegisterRequest extends FormRequest
             'max:20',
             'regex:/^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d).+$/'
         ],
+         // Xác nhận nhập lại mật khẩu
+        'password_confirmation' => 'required'
     ];
 }
 
@@ -64,6 +66,9 @@ class RegisterRequest extends FormRequest
         'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',
         'password.max' => 'Mật khẩu không được vượt quá :max ký tự',
         'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
+
+        # password_confirmation
+        'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu',
     ];
 }
 
