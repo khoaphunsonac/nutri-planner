@@ -133,25 +133,28 @@
 <div class="container new ">
     <h4 class="mb-4" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Món ăn mới nhất</h4>
     <div class="row">
-        @foreach ($latestMeals as $latest)
+       
+            @foreach ($latestMeals as $latest)
             @php
+                
                 //tính toán dinh dưỡng
-                $totalKcal = 0;
-                $totalPro = 0;
-                $totalCarbs = 0;
-                $totalFat = 0;
-                foreach ($latest->recipeIngredients as $pri) {
-                          $ingredient = $pri->ingredient;
-                          if ($ingredient) {
-                              $quantity = $pri->quantity ?? 1;
+                
+                    $totalPro = 0;
+                    $totalCarbs= 0;
+                    $totalFat= 0;
+                    $totalKcal= 0;
+                    foreach($latest->recipeIngredients as $pri){
+                        $ingredient = $pri->ingredient;
+                        if($ingredient){
+                            $totalPro += $ingredient->protein;
+                            $totalCarbs += $ingredient->carb;
+                            $totalFat += $ingredient->fat;
+                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                        }
+                    }
+                
 
-                              $totalPro += ($ingredient->protein ?? 0) * $quantity;
-                              $totalCarbs += ($ingredient->carb ?? 0) * $quantity;
-                              $totalFat += ($ingredient->fat ?? 0) * $quantity;
-
-                              $totalKcal += (($ingredient->protein ?? 0) * 4 + ($ingredient->carb ?? 0) * 4 + ($ingredient->fat ?? 0) * 9) * $quantity;
-                          }
-                      }
+                // hiển thị ảnh
                 $image = $meal->image_url ?? '';
                 $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                               
@@ -171,14 +174,16 @@
                         <div class="card-body ">
                             <h4 class="card-title my-3">{{ $latest->name }}</h4>
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
-                            <p class="mb-2 my-4">
-                                <strong>{{$totalKcal}} kcal</strong> | 
-                                P: {{$totalPro}} g |
-                                C: {{$totalCarbs}} g |
-                                F: {{$totalFat}} g 
-                            </p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                              </div>
+                            </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
-                    
+                          
                         </div>
                     </a>
                 </div>
