@@ -145,7 +145,7 @@
                     <th class="text-primary">Vai trò</th>
                     <th class="text-primary">Phản hồi</th>
                     <th class="text-primary">Trạng thái</th>
-                    <th class="text-primary" width="220">Món yêu thích</th>
+                    <th class="text-primary" width="300">Món yêu thích</th>
                     <th colspan="2">Thao tác</th>
                 </tr>   
             </thead>
@@ -177,24 +177,24 @@
                         <td class="{{ $item->status === 'active' ? 'text-success' : 'text-danger' }}">
                             {{ $item->status === 'active' ? 'Hoạt động' : 'Đã bị khoá' }}
                         </td>
-                        </td>
+                        @php
+                            $preview = $item->savemeal_preview; // mảng tối đa 3 meal
+                            $total = $item->savemeal_total;     // tổng số meal
+                        @endphp
 
-                            @php
-                                $totalMeals = collect($item->savemeal_preview); // chuyển sang Collection
-                                $total = $totalMeals->count();
-                            @endphp
-                            <td>
-                            @if ($total)
-                                @foreach ($totalMeals->take(2) as $meal)
+                        <td>
+                            @if ($total > 0)
+                                @foreach ($preview as $meal)
                                     <span class="badge bg-success mb-1">{{ $meal->name }}</span>
                                 @endforeach
-                                @if ($total > 2)
+
+                                {{-- Nếu nhiều hơn 3 thì thêm dấu ... --}}
+                                @if ($total > 3)
                                     <span class="badge bg-success mb-1">...</span>
                                 @endif
                             @else
                                 0
                             @endif
-
                         </td>
                         <td class="text-center" onclick="event.stopPropagation();">
                             <a href="{{ route($shareUser . 'form', ['id' => $item->id]) }}"

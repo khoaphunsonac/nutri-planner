@@ -93,31 +93,37 @@ class AccountModel extends Authenticatable implements JWTSubject
 
 
     public function getSavemealPreviewAttribute()
-{
-    if (empty($this->savemeal)) {
-        return [];
-    }
-
-    // Tách chuỗi "18-17-15-10" thành mảng ID
-    $mealIds = explode('-', $this->savemeal);
-
-    // Lấy danh sách meal theo ID, giữ đúng thứ tự
-    $meals = \App\Models\MealModel::whereIn('id', $mealIds)->get();
-
-    $result = [];
-    $count = 0;
-    foreach ($meals as $meal) {
-        if ($count < 2) { // chỉ lấy 2 món đầu
-            $result[] = $meal;
+    {
+        if (empty($this->savemeal)) {
+            return [];
         }
-        $count++;
+
+        // Tách chuỗi "18-17-15-10" thành mảng ID
+        $mealIds = explode('-', $this->savemeal);
+
+        $result = [];
+        $count = 0;
+        foreach ($mealIds as $id) {
+            if ($count > 2) { 
+                break;
+            }
+            $meal = \App\Models\MealModel::find($id); // lấy meal theo id
+            if ($meal) {
+                $result[] = $meal;
+                $count++;
+            }
+        }
+
+        return $result;
     }
 
-    // Nếu nhiều hơn 2 thì thêm dấu "..."
-    if ($count > 3) {
-        $result[] = (object) ['name' => '...'];
-    }
+    public function getSavemealTotalAttribute()
+    {
+        if (empty($this->savemeal)) {
+            return 0;
+        }
 
-    return $result;
-}
+        $mealIds = explode('-', $this->savemeal);
+        return count($mealIds);
+    }
 }
