@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\Models\AccountModel;
+use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
@@ -20,7 +21,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             return redirect('/');
         }
-        return view('auth.login');
+        return view('site.auth.login');
     }
 
     /**
@@ -29,11 +30,27 @@ class AuthController extends Controller
     public function webLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ], [
-            'username.required' => 'Tên đăng nhập là bắt buộc.',
-            'password.required' => 'Mật khẩu là bắt buộc.',
+
+        "username" => "required|string|min:4|max:40",
+        'password' => [
+            'required',
+            'string',
+            'min:6',
+            'max:20',
+            // 'regex:/^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d).+$/'
+                ],
+            ], 
+        [
+        # username
+        "username.required" => "Vui lòng điền tên đăng nhập",
+        "username.min" => "Tên đăng nhập ít nhất :min ký tự",
+        "username.max" => "Tên đăng nhập tối đa :max ký tự",
+
+        # password
+        'password.required' => 'Vui lòng nhập mật khẩu',
+        'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',
+        'password.max' => 'Mật khẩu không được vượt quá :max ký tự',
+        // 'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
         ]);
 
         if ($validator->fails()) {
