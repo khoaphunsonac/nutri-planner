@@ -85,14 +85,19 @@
             </ul>
 
                 <div class="right-menu">
-                    <a href="" class="nav-link text-light">Đăng Ký</a>
-                    <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
+                    @if (!empty($currentUser))
+                        <span>Xin chào {{ $currentUser->username }}</span>
+                    @else
+                        <a href="{{ route('register') }}" class="nav-link text-light">Đăng Ký</a>
+                        <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
+                    @endif
+
                     <div class="cart-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"
-                            width="20">
+                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart" width="20">
                         <span>0</span>
                     </div>
                 </div>
+                
             </div>
         </div>
     </nav>
