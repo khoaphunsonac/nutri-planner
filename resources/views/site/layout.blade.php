@@ -50,7 +50,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('index') }}">
+        <a class="navbar-brand" href="{{ route('home') }}">
+        {{-- <a class="navbar-brand" href="{{ route('index') }}"> --}}
             {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
             <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="width: 80%; height: 37px;">
         </a>
@@ -62,7 +63,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="">TRANG CHỦ</a>
+                    <a class="nav-link active" href="{{ route('home') }}">TRANG CHỦ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
@@ -83,7 +84,7 @@
 
                 <div class="right-menu">
                     <a href="" class="nav-link text-light">Đăng Ký</a>
-                    <a href="" class="nav-link text-light">Đăng Nhập</a>
+                    <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     <div class="cart-icon">
                         <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"
                             width="20">
