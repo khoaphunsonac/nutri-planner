@@ -25,8 +25,7 @@ class MealsController extends BaseController
         $search = $params['search'] ?? '';
         
         $mealType = $params['meal_type'] ?? '';
-        $caloriesMin = $params['calories_min'] ?? '';
-        $caloriesMax = $params['calories_max'] ?? '';
+        $caloriesRange = $params['calories_range'] ?? '';
         $allergen = $params['allergen'] ?? '';
         $diet = $params['diet'] ?? '';
 
@@ -37,7 +36,7 @@ class MealsController extends BaseController
 
         // khởi tạo query  lấy từ model gốc
         $meals = MealModel::with('recipeIngredients.ingredient')
-                            ->withSum('recipeIngredients as total_calories', 'total_calo') // Sửa đổi ở đây
+                            ->withSum('recipeIngredients as total_calories', 'total_calo') // Sum calo ở đây
                             ->orderBy('id','desc' );
 
         // Gom điều kiện tìm kiếm thành mảng cho bên hiển thị form k tìm thấy
@@ -71,14 +70,14 @@ class MealsController extends BaseController
            
         }
 
-        //lọc theo allergen
+        //lọc bỏ allergen  lấy món không có allergen
         if(!empty($allergen)){
-            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; // Lấy tên diet từ DB
-            $meals = $meals->whereHas('allergens',function($q) use($allergen){
+            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; 
+            $meals = $meals->whereDoesntHas('allergens',function($q) use($allergen){ 
                         $q->where('allergens.id',$allergen);
                     });
                if($allergentName){
-                    $searchConditions[] = 'chất dị ứng " ' . $allergentName. ' "';
+                    $searchConditions[] = 'loại bỏ món có chất dị ứng " ' . $allergentName. ' "';
 
                 }
 
@@ -87,7 +86,7 @@ class MealsController extends BaseController
 
         //lọc theo mealtype
         if(!empty($mealType)){
-            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; // Lấy tên diet từ DB
+            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; 
             $meals = $meals->where('meals.meal_type_id',$mealType);
             if($mealTypeName){
                     $searchConditions[] = 'chế độ ăn " ' . $mealTypeName. ' "';
@@ -96,16 +95,19 @@ class MealsController extends BaseController
         }
 
         //lọc theo calories
-        if(!empty($caloriesMin )){
-            $meals = $meals->having('total_calories','>=',$caloriesMin);
-                    
-            $searchConditions[] = 'Calories Min " ' . $caloriesMin. ' "';
-        }
-        if(!empty($caloriesMax)){
-            $meals = $meals->having('total_calories','<=',$caloriesMax);
-            $searchConditions[] = 'Calories Max " ' . $caloriesMax. ' "';
-        }
+        if(!empty($caloriesRange )){
+            // tách chuỗi "min-max"
+            [$caloriesMin,$caloriesMax] = explode('-', $caloriesRange) + [null,null];
 
+            if($caloriesMin !== null){
+                $meals = $meals->having('total_calories','>=',(int)$caloriesMin);
+            }
+            if($caloriesMax !== null){
+                $meals = $meals->having('total_calories','<=',(int)$caloriesMax);
+                
+            }
+            $searchConditions[] = 'Calories từ ' . $caloriesMin. ' đến ' . $caloriesMax;
+        }
         // lay du lieu phan trang
         $meals = $meals->paginate(9,'*','meals_page');
 
@@ -114,8 +116,7 @@ class MealsController extends BaseController
             'search'=>$search,
             'diet'=>$diet,
             'mealType'=>$mealType,
-            'caloriesMin'=>$caloriesMin,
-            'caloriesMax'=>$caloriesMax,
+            'caloriesRange'=>$caloriesRange,
             'allergen'=>$allergen,
             'dietTypes'=>$dietTypes,
             'mealTypes'=>$mealTypes,

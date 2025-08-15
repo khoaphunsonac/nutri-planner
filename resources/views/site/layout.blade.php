@@ -63,19 +63,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="">TRANG CHỦ</a>
+                    <a class="nav-link active" href="{{ route('home') }}">TRANG CHỦ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">NUTRI-CALC</a>
+                    <a class="nav-link" href="{{route('nutri-calc')}}">NUTRI-CALC</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">TDEE</a>
+                    <a class="nav-link" href="{{route('tdee')}}">TDEE</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="">PHẢN HỒI</a>
+                    <a class="nav-link " href="{{route('feedbacks.create')}}">PHẢN HỒI</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="">LIÊN HỆ</a>
@@ -84,7 +84,7 @@
 
                 <div class="right-menu">
                     <a href="" class="nav-link text-light">Đăng Ký</a>
-                    <a href="" class="nav-link text-light">Đăng Nhập</a>
+                    <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     <div class="cart-icon">
                         <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"
                             width="20">
