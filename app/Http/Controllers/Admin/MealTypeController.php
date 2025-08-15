@@ -50,17 +50,23 @@ class MealTypeController extends Controller
     }
 
     // GET /admin/meal_types/{id}
-    public function show($id)
-    {
-        $item = MealTypeModel::with(['meals' => fn($q) => $q->latest('id')])
-            ->withCount('meals')
-            ->findOrFail($id);
-    
-        $relatedCount = $item->meals_count; // 👈 lấy từ withCount
-    
-        return view('admin.meal_types.show', compact('item', 'relatedCount'));
-    }
-    
+   // GET /admin/meal_types/{id}
+// GET /admin/meal_types/{id}
+public function show($id)
+{
+    $item = MealTypeModel::withCount('meals')->findOrFail($id);
+
+    // Danh sách món (meals) thuộc loại này + phân trang
+    $relatedDishes = \App\Models\MealModel::where('meal_type_id', $item->id)
+                        ->orderByDesc('id')
+                        ->paginate(10);
+
+    $relatedCount = $item->meals_count; // hoặc $relatedDishes->total()
+
+    return view('admin.meal_types.show', compact('item','relatedDishes','relatedCount'));
+}
+
+
 
     // GET /admin/meal_types/{id}/edit
     public function edit($id)

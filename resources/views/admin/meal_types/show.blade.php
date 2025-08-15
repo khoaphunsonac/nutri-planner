@@ -45,14 +45,14 @@
         @endphp
 
         <div class="row g-3 mb-4">
-            {{-- <div class="col-6 col-md-3">
+            <div class="col-6 col-md-3">
                 <div class="card shadow-sm rounded-4 h-100">
                     <div class="card-body py-3">
                         <div class="text-muted small">ID</div>
-                        <div class="fs-5 fw-semibold">#{{ $index + 1 }}</div>
+                        <div class="fs-5 fw-semibold">#{{ $item->id }}</div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
             <div class="col-6 col-md-3">
                 <div class="card shadow-sm rounded-4 h-100">
                     <div class="card-body py-3">
@@ -101,37 +101,57 @@
                                 <tr>
                                     <th style="width:80px">#</th>
                                     <th>Tên món</th>
-                                    <th class="text-muted">Calories</th>
                                     <th class="text-muted">Cập nhật</th>
                                     <th class="text-end">Hành động</th>
                                 </tr>
                             </thead>
-                            {{-- <tbody>
-                                @foreach ($relatedDishes as $d)
-                                    <tr>
-                                        <td>{{ $d->id }}</td>
-                                        <td class="text-truncate" style="max-width:360px" title="{{ $d->name }}">
-                                            {{ $d->name }}</td>
-                                        <td class="text-muted">{{ $d->calories ?? '—' }}</td>
-                                        <td class="text-muted">{{ $d->updated_at?->format('d/m/Y H:i') ?? '—' }}</td>
-                                        <td class="text-end">
-                                            <div class="btn-group btn-group-sm">
-                                                <a href="{{ route('admin.dishes.show', $d->id) }}"
-                                                    class="btn btn-outline-secondary" title="Xem"><i
-                                                        class="bi bi-eye"></i></a>
-                                                <a href="{{ route('admin.dishes.edit', $d->id) }}"
-                                                    class="btn btn-outline-primary" title="Sửa"><i
-                                                        class="bi bi-pencil"></i></a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                            <tbody>
+                                <style>
+                                    /* Hiệu ứng hover */
+                                    .clickable-row {
+                                        cursor: pointer;
+                                    }
+                                    .clickable-row:hover {
+                                        background-color: #f5f5f5;
+                                    }
+                                </style>
+                                
+                                @foreach ($relatedDishes as $index => $d)
+                                <tr class="clickable-row" onclick="window.location='{{ route('meals.show', $d->id) }}'">
+                                    {{-- STT theo trang nếu có paginate --}}
+                                    <td>{{ ($relatedDishes->firstItem() ?? 0) + $index }}</td>
+                                
+                                    <td class="text-truncate" style="max-width:360px" title="{{ $d->name }}">
+                                        {{ $d->name }}
+                                    </td>
+                                    <td class="text-muted">{{ $d->updated_at?->format('d/m/Y H:i') ?? '—' }}</td>
+                                
+                                    <td class="text-end" onclick="event.stopPropagation()">
+                                        <div class="btn-group btn-group-sm">
+                                            <a href="{{ route('meals.show', $d->id) }}"
+                                               class="btn btn-outline-secondary" title="Xem">
+                                              <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a href="{{ route('meals.form', $d->id) }}"
+                                               class="btn btn-outline-primary" title="Sửa">
+                                              <i class="bi bi-pencil"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                                 @endforeach
-                            </tbody> --}}
+                                
+                                </tbody>
+                                
+                                </tbody>
+                                
+                            
+                            </tbody>
                         </table>
                     </div>
 
                     {{-- Phân trang (nếu là paginator) --}}
-                    {{-- @if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
+                    @if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <small class="text-muted">
                                 Hiển thị {{ $relatedDishes->firstItem() }}–{{ $relatedDishes->lastItem() }} /
@@ -142,7 +162,7 @@
                     
                 @else
                     <div class="text-muted fst-italic">Chưa có món ăn nào được phân vào loại bữa ăn này.</div>
-                @endif --}}
+                @endif
             </div>
         </div>
 
