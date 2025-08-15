@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
-    class LayoutController extends Controller
+class LayoutController extends Controller
 {
-    public function index() {
-        $currentUser = Auth::user(); // Lấy user đang đăng nhập
+    public function index()
+    {
+        
+        $currentUser = Auth::user();# Lấy user đang đăng nhập (nếu có)
+
         return view('site.layout', [
-            'newAccount' => $currentUser
+            'currentUser' => $currentUser
         ]);
     }
-
 }
-
