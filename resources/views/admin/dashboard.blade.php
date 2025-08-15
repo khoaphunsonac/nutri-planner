@@ -222,27 +222,43 @@
     }
 });
 </script>
-{{-- ve cho mốn ăn theo chế độ --}}
+{{-- ve cho mốn ăn theo chế độ chỉ hiện top 10 --}}
 <script>
-const labels = {!! json_encode($DietTypeCount->pluck('name')) !!};
-const data = {!! json_encode($DietTypeCount->pluck('meals_count')) !!};
+let labels = {!! json_encode($DietTypeCount->pluck('name')) !!};
+let data = {!! json_encode($DietTypeCount->pluck('meals_count')) !!};
 
-// Lấy top 3 giá trị lớn nhất và index của chúng
+// Gom dữ liệu thành mảng [{name, count}]
+let combined = labels.map((name, i) => ({
+    name: name,
+    count: data[i]
+}));
+
+// Sắp xếp giảm dần theo count
+combined.sort((a, b) => b.count - a.count);
+
+// Chỉ lấy top 10
+combined = combined.slice(0, 10);
+
+// Cập nhật lại labels và data
+labels = combined.map(item => item.name);
+data = combined.map(item => item.count);
+
+// Xác định top 3
 const sorted = [...data].map((val, i) => ({ val, i }))
                         .sort((a, b) => b.val - a.val);
-
 const topIndices = sorted.slice(0, 3).map(obj => obj.i);
 
-// màu theo vị trí: top 1, 2, 3
+// Màu sắc cho top 3
 const backgroundColors = data.map((val, index) => {
-  if (index === topIndices[0]) return '#FF7043'; // Top 1 - đỏ cam
-  if (index === topIndices[1]) return '#FFD54F'; // Top 2 - vàng
-  if (index === topIndices[2]) return '#4FC3F7'; // Top 3 - xanh dương
-  return '#81C784'; // còn lại - xanh ngọc
+  if (index === topIndices[0]) return '#FF7043'; // Top 1
+  if (index === topIndices[1]) return '#FFD54F'; // Top 2
+  if (index === topIndices[2]) return '#4FC3F7'; // Top 3
+  return '#81C784'; // Còn lại
 });
 
 const borderColors = backgroundColors.map(color => color);
 
+// Render chart
 const dietCtx = document.getElementById('dietTypeChart').getContext('2d');
 new Chart(dietCtx, {
   type: 'bar',
@@ -265,9 +281,7 @@ new Chart(dietCtx, {
       legend: {
         display: true,
         labels: {
-          font: {
-          size: 15 
-          },
+          font: { size: 15 },
           generateLabels: function() {
             return [
               { text: 'Top nhiều món nhất', fillStyle: '#FF7043' },
@@ -298,5 +312,6 @@ new Chart(dietCtx, {
     }
   }
 });
+
 </script>
 @endsection
