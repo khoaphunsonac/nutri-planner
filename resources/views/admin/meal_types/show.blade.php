@@ -70,22 +70,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="card shadow-sm rounded-4 h-100">
-                    <div class="card-body py-3">
-                        <div class="text-muted small">Trạng thái</div>
-                        <div>
-                            @if ($hasStatus)
-                                <span class="badge {{ $item->is_active ? 'bg-success' : 'bg-secondary' }}">
-                                    {{ $item->is_active ? 'Hoạt động' : 'Tạm ẩn' }}
-                                </span>
-                            @else
-                                <span class="text-muted">—</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         {{-- 3) Thông tin chi tiết (key–value rõ ràng) --}}
@@ -122,7 +106,7 @@
                                     <th class="text-end">Hành động</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
                                 @foreach ($relatedDishes as $d)
                                     <tr>
                                         <td>{{ $d->id }}</td>
@@ -142,12 +126,12 @@
                                         </td>
                                     </tr>
                                 @endforeach
-                            </tbody>
+                            </tbody> --}}
                         </table>
                     </div>
 
                     {{-- Phân trang (nếu là paginator) --}}
-                    @if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
+                    {{-- @if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <small class="text-muted">
                                 Hiển thị {{ $relatedDishes->firstItem() }}–{{ $relatedDishes->lastItem() }} /
@@ -155,10 +139,10 @@
                             </small>
                             {{ $relatedDishes->onEachSide(1)->links('pagination::bootstrap-5') }}
                         </div>
-                    @endif
+                    
                 @else
                     <div class="text-muted fst-italic">Chưa có món ăn nào được phân vào loại bữa ăn này.</div>
-                @endif
+                @endif --}}
             </div>
         </div>
 
