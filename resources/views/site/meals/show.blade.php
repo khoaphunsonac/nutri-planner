@@ -25,7 +25,24 @@
             </div>
             
             {{-- Thông tin chính --}}
-            <div class="col-md-7">
+            <div class="col-md-7"> 
+                 {{-- Form nút yêu thích --}}
+                <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" 
+                    class="favorite-form" 
+                    style="position: absolute; top: 10px; right: 10px;">
+                    @csrf
+                    <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
+                        data-liked="false" {{-- mặc định chưa thích --}}
+                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                    
+                    @php
+                        $saved = auth()->user() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                    @endphp
+                        <i class="fas fa-heart" 
+                            style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                    </button>
+                </form>
+
                 <h2>{{ $meal->name }}</h2>
                 <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
