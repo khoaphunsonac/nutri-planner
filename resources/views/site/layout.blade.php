@@ -44,6 +44,7 @@
     {{-- custom css --}}
     <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/user/css/home.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/user/css/register.css') }}">
 
     <title>Nutri Planner</title>
 </head>
@@ -65,30 +66,44 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ route('home') }}">TRANG CHỦ</a>
+                    <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">
+                        TRANG CHỦ
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="{{ route('meal.index') }}">THỰC ĐƠN</a>
+                    <a class="nav-link {{ request()->routeIs('meal.index') ? 'active' : '' }}" href="{{ route('meal.index') }}">
+                        THỰC ĐƠN
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('nutri-calc')}}">NUTRI-CALC</a>
+                    <a class="nav-link {{ request()->routeIs('nutri-calc') ? 'active' : '' }}" href="{{ route('nutri-calc') }}">
+                        NUTRI-CALC
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{route('tdee')}}">TDEE</a>
+                    <a class="nav-link {{ request()->routeIs('tdee') ? 'active' : '' }}" href="{{ route('tdee') }}">
+                        TDEE
+                    </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link " href="{{route('feedbacks.create')}}">PHẢN HỒI</a>
+                    <a class="nav-link {{ request()->routeIs('feedbacks.create') ? 'active' : '' }}" href="{{ route('feedbacks.create') }}">
+                        PHẢN HỒI
+                    </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="">LIÊN HỆ</a>
-                </li>
-            </ul>
-
+                </ul>
                 <div class="right-menu">
-                    @if (!empty($currentUser))
-                        <span>Xin chào {{ $currentUser->username }}</span>
+                    @if (Auth::check())
+                        <div class="user-dropdown">
+                            <span class="user-name-highlight">Xin chào {{ Auth::user()->username }}</span>
+                            <div class="dropdown-menu">
+                                <form action="{{ route('register.logout') }}" method="post">
+                                 @csrf
+                                 <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                </form>
+                            </div>
+                        </div>
                     @else
-                        <a href="{{ route('register') }}" class="nav-link text-light">Đăng Ký</a>
+                        <a href="{{ route('showRegister') }}" class="nav-link text-light">Đăng Ký</a>
                         <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     @endif
 
@@ -97,7 +112,8 @@
                         <span>0</span>
                     </div>
                 </div>
-                
+
+
             </div>
         </div>
     </nav>
