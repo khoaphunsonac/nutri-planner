@@ -32,16 +32,17 @@ class MealTypeController extends Controller
 
     // POST /admin/meal_types/store
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'name' => ['required','max:100','unique:meal_type,name'],
-        ]);
+{
+    $data = $request->validate([
+        'name' => ['required', 'max:100', 'unique:meal_type,name'],
+    ]);
 
-        MealTypeModel::create($data);
+    MealTypeModel::create($data);
 
-        return redirect()->route('admin.meal_types.index')
-            ->with('success','Tạo loại bữa ăn thành công.');
-    }
+    return redirect()->route('admin.meal_types.index')
+        ->with('success', 'Tạo loại bữa ăn thành công.');
+}
+
 
     // GET /admin/meal_types/{id}
     public function show($id)
