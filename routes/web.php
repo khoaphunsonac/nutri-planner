@@ -181,7 +181,6 @@ Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
 });
 
 // Home
-// Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 //Nutri Calc

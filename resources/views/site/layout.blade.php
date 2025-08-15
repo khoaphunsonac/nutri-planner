@@ -63,7 +63,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="">TRANG CHỦ</a>
+                    <a class="nav-link active" href="{{ route('home') }}">TRANG CHỦ</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
@@ -83,8 +83,8 @@
             </ul>
 
                 <div class="right-menu">
-                    <a href="{{ route('showRegister') }}" class="nav-link text-light">Đăng Ký</a>
-                    <a href="" class="nav-link text-light">Đăng Nhập</a>
+                    <a href="" class="nav-link text-light">Đăng Ký</a>
+                    <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     <div class="cart-icon">
                         <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"
                             width="20">
