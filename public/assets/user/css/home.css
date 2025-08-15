@@ -335,7 +335,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 10px 0;
+    margin-bottom: 0;
 }
 
 
@@ -381,12 +381,8 @@ body {
 }
 .step-card {
     border-left: 10px solid #0d6efd;
-    transition: all 0.3s ease;
 }
-.step-card:hover {
-    transform: translateX(5px);
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
-}
+
 .step-badge {
     min-width: 50px;
 }
@@ -410,6 +406,7 @@ body {
     margin-left: auto;
     padding-right: 15px;
     padding-left: 15px;
+    margin-top: 100px;
 }
 
 @media (min-width: 1000px) {

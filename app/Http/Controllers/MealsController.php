@@ -145,75 +145,74 @@ class MealsController extends BaseController
                                 ->take(8)
                                 ->get();
 
+        $saved = false;
+        if (auth()->check()) {
+            $savedMeals = auth()->user()->savemeal ? explode('-', auth()->user()->savemeal) : [];
+            $saved = in_array($meal->id, $savedMeals);
+        }
+
         return view($this->pathViewController.'show',[
             'meal'=>$meal,
             'latestMeals'=>$latestMeals,
+            'saved'=>$saved,
         ]);
     }
 
     public function favorite($id){
-        //lấy user hiện tại
-        $account = AccountModel::findOrFail(auth()->id());
+
+    //     //middleware đã đảm bảo là user role='user'
+    //     $user = auth()->user();
 
         
+    //    // Lấy danh sách yêu thích hiện tại (nếu có)
+    //     $favorites = [];
+    //     if (!empty($user->favorite_meals)) {
+    //         $favorites = explode('-', $user->favorite_meals);
+    //     }
 
-        //lấy danh sách hiện tại từ cột favorite
-        $saveMeals = $account->savemeal ? explode('-',$account->savemeal) : [];
-        // nếu meal này đã có trong ds thì bỏ ra
-        // ktra id đã có chưa
-        $found = false;
-        foreach($saveMeals as $key => $saveId){
-            if($saveId == $id){
-                // nếu đã có thì xóa đi
-                unset($saveMeals[$key]);
-                $found = true;
+    //     $found = false;
+    //     foreach ($favorites as $key => $mealId) {
+    //         if ($mealId == $id) {
+    //             // Nếu đã tồn tại → xóa
+    //             unset($favorites[$key]);
+    //             $found = true;
+    //             break;
+    //         }
+    //     }
+
+    //     if (!$found) {
+    //         // Nếu chưa tồn tại → thêm
+    //         $favorites[] = $id;
+    //     }
+
+    //     // Chuyển lại thành chuỗi
+    //     $user->savemeal = implode('-', $favorites);
+    //     $user->save();
+
+    $account = auth()->user(); // lấy user đang đăng nhập
+    if (!$account) {
+        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập');
+    }
+
+    // Lấy danh sách ID đã lưu (nếu rỗng thì mảng trống)
+    $savedMeals = $account->savemeal ? explode('-', $account->savemeal) : [];
+
+    if (in_array($id, $savedMeals)) {
+        // Nếu đã có thì xóa nó
+        foreach ($savedMeals as $key => $mealId) {
+            if ($mealId == $id) {
+                unset($savedMeals[$key]);
             }
         }
-        //nếu chưa có thì thêm vào
-        if(!$found){
-           $saveMeals[] = $id;
-        }
+    } else {
+        // Nếu chưa có thì thêm vào
+        $savedMeals[] = $id;
+    }
 
-        // chuyen mảng thành chuỗi va lưu lại
-        $account->savemeal = implode('-',$saveMeals);
-        $account->save();
+    // Ghép mảng lại thành chuỗi 1-2-3
+    $account->savemeal = implode('-', $savedMeals);
+    $account->save();
 
-
-        // //lấy meal
-        // $meal =  MealModel::findOrFail($id);
-        // //lấy giá trị hiện tại từ cột savemeal(chuyển thành mảng)
-        // $saveMeals = $meal->savemeal ? explode('-',$meal->savemeal) : [];
-
-        // ktra id đã có chưa
-        // $found = false;
-        // foreach($saveMeals as $saveId){
-        //     if($saveId == $id){
-        //         $found = true;
-        //         break;
-        //     }
-        // }
-        // if($found){
-        //    // nếu id tồn tại thì xóa bằng cách tạo mảng mới k chứa $id
-        //    $newMeals = [];
-        //    foreach($saveMeals as $saveId){
-        //     if($saveId != $id){
-        //         $newMeals[] = $saveId;
-        //     }
-        //    }
-        //    $saveMeals = $newMeals;
-        // }else{
-        //     //chưa có thì thêm vào
-        //     $saveMeals[] = $id;
-        // }
-
-        // // chuyen mảng thành chuỗi
-        // $meal->savemeal = implode('-',$saveMeals);
-        // $meal->save();
-
-        return back()->with('success', 'Cập nhật món yêu thích thành công');
-
-        
-
-
+        return back();
     }
 }

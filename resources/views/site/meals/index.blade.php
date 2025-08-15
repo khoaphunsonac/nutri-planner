@@ -231,7 +231,7 @@
                                                 >
                                                 @php
                                                     // kiểm tra đã yêu thích chưa
-                                                    $saved = $meal->savemeal && in_array($meal->id, explode('-', $meal->savemeal));
+                                                    $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
                                                 @endphp
                                                      <i class="fas fa-heart" 
                                                         style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
@@ -247,13 +247,6 @@
                 @else
                     <div class="alert alert-warning text-center mx-auto" style="width: 40%">
                         
-                            {{-- @if(!empty($search)&& !empty($mealTypeName))
-                            Không có kết quả tìm kiếm nào  "<strong>{{ $search }}</strong>" và loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($mealTypeName))
-                            Không có món ăn nào cho loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($search))
-                            Không có kết quả tìm kiếm cho "<strong>{{ $search }}</strong>".
-                        @endif --}}
                         <div class="alert alert-warning">
                             Không có kết quả hiển thị  
                             @if (!empty($searchConditions))

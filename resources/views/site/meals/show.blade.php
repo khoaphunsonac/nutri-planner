@@ -2,30 +2,15 @@
 
 @section('content')
 
-<style>
-    
-   
-    
-</style>
-<div class="row">
-    <div class="col-md-12">
-        <div class="slider">
-            <div class="sliders">
-                <div class="slide">
-                    <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);  ">
-                        <div class="container mb-3" style="">
-                            <h2 class="display-5 fw-bold text-white shadow-text">Chi tiết món ăn</h2>
-                            
-                            <div class="scroll-down-icon">
-                                <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
-                            </div>
-                        </div>
-                    </div>
+        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);">
+            <div class="container mb-3" style="">
+                <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
+                <div class="scroll-down-icon">
+                    <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
                 </div>
-            </div >   
+                
+            </div>
         </div>
-    </div>
-</div>
 
 <div class="wide-container  my-5" >
     <div class="card shadow-sm p-4">
@@ -132,7 +117,7 @@
                         <td>{{ $displayPro ?? 0 }}</td>
                         <td>{{ $displayCarbs ?? 0 }}</td>
                         <td>{{ $displayFat ?? 0 }}</td>
-                        <td>{{ $pri->total_calo ?? 0 }}</td>
+                        <td>{{ $displayKcal ?? 0 }}</td>
                     </tr>
                 @endforeach
             </tbody>
