@@ -13,10 +13,14 @@ class HomeController extends BaseController
 
     public $viewPath = 'site.home.';
     public function index(){
-        $latestMeals = MealModel::with('recipeIngredients.ingredient')
-                    ->orderBy('created_at', 'desc')
-                    ->limit(8)
-                    ->get();
+        $latestMeals = MealModel::with(['tags',
+                                'mealType',
+                                'ingredients',
+                                'allergens',
+                                'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
+                            ])->orderBy('created_at','desc')
+                                ->take(8)
+                                ->get();
         return view($this->viewPath.'index',[
             'latestMeals'=> $latestMeals
         ]);

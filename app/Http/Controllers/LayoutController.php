@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use App\Models\AccountModel;
 
     class LayoutController extends Controller
 {
-    public function index(){
-        $newAccount = AccountModel::orderBy('created_at', 'desc')->first(); # lấy user mới nhất
+    public function index() {
+        $currentUser = Auth::user(); // Lấy user đang đăng nhập
         return view('site.layout', [
-            'newAccount' => $newAccount
+            'newAccount' => $currentUser
         ]);
     }
-    
+
 }
+
