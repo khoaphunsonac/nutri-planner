@@ -72,34 +72,85 @@
                 {{-- Thông tin dinh dưỡng tổng --}}
                 @php
                     $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($meal->recipeIngredients as $pri){
-                        $ingredient = $pri->ingredient;
-                        if($ingredient){
-                            $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
-                            // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
-                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
-                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                    $totalCarbs = 0;
+                    $totalFat = 0;
+                    $totalKcal = 0;
+                    
+                    // Mảng chuyển đổi đơn vị về gram
+                    $unitToGram = [
+                        'g' => 1,
+                        'kg' => 1000,
+                        'ml' => 1, // Giả sử 1ml ≈ 1g cho chất lỏng
+                        'l' => 1000,
+                        'muỗng canh' => 15, // 1 muỗng canh ≈ 15g
+                        'muỗng cà phê' => 5, // 1 muỗng cà phê ≈ 5g
+                        'cốc' => 200, // 1 cốc ≈ 200g
+                        'lát' => 25, // 1 lát ≈ 25g (có thể điều chỉnh)
+                        'gói' => 100, // 1 gói ≈ 100g (có thể điều chỉnh)
+                        'cái' => 100, // 1 cái ≈ 100g (có thể điều chỉnh)
+                    ];
+                @endphp
 
+                {{-- Tính toán trước để có thể sử dụng ở cả phần tổng và bảng chi tiết --}}
+                @php
+                    $ingredientNutritions = [];
+                    
+                    foreach($meal->recipeIngredients as $pri) {
+                        $ingredient = $pri->ingredient;
+                        if($ingredient) {
+                            $quantity = $pri->quantity ?? 0;
+                            $unit = $ingredient->unit ?? 'g';
+                            
+                            // Chuyển đổi quantity về gram
+                            $quantityInGram = $quantity * ($unitToGram[$unit] ?? 1);
+                            
+                            // Tính tỷ lệ dựa trên 100g (vì thông tin dinh dưỡng trong DB tính cho 100g)
+                            $ratio = $quantityInGram / 100;
+                            
+                            // Tính toán P/C/F cho nguyên liệu này
+                            $pro = ($ingredient->protein ?? 0) * $ratio;
+                            $carb = ($ingredient->carb ?? 0) * $ratio;
+                            $fat = ($ingredient->fat ?? 0) * $ratio;
+                            
+                            // Tính calo: ưu tiên total_calo từ DB, nếu không có thì tính từ P/C/F
+                            if(isset($pri->total_calo) && $pri->total_calo > 0) {
+                                $kcal = $pri->total_calo;
+                            } else {
+                                $kcal = ($pro * 4) + ($carb * 4) + ($fat * 9);
+                            }
+                            
+                            // Lưu thông tin để hiển thị trong bảng
+                            $ingredientNutritions[] = [
+                                'name' => $ingredient->name,
+                                'quantity' => $quantity,
+                                'unit' => $unit,
+                                'protein' => round($pro, 1),
+                                'carb' => round($carb, 1),
+                                'fat' => round($fat, 1),
+                                'kcal' => round($kcal, 1)
+                            ];
+                            
+                            // Cộng vào tổng
                             $totalPro += $pro;
                             $totalCarbs += $carb;
                             $totalFat += $fat;
-                            $totalKcal += $pri->total_calo ?? 0;
+                            $totalKcal += $kcal;
                         }
                     }
-                    $displayPro = round($totalPro, 1);
-                    $displayCarbs = round($totalCarbs, 1);
-                    $displayFat = round($totalFat, 1);
-                    $displayKcal = round($totalKcal);
+                    
+                    $displayPro = round($totalPro,);
+                    $displayCarbs = round($totalCarbs);
+                    $displayFat = round($totalFat);
+                    $displayKcal = round($totalKcal, 1);
                 @endphp
-                <p class="text-p">
-                    <strong>Thông tin dinh dưỡng (ước tính):</strong> 
-                    <span class="text-primary">{{ $displayKcal }} kcal</span> | P: {{ $displayPro }} g | C: {{ $displayCarbs }} g | F: {{ $displayFat }} g
-                </p>
+
+                <div class="nutrition-summary mb-4">
+                    <h4>Thông tin dinh dưỡng (ước tính):</h4>
+                    <div class="total-nutrition mb-3">
+                        <strong class="text-primary">{{ $displayKcal }} kcal </strong> | P: {{ $displayPro }}g | C: {{ $displayCarbs }}g | F: {{ $displayFat }}g
+                    </div>
+                    
+                </div>
             </div>
         </div>
 
@@ -108,7 +159,7 @@
         
         <div class="mb-4">
             <h4>Nguyên liệu</h4>
-            <hr class="border-bottom border-danger border-5 mt-0" style="width: 130px; ">
+            <hr class="border-bottom border-danger border-5 mt-0" style="width: 150px; ">
         </div>
         <table class="table table-bordered text-center">
             <thead>
@@ -122,22 +173,28 @@
                     <th>Kcal </th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($meal->recipeIngredients as $pri)
-                    @php
-                        $ingredient = $pri->ingredient;
-                    @endphp
-                    <tr>
-                        <td>{{ $ingredient->name ?? 'N/A' }}</td>
-                        <td>{{ $pri->quantity ?? '-' }}</td>
-                        <td>{{ $ingredient->unit ?? '-' }}</td>
-                        <td>{{ $displayPro ?? 0 }}</td>
-                        <td>{{ $displayCarbs ?? 0 }}</td>
-                        <td>{{ $displayFat ?? 0 }}</td>
-                        <td>{{ $displayKcal ?? 0 }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+             <tbody>
+        @foreach($ingredientNutritions as $nutrition)
+            <tr>
+                <td>{{ $nutrition['name'] }}</td>
+                <td>{{ $nutrition['quantity'] }}</td>
+                <td>{{ $nutrition['unit'] }}</td>
+                <td>{{ $nutrition['protein'] }}</td>
+                <td>{{ $nutrition['carb'] }}</td>
+                <td>{{ $nutrition['fat'] }}</td>
+                <td>{{ $nutrition['kcal'] }}</td>
+            </tr>
+        @endforeach
+        {{-- Dòng tổng cộng --}}
+        <tr class="table-warning">
+            <td><strong>TỔNG CỘNG</strong></td>
+            <td colspan="2">-</td>
+            <td><strong>{{ $displayPro }}</strong></td>
+            <td><strong>{{ $displayCarbs }}</strong></td>
+            <td><strong>{{ $displayFat }}</strong></td>
+            <td><strong>{{ $displayKcal }}</strong></td>
+        </tr>
+    </tbody>
         </table>
 
         <hr >
@@ -147,7 +204,7 @@
         <div class="steps-container bg-light p-4 rounded">
             <div class="mb-4">
                 <h3 class="d-inline-block mb-0">Cách chế biến</h3>
-                <hr class="border-bottom border-danger border-5 mt-0" style="width: 180px; ">
+                <hr class="border-bottom border-danger border-5 mt-0" style="width: 200px; ">
             </div>
             @php
                 // Tách các bước từ chuỗi trong DB
@@ -231,7 +288,7 @@
                     $displayPro = round($totalPro, 1);
                     $displayCarbs = round($totalCarbs, 1);
                     $displayFat = round($totalFat, 1);
-                    $displayKcal = round($totalKcal);
+                    $displayKcal = round($totalKcal, 1);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';

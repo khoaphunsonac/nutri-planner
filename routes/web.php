@@ -179,7 +179,10 @@ $mealController = MealsController::class;
 Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
     Route::get('/', [$mealController, 'index'])->name('index');
     Route::get('/show/{id}', [$mealController, 'show'])->name('show');
-    Route::post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');
+
+
+    Route::post('/favorite/{id}', [$mealController, 'favorite'])->middleware('user')->name('favorite');
+    Route::get('/favorites', [$mealController, 'showsavemeals'])->middleware('user')->name('showsavemeals');
 
     //chỉ user mới được like
     // Route::middleware('user')-> post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');

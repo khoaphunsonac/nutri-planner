@@ -106,9 +106,23 @@
                         <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     @endif
 
-                    <div class="cart-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart" width="20">
-                        <span>0</span>
+                    <div class="cart-icon" style="cursor: pointer;">
+                        <a href="{{ route('meal.showsavemeals') }}" alt="cart" >
+                            <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
+                            @php
+                                $favoriteCount = 0;
+                                if (!empty(auth()->user()->savemeal)) {
+                                    $favorites = array_filter(explode('-', auth()->user()->savemeal));
+                                    $favoriteCount = count($favorites);
+                                }
+                            @endphp
+                            @if($favoriteCount > 0)
+                                <span class="ms-1 badge bg-danger">
+                                    {{ $favoriteCount }}
+                                </span>
+                            @endif
+                        </a>
+                        
                     </div>
                 </div>
 

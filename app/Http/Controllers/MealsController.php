@@ -20,6 +20,12 @@ class MealsController extends BaseController
     public $controllerName = "meals";
     public $pathViewController = "site.meals.";
 
+    public function __construct()
+    {
+        // Áp dụng middleware cho toàn bộ controller
+        $this->middleware('isuser');
+    }
+
     public function index(SearchFillterRequest $request){
 
         $params = $request->all();
@@ -159,60 +165,69 @@ class MealsController extends BaseController
     }
 
     public function favorite($id){
-
-    //     //middleware đã đảm bảo là user role='user'
-    //     $user = auth()->user();
-
+        // ktra dn
+        $user = auth()->user();
         
-    //    // Lấy danh sách yêu thích hiện tại (nếu có)
-    //     $favorites = [];
-    //     if (!empty($user->favorite_meals)) {
-    //         $favorites = explode('-', $user->favorite_meals);
-    //     }
+        // lay tai khoan
+        $account = AccountModel::find($user->id); // lấy user đang đăng nhập
+        if (!$account) {
+            return back()->with('error', 'Tài khoản không tồn tại');
+        }
 
-    //     $found = false;
-    //     foreach ($favorites as $key => $mealId) {
-    //         if ($mealId == $id) {
-    //             // Nếu đã tồn tại → xóa
-    //             unset($favorites[$key]);
-    //             $found = true;
-    //             break;
-    //         }
-    //     }
+        // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
+        $savedMeals  = [];
 
-    //     if (!$found) {
-    //         // Nếu chưa tồn tại → thêm
-    //         $favorites[] = $id;
-    //     }
-
-    //     // Chuyển lại thành chuỗi
-    //     $user->savemeal = implode('-', $favorites);
-    //     $user->save();
-
-    $account = auth()->user(); // lấy user đang đăng nhập
-    if (!$account) {
-        return redirect()->route('login')->with('error', 'Bạn cần đăng nhập');
-    }
-
-    // Lấy danh sách ID đã lưu (nếu rỗng thì mảng trống)
-    $savedMeals = $account->savemeal ? explode('-', $account->savemeal) : [];
-
-    if (in_array($id, $savedMeals)) {
-        // Nếu đã có thì xóa nó
-        foreach ($savedMeals as $key => $mealId) {
-            if ($mealId == $id) {
+        if (!empty($account->savemeal)) {
+            $savedMeals = explode('-', $account->savemeal);
+            // loại bỏ phần tử rỗng nếu có = cách duyệt mảng
+            $cleanMeals = [];
+            foreach ($savedMeals as $meal) {
+                if ($meal !== '' && $meal !== null) {
+                    $cleanMeals[] = $meal;
+                }
+            }
+            $savedMeals  = $cleanMeals;
+        } 
+        // ktra meal co trong danh sach chua
+        $found = false;
+        foreach($savedMeals as $key => $mealId){
+            if($mealId == $id){
                 unset($savedMeals[$key]);
+                $found = true;
+                break;
             }
         }
-    } else {
-        // Nếu chưa có thì thêm vào
-        $savedMeals[] = $id;
-    }
+        // nếu k có thì thêm vào 
+        if(!$found){
+            $savedMeals[] = $id;
+        }
 
-    // Ghép mảng lại thành chuỗi 1-2-3
-    $account->savemeal = implode('-', $savedMeals);
-    $account->save();
+        // Ghép mảng lại thành chuỗi 1-2-3
+        $account->savemeal = implode('-', $savedMeals);
+        $account->save();
 
-        return back();
+            if ($account->save()) {
+                return back()->with('success', 'Đã cập nhật yêu thích thành công!');
+            } else {
+                return back()->with('error', 'Có lỗi xảy ra khi cập nhật');
+            }
+        }
+
+
+        public function showsavemeals(){
+            $account = AccountModel::find(auth()->id()); // lấy user đang đăng nhập
+            if (!$account) {
+                return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
+            }
+            // tách chuỗi thành mảng
+            $savedMealIds = $account->savemeal ? explode('-', $account->savemeal) : [];
+
+            // lấy dữ liệu các meal theo ID
+            $meals = MealModel::whereIn('id', $savedMealIds)->get();
+
+            return view($this->pathViewController.'showsavemeals',[
+                    'meals'=>$meals,
+                    
+                ]); 
+        }
     }
-}
