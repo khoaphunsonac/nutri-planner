@@ -1,128 +1,156 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const searchInput = document.getElementById("ingredient-search");
-    const filterSelect = document.getElementById("ingredient-filter");
-    const ingredientsList = document.getElementById("ingredients-list");
-    const dropzone = document.getElementById("recipe-dropzone");
+document.addEventListener("DOMContentLoaded", function() {
 
-    let recipe = [];
+            // Bỏ dấu tiếng Việt
+            function removeVietnameseTones(str) {
+                return str.normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/đ/g, "d")
+                    .replace(/Đ/g, "D");
+            }
 
-    function renderIngredients(list) {
-        ingredientsList.innerHTML = "";
-        list.forEach(ing => {
-            const item = document.createElement("div");
-            item.className = "ingredient-item border p-2 mb-2";
-            item.draggable = true;
-            item.dataset.id = ing.id;
-            item.dataset.name = ing.name;
-            item.dataset.unit = ing.unit;
-            item.dataset.protein = ing.protein;
-            item.dataset.carb = ing.carb;
-            item.dataset.fat = ing.fat;
-            item.dataset.calo = ing.calo;
+            function normalizeText(str) {
+                return removeVietnameseTones(str).toLowerCase().trim();
+            }
 
-            item.innerHTML = `<strong>${ing.name}</strong> (${ing.unit})<br>
-                P:${ing.protein}g | C:${ing.carb}g | F:${ing.fat}g | Cal:${ing.calo}`;
+            // Search & Filter
+            const searchInput = document.getElementById("ingredient-search");
+            const filterSelect = document.getElementById("ingredient-filter");
+            const ingredientItems = document.querySelectorAll(".ingredient-item");
 
-            item.addEventListener("dragstart", e => {
-                e.dataTransfer.setData("ingredient", JSON.stringify(ing));
+            function filterIngredients() {
+                const keyword = normalizeText(searchInput.value);
+                const filterType = filterSelect.value;
+
+                ingredientItems.forEach(item => {
+                    const name = normalizeText(item.querySelector(".ingredient-name").textContent);
+                    const protein = parseFloat(item.dataset.protein);
+                    const carb = parseFloat(item.dataset.carb);
+                    const fat = parseFloat(item.dataset.fat);
+
+                    let matchSearch = keyword === "" || name.includes(keyword);
+                    let matchFilter = true;
+                    if (filterType === "protein") matchFilter = protein >= carb && protein >= fat;
+                    if (filterType === "carb") matchFilter = carb >= protein && carb >= fat;
+                    if (filterType === "fat") matchFilter = fat >= protein && fat >= carb;
+
+                    item.style.display = (matchSearch && matchFilter) ? "flex" : "none";
+                });
+            }
+
+            searchInput.addEventListener("input", filterIngredients);
+            filterSelect.addEventListener("change", filterIngredients);
+
+            // Drag & Drop + Double Click
+            const recipeContainer = document.getElementById("recipe-container");
+
+            ingredientItems.forEach(item => {
+                item.addEventListener("dragstart", function(e) {
+                    e.dataTransfer.setData("ingredient", JSON.stringify({
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        protein: parseFloat(this.dataset.protein),
+                        carb: parseFloat(this.dataset.carb),
+                        fat: parseFloat(this.dataset.fat),
+                        calories: parseFloat(this.dataset.calories)
+                    }));
+                });
+
+                item.addEventListener("dblclick", function() {
+                    const data = {
+                        id: this.dataset.id,
+                        name: this.dataset.name,
+                        protein: parseFloat(this.dataset.protein),
+                        carb: parseFloat(this.dataset.carb),
+                        fat: parseFloat(this.dataset.fat),
+                        calories: parseFloat(this.dataset.calories)
+                    };
+                    addIngredientToRecipe(data);
+                });
             });
 
-            ingredientsList.appendChild(item);
-        });
-    }
-
-    function filterIngredients() {
-        const keyword = removeVietnameseTones(searchInput.value.toLowerCase().trim());
-        const filter = filterSelect.value;
-
-        let filtered = ingredients.filter(ing => 
-            removeVietnameseTones(ing.name.toLowerCase()).includes(keyword)
-        );
-
-        if (filter) {
-            filtered = filtered.filter(ing => {
-                if (filter === "protein") return ing.protein >= ing.carb && ing.protein >= ing.fat;
-                if (filter === "carb") return ing.carb >= ing.protein && ing.carb >= ing.fat;
-                if (filter === "fat") return ing.fat >= ing.protein && ing.fat >= ing.carb;
-                return true;
+            recipeContainer.addEventListener("dragover", e => e.preventDefault());
+            recipeContainer.addEventListener("drop", function(e) {
+                e.preventDefault();
+                const data = JSON.parse(e.dataTransfer.getData("ingredient"));
+                if (data) addIngredientToRecipe(data);
             });
-        }
 
-        renderIngredients(filtered);
-    }
+            // Thêm nguyên liệu vào công thức
+            function addIngredientToRecipe(data) {
+                if (document.querySelector(`[data-row-id="${data.id}"]`)) {
+                    alert("Nguyên liệu này đã có!");
+                    return;
+                }
 
-    function removeVietnameseTones(str) {
-        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
-    }
+                const row = document.createElement("div");
+                row.className = "d-flex justify-content-between align-items-center border p-2 mb-2";
+                row.dataset.rowId = data.id;
+                row.dataset.protein = data.protein;
+                row.dataset.carb = data.carb;
+                row.dataset.fat = data.fat;
+                row.dataset.calories = data.calories;
 
-    function updateTotals() {
-        const totals = recipe.reduce((acc, ing) => {
-            acc.protein += (ing.protein * ing.qty) / 100;
-            acc.carb += (ing.carb * ing.qty) / 100;
-            acc.fat += (ing.fat * ing.qty) / 100;
-            acc.calo += (ing.calo * ing.qty) / 100;
-            return acc;
-        }, { protein: 0, carb: 0, fat: 0, calo: 0 });
+                let qty = 100;
+                row.innerHTML = `
+            <span>${data.name}</span>
+            <div class="d-flex align-items-center">
+                <small class="me-3 text-muted nutrition-display">
+                    ${getNutritionText(data, qty)}
+                </small>
+                <input type="number" value="${qty}" min="0" class="form-control form-control-sm quantity-input me-2" style="width:80px;">
+                <button class="btn btn-sm btn-danger">&times;</button>
+            </div>
+        `;
 
-        document.getElementById("total-protein").textContent = totals.protein.toFixed(1);
-        document.getElementById("total-carb").textContent = totals.carb.toFixed(1);
-        document.getElementById("total-fat").textContent = totals.fat.toFixed(1);
-        document.getElementById("total-calories").textContent = totals.calo.toFixed(0);
-    }
+                // Validate input số
+                const qtyInput = row.querySelector(".quantity-input");
+                qtyInput.addEventListener("input", function() {
+                    let val = parseFloat(this.value);
+                    if (isNaN(val) || val < 0) {
+                        this.value = 0;
+                        val = 0;
+                    }
+                    row.querySelector(".nutrition-display").textContent = getNutritionText(data, val);
+                    updateTotals();
+                });
 
-    dropzone.addEventListener("dragover", e => e.preventDefault());
-    dropzone.addEventListener("drop", e => {
-        e.preventDefault();
-        const ing = JSON.parse(e.dataTransfer.getData("ingredient"));
-        ing.qty = 100;
-        recipe.push(ing);
-        renderRecipe();
-        updateTotals();
-    });
+                // Xóa nguyên liệu
+                row.querySelector("button").addEventListener("click", function() {
+                    row.remove();
+                    updateTotals();
+                });
 
-    function renderRecipe() {
-        dropzone.innerHTML = "";
-        recipe.forEach((ing, index) => {
-            const row = document.createElement("div");
-            row.className = "border p-2 mb-2";
-            row.innerHTML = `<strong>${ing.name}</strong> - 
-                <input type="number" value="${ing.qty}" min="0" step="0.1" style="width:80px;"> ${ing.unit}
-                <button class="btn btn-sm btn-danger float-end">X</button>`;
-            
-            row.querySelector("input").addEventListener("input", e => {
-                ing.qty = parseFloat(e.target.value) || 0;
+                recipeContainer.appendChild(row);
                 updateTotals();
-            });
+            }
 
-            row.querySelector("button").addEventListener("click", () => {
-                recipe.splice(index, 1);
-                renderRecipe();
-                updateTotals();
-            });
+            // Tính dinh dưỡng hiển thị
+            function getNutritionText(data, qty) {
+                let p = ((data.protein * qty) / 100).toFixed(1);
+                let c = ((data.carb * qty) / 100).toFixed(1);
+                let f = ((data.fat * qty) / 100).toFixed(1);
+                let cal = ((data.calories * qty) / 100).toFixed(0);
+                return `P: ${p}g | C: ${c}g | F: ${f}g | ${cal} kcal`;
+            }
 
-            dropzone.appendChild(row);
+            // Cập nhật tổng dinh dưỡng
+            function updateTotals() {
+                let totalP = 0,
+                    totalC = 0,
+                    totalF = 0,
+                    totalCal = 0;
+                document.querySelectorAll("#recipe-container [data-row-id]").forEach(row => {
+                    let qty = parseFloat(row.querySelector(".quantity-input").value) || 0;
+                    totalP += (parseFloat(row.dataset.protein) * qty) / 100;
+                    totalC += (parseFloat(row.dataset.carb) * qty) / 100;
+                    totalF += (parseFloat(row.dataset.fat) * qty) / 100;
+                    totalCal += (parseFloat(row.dataset.calories) * qty) / 100;
+                });
+                document.getElementById("total-protein").textContent = totalP.toFixed(1);
+                document.getElementById("total-carb").textContent = totalC.toFixed(1);
+                document.getElementById("total-fat").textContent = totalF.toFixed(1);
+                document.getElementById("total-calories").textContent = totalCal.toFixed(0);
+            }
+
+            filterIngredients(); // chạy khi load
         });
-    }
-
-    document.getElementById("export-excel").addEventListener("click", () => {
-        const data = recipe.map(ing => ({
-            Name: ing.name,
-            Quantity: ing.qty,
-            Unit: ing.unit,
-            Protein: ((ing.protein * ing.qty) / 100).toFixed(1),
-            Carb: ((ing.carb * ing.qty) / 100).toFixed(1),
-            Fat: ((ing.fat * ing.qty) / 100).toFixed(1),
-            Calories: ((ing.calo * ing.qty) / 100).toFixed(0)
-        }));
-
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Nutrition");
-        XLSX.writeFile(wb, "nutrition_calculator.xlsx");
-    });
-
-    searchInput.addEventListener("input", filterIngredients);
-    filterSelect.addEventListener("change", filterIngredients);
-
-    renderIngredients(ingredients);
-});

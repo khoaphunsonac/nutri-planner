@@ -88,7 +88,7 @@
                     @if (!empty($currentUser))
                         <span>Xin chào {{ $currentUser->username }}</span>
                     @else
-                        <a href="{{ route('register') }}" class="nav-link text-light">Đăng Ký</a>
+                        <a href="#" class="nav-link text-light">Đăng Ký</a>
                         <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     @endif
 
