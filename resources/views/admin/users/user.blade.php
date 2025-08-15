@@ -145,6 +145,7 @@
                     <th class="text-primary">Vai trò</th>
                     <th class="text-primary">Phản hồi</th>
                     <th class="text-primary">Trạng thái</th>
+                    <th class="text-primary" width="220">Món yêu thích</th>
                     <th colspan="2">Thao tác</th>
                 </tr>   
             </thead>
@@ -176,6 +177,25 @@
                         <td class="{{ $item->status === 'active' ? 'text-success' : 'text-danger' }}">
                             {{ $item->status === 'active' ? 'Hoạt động' : 'Đã bị khoá' }}
                         </td>
+
+                            @php
+                                $totalMeals = collect($item->savemeal_preview); // chuyển sang Collection
+                                $total = $totalMeals->count();
+                            @endphp
+                            <td>
+                            @if ($total)
+                                @foreach ($totalMeals->take(2) as $meal)
+                                    <span class="badge bg-success mb-1">{{ $meal->name }}</span>
+                                @endforeach
+                                @if ($total > 2)
+                                    <span class="badge bg-success mb-1">...</span>
+                                @endif
+                            @else
+                                0
+                            @endif
+
+                        </td>
+
                         <td class="text-center" onclick="event.stopPropagation();">
                             <a href="{{ route($shareUser . 'form', ['id' => $item->id]) }}"
                                 class="btn btn-sm btn-warning rounded me-2" title="Chỉnh sửa">
