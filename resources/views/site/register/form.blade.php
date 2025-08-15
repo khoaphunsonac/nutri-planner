@@ -45,7 +45,7 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-
+            
                 <button type="submit" 
                         class="btn w-100 shadow-sm"
                         style="background-color: #ed4e3c; 
