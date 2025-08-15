@@ -20,11 +20,7 @@ class MealsController extends BaseController
     public $controllerName = "meals";
     public $pathViewController = "site.meals.";
 
-    public function __construct()
-    {
-        // Áp dụng middleware cho toàn bộ controller
-        $this->middleware('isuser');
-    }
+    
 
     public function index(SearchFillterRequest $request){
 
@@ -164,6 +160,8 @@ class MealsController extends BaseController
         ]);
     }
 
+    
+
     public function favorite($id){
         // ktra dn
         $user = auth()->user();
@@ -215,7 +213,7 @@ class MealsController extends BaseController
 
 
         public function showsavemeals(){
-            $account = AccountModel::find(auth()->id()); // lấy user đang đăng nhập
+            $account = auth()->user(); // lấy user đang đăng nhập
             if (!$account) {
                 return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
             }

@@ -55,79 +55,9 @@
           <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
           <hr class="section-title-hr" >
       </div>
-      <!-- <div class="content-meal">
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-      </div> -->
 
       {{-- hiển thị 8 món mới nhất --}}
       <div class=" container new  "> 
-        {{-- <div class="section-header my-5" style=" color: white;">
-          <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
-          <hr style="
-              display: inline-block;
-              width: 19%; 
-              height: 4px; 
-              background-color: #ffffff; 
-              border: none; 
-              border-radius: 2px; 
-              vertical-align: middle;
-          ">
-        </div> --}}
       
         <div class="row g-4">
       
@@ -136,32 +66,31 @@
                 
                 //tính toán dinh dưỡng
                 
-                $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $recipeIngredient){
-                        $ingredient = $recipeIngredient->ingredient;
-                        if($ingredient){
-                            $quantity = $recipeIngredient->quantity ?? 1; // Lấy quantity từ recipe_ingredients
-                           
-                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
-                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            
-                            $totalPro += $pro;
-                            $totalCarbs += $carb;
-                            $totalFat += $fat;
-                            $totalKcal += $recipeIngredient->total_calo ?? 0;
-                        }
-                        
-                    }
-                    // Làm tròn
-                    $displayPro = round($totalPro, 1);
-                    $displayCarbs = round($totalCarbs, 1);
-                    $displayFat = round($totalFat, 1);
-                    $displayKcal = round($totalKcal);
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
+                      }
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';

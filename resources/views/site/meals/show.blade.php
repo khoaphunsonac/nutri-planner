@@ -4,7 +4,7 @@
 
         <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);">
             <div class="container mb-3" style="">
-                <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
+                <h2 class="display-5 fw-bold text-white shadow-text">Chi tiết món ăn</h2>
                 <div class="scroll-down-icon">
                     <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
                 </div>
@@ -26,23 +26,31 @@
             
             {{-- Thông tin chính --}}
             <div class="col-md-7"> 
-                 {{-- Form nút yêu thích --}}
-                <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" 
-                    class="favorite-form" 
-                    style="position: absolute; top: 10px; right: 10px;">
-                    @csrf
-                    <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
-                        data-liked="false" {{-- mặc định chưa thích --}}
-                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
-                    
+                 {{-- Nút yêu thích --}}
+                <div style="position: absolute; top: 10px; right: 10px;">
                     @php
-                        $saved = auth()->user() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                        $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
                     @endphp
-                        <i class="fas fa-heart" 
-                            style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
-                    </button>
-                </form>
 
+                    @if(auth()->check())
+                        {{-- Đã đăng nhập → dùng form POST để lưu --}}
+                        <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
+                            @csrf
+                            <button type="submit" 
+                                class="btn btn-favorite" 
+                                style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                                <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                            </button>
+                        </form>
+                    @else
+                        {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
+                        <button class="btn btn-favorite" 
+                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
+                            onclick="showLoginRegisterPopup()">
+                            <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
+                        </button>
+                    @endif
+                </div>
                 <h2>{{ $meal->name }}</h2>
                 <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
@@ -187,7 +195,7 @@
         @endforeach
         {{-- Dòng tổng cộng --}}
         <tr class="table-warning">
-            <td><strong>TỔNG CỘNG</strong></td>
+            <td><strong>TỔNG CỘNG </strong>(làm tròn số)</td>
             <td colspan="2">-</td>
             <td><strong>{{ $displayPro }}</strong></td>
             <td><strong>{{ $displayCarbs }}</strong></td>
@@ -327,4 +335,22 @@
         @endforeach
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.favorite-form').forEach(function (form) {
+            form.addEventListener('click', function (event) {
+                event.stopPropagation(); // Ngăn click lan ra ngoài
+            });
+        });
+    });
+
+    function showLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'block';
+    }
+    function closeLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'none';
+    }
+</script>
 @endsection

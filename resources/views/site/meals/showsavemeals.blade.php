@@ -2,17 +2,17 @@
 
 @section('content')
     <style>
-        .shadow-text {
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
-        }
+    .shadow-text {
+        text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+    }
 
-        meal-card {
-        transition: all 0.3s ease;
-        cursor: pointer;
-        border-radius: 12px;
-        overflow: hidden;
-        position: relative;
-        border: none;
+    meal-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: none;
     }
 
     .meal-card img {
@@ -70,7 +70,7 @@
     </div>
 
     <div class="container my-4">
-    <h2 class="mb-4 text-center">Món ăn yêu thích</h2>
+    <h2 class="mb-4 text-center text-info">Món ăn yêu thích</h2>
 
     @if($meals->count() > 0)
         <div class="row g-4">
@@ -82,11 +82,16 @@
                                 ? url("uploads/meals/{$meal->image_url}") 
                                 : "https://placehold.co/300x400?text=No+Image";
 
-                            $totalPro = $totalCarbs = $totalFat = $totalKcal = 0;
+                            $totalPro = 0;
+                            $totalCarbs= 0;
+                            $totalFat= 0;
+                            $totalKcal= 0;
                             foreach($meal->recipeIngredients as $pri){
                                 $ingredient = $pri->ingredient;
                                 if($ingredient){
-                                    $quantity = $pri->quantity ?? 1;
+                                    $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                                    // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                                    // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
                                     $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
                                     $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
                                     $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
@@ -97,9 +102,10 @@
                                     $totalKcal += $pri->total_calo ?? 0;
                                 }
                             }
-                            $displayPro = round($totalPro, 1);
-                            $displayCarbs = round($totalCarbs, 1);
-                            $displayFat = round($totalFat, 1);
+                            
+                            $displayPro = round($totalPro, );
+                            $displayCarbs = round($totalCarbs, );
+                            $displayFat = round($totalFat, );
                             $displayKcal = round($totalKcal, 1);
 
                         @endphp

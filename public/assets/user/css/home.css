@@ -216,6 +216,7 @@ body {
 .new-meals-container {
         padding-top: 20px;
         padding-bottom: 50px;
+        
     }
 
 .section-divider {
@@ -338,7 +339,10 @@ body {
     margin-bottom: 0;
 }
 
+.new{
+    margin-top: 200px;
 
+}
 
 
 
