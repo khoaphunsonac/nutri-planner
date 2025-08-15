@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\IngredientModel;
 use Illuminate\Http\Request;
 
 class NutriController extends Controller
 {
-    // Hiển thị trang Nutri Calculator
-    public function index(Request $request)
+    /**
+     * Nutrition Calculator Page
+     */
+    public function index()
     {
-        $search = $request->query('search', null);
-        // Lấy tất cả nguyên liệu. Có thể paginate nếu danh sách dài.
-        $ingredients = IngredientModel::when($search, function ($q, $search) {
-            return $q->where('name', 'LIKE', "%{$search}%");
-        })->orderBy('name')->get();
+        // Lấy nguyên liệu từ DB và tính calo qua accessor getCaloAttribute
+        $ingredients = IngredientModel::select('id', 'name', 'unit', 'protein', 'carb', 'fat')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($item) {
+                $item->calo = $item->calo; // Accessor tính calo
+                return $item;
+            });
 
-        return view('site.nutri-calc', compact('ingredients', 'search'));
+        return view('site.nutri-calc', [
+            'ingredientsJson' => $ingredients->toJson()
+        ]);
     }
 }
