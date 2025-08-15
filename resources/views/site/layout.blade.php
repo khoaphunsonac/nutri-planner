@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     {{-- favicon --}}
     <link rel="apple-touch-icon" sizes="57x57"
         href="{{ asset('assets/admin/img/avatar/favicon.ico/apple-icon-57x57.png') }}">
@@ -49,48 +51,53 @@
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ route('index') }}">
-                {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
-                <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood"
-                    style="width: 80%; height: 37px;">
-            </a>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{{ route('home') }}">
+        {{-- <a class="navbar-brand" href="{{ route('index') }}"> --}}
+            {{-- <img src="{{ asset('assets/admin/img/avatar/logo-fitfood.jpg') }}" alt="Logo"> --}}
+            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" alt="logo fitfood" style="width: 80%; height: 37px;">
+        </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="">TRANG CHỦ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link highlight" href="{{ route('meal.index') }}">THỰC ĐƠN</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('nutri-calc') }}">NUTRI-CALC</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('tdee') }}">TDEE</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="{{ route('feedbacks.create') }}">PHẢN HỒI</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">LIÊN HỆ</a>
-                    </li>
-                </ul>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ route('home') }}">TRANG CHỦ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="{{ route('meal.index') }}">THỰC ĐƠN</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('nutri-calc')}}">NUTRI-CALC</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{route('tdee')}}">TDEE</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link " href="{{route('feedbacks.create')}}">PHẢN HỒI</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">LIÊN HỆ</a>
+                </li>
+            </ul>
 
                 <div class="right-menu">
-                    <a href="" class="nav-link text-light">Đăng Ký</a>
-                    <a href="" class="nav-link text-light">Đăng Nhập</a>
+                    @if (!empty($currentUser))
+                        <span>Xin chào {{ $currentUser->username }}</span>
+                    @else
+                        <a href="{{ route('register') }}" class="nav-link text-light">Đăng Ký</a>
+                        <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
+                    @endif
+
                     <div class="cart-icon">
-                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart"
-                            width="20">
+                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart" width="20">
                         <span>0</span>
                     </div>
                 </div>
+                
             </div>
         </div>
     </nav>

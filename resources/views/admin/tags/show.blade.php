@@ -10,7 +10,7 @@
     </nav>
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">📝 Thông tin chi tiết <span class="fw-semibold text-success">Thẻ {{ $item->name }} </span> </h5>
+            <h5 class="mb-0">📝 Thông tin chi tiết Thẻ:  <span class="fw-semibold text-success">{{ $item->name }} </span> </h5>
             <div>
                 <a href="{{ route('tags.form', ['id' => $item->id]) }}" class="btn btn-sm btn-warning me-2">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
@@ -24,7 +24,7 @@
     <div class="card shadow-sm border-0">
         <div class="card-body">
             <p><strong>ID:</strong> {{ $item->id }}</p>
-            <p><strong>Tên Thẻ:</strong> <span class="text-success">Thẻ {{ $item->name }} </span></p>
+            <p><strong>Tên Thẻ:</strong> <span class="text-success"> {{ $item->name }} </span></p>
             <p><strong>Trạng thái:</strong>
                 @if ($item->deleted_at)
                     <span class="badge bg-danger">Đã xóa</span>
@@ -35,20 +35,7 @@
             <p><strong>Tổng số món ăn được gán:</strong> {{ $item->meals->count() }}</p>
 
             <hr>
-{{-- 
-            @if ($item->meals->count())
-                <h6><i class="bi bi-list-ul"></i> Danh sách món ăn:</h6>
-                <ul class="list-group list-group-flush mt-2">
-                    @foreach ($item->meals as $meal)
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ $meal->name }}
-                            <span class="badge bg-primary rounded-pill">ID: {{ $meal->id }}</span>
-                        </li>
-                    @endforeach
-                </ul>
-            @else
-                <p class="text-muted fst-italic">Chưa gán với món ăn nào.</p>
-            @endif --}}
+            
 
             {{-- Nếu có meal được gán --}}
             <div class="container mt-4">
