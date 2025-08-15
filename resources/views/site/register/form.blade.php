@@ -4,22 +4,6 @@
 <div class="d-flex flex-column justify-content-center align-items-center" 
      style="min-height: 100vh; background-color: rgb(255, 253, 244);">
 
-    @if(session('success'))
-    <div class="success-alert" style="background: #5ce978; 
-                color: white; text-align: center; 
-                font-weight: 600; margin-bottom: 20px; 
-                padding: 10px 20px; border-radius: 8px; min-width: 300px;">
-        {{ session('success') }}
-    </div>
-    <script>
-        setTimeout(function() {
-            const alert = document.querySelector('.success-alert');
-            if(alert) alert.style.display = 'none';
-        }, 2000);
-    </script>
-    @endif
-
-
     {{-- Form --}}
     <div class="card shadow-lg border-0" style="width: 420px; border-radius: 10px; background-color: #fdfdfd;">
         <div class="card-body p-4">

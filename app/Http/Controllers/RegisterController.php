@@ -28,6 +28,12 @@ class RegisterController extends Controller
         # với lần đầu đk thì đăng ký xong thì cho vô ngay
         Auth::login($user);
 
-        return redirect()->route('home')->with('success', 'Đăng ký thành công');
+        return redirect()->route('home');
+    }
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('home');
     }
 }
+
+

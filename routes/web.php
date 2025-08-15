@@ -171,6 +171,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
 Route::get('/register', [RegisterController::class, 'showRegister'])->name('showRegister');
 # XỬ LÝ REGISTER
 Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+Route::post('/logout', [RegisterController::class, 'logout'])->name('register.logout');
 
 
 // Meal site
