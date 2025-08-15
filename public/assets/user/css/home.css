@@ -201,9 +201,22 @@ body {
     font-size: 2rem;
     font-weight: 700;
     text-align: center;
-    margin-bottom: 0.25rem;
     color: #333;
 }
+.section-title-hr {
+        width: 300px;
+        height: 4px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 2px;
+        margin: 0 auto 70px; /* Giảm margin-top và tăng margin-bottom */
+        display: block;
+    }
+
+.new-meals-container {
+        padding-top: 20px;
+        padding-bottom: 50px;
+    }
 
 .section-divider {
     width: 80px;
@@ -326,3 +339,21 @@ body {
 .card.meal-card:hover img {
     filter: brightness(70%) !important;;
 }
+
+  .object-fit-cover {
+    object-fit: cover;
+  }
+  
+  .nutrition-info .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+  }
+  
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 1rem !important;
+    }
+    .nutrition-info .badge {
+      font-size: 0.65rem;
+    }
+  }

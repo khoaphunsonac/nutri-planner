@@ -36,6 +36,13 @@
             filter: brightness(70%);
         }
 
+        .btn-favorite{
+            cursor: pointer;
+        }
+        .btn-favorite{
+            transform: scale(1.1);
+            transition: 0.2s;
+        }
         
     </style>
 
@@ -79,16 +86,23 @@
 
                     {{-- Calories--}}
                     <div class="col-md-3" >
-                        <select name="calories_range" class="form-select text-center" onchange="this.form.submit()" style="cursor: pointer">
-                            <option value="">-- Chọn khoảng calories --</option>
+                        <select name="calories_range" 
+                            class="form-select text-center" 
+                            onchange="this.form.submit()" 
+                            style="cursor: pointer"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom" 
+                            title="1 Calorie (dinh dưỡng) = 1 Kcal =  1000 calories (khoa học)"
+                        >
+                            <option value="">-- Chọn khoảng Calories (Kcal) --</option>
                             <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
                             <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
-                            <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
-                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
                             <option value="200-400" {{ request('calories_range') == '200-400' ? 'selected' : '' }}>200 - 400</option>
                             <option value="400-600" {{ request('calories_range') == '400-600' ? 'selected' : '' }}>400 - 600</option>
                             <option value="600-800" {{ request('calories_range') == '600-800' ? 'selected' : '' }}>600 - 800</option>
+                            <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
                             <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
+                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
                             <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
                             <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
                             <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
@@ -157,19 +171,17 @@
                                     
 
                                     foreach ($meal->recipeIngredients as $ing) {
-                                        // Ưu tiên dùng giá trị đã tính sẵn trong DB (nếu có)
-                                        if (isset($ing->total_calo)) {
-                                            $totalKcal += $ing->total_calo;
-                                        } else {
-                                            // Tính thủ công nếu không có sẵn
-                                            $totalKcal += ($ing->ingredient->protein * 4 + $ing->ingredient->carb * 4 + $ing->ingredient->fat * 9) * ($ing->quantity ?? 1);
+                                        $ingredient = $ing->ingredient;
+                                        if ($ingredient) {
+                                            $quantity = $ing->quantity ?? 1;
+                                            $totalPro += $ingredient->protein ;
+                                            $totalCarbs += $ingredient->carb ;
+                                            $totalFat += $ingredient->fat ;
+                                            $totalKcal += ($ingredient->protein * 4) + ($ingredient->carb * 4) + ($ingredient->fat * 9);
                                         }
-                                        
-                                        // Tính protein, carb, fat (bắt buộc tính thủ công nếu không lưu sẵn)
-                                        $totalPro += ($ing->ingredient->protein ?? 0) * ($ing->quantity ?? 1);
-                                        $totalCarbs += ($ing->ingredient->carb ?? 0) * ($ing->quantity ?? 1);
-                                        $totalFat += ($ing->ingredient->fat ?? 0) * ($ing->quantity ?? 1);
                                     }
+
+                                    
                                 @endphp
                             
                                 <div class="col-md-4 ">
@@ -178,26 +190,51 @@
                                                 @php
                                                     $image = $meal->image_url ?? '';
                                                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                                    
+                                                     
                                                 @endphp
                                             
                                         
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
                                                 
-                                                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                                                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
                                                 
+
                                                 <div class="card-body ">
                                                     <h4 class="card-title my-3">{{ $meal->name }}</h4>
                                                     <p class="card-text text-muted ">{{ Str::limit($meal->description, 80) }}</p>
-                                                    <p class="mb-2 my-4">
-                                                        <strong>{{$totalKcal}} kcal</strong> | 
-                                                        P: {{$totalPro}} g |
-                                                        C: {{$totalCarbs}} g |
-                                                        F: {{$totalFat}} g 
-                                                    </p>
+                                                    <div class="nutrition-info mt-auto pt-2">
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                                            <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                                            <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                                            <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                                        </div>
+                                                        </div>
                                                     {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                                             
                                                 </div>
                                             </a>
+
+                                            {{-- Nút yêu thích (POST) --}}
+                                            <form action="{{ route('meal.favorite', $meal->id) }}" 
+                                                method="POST" 
+                                                class="favorite-form" 
+                                                style="position: absolute; top: 10px; right: 10px;"
+                                            >
+                                                @csrf
+                                                <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
+                                                    data-liked="false" {{-- mặc định chưa thích --}}
+                                                    style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
+                                                >
+                                                @php
+                                                    // kiểm tra đã yêu thích chưa
+                                                    $saved = $meal->savemeal && in_array($meal->id, explode('-', $meal->savemeal));
+                                                @endphp
+                                                     <i class="fas fa-heart" 
+                                                        style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                                                </button>
+                                            </form>
                                         </div>
                                     
                                 </div>
@@ -240,6 +277,15 @@
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.favorite-form').forEach(function (form) {
+            form.addEventListener('click', function (event) {
+                event.stopPropagation(); // Ngăn click lan ra ngoài
+            });
+        });
+    });
+
 </script>
 @endsection

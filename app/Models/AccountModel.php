@@ -22,7 +22,8 @@ class AccountModel extends Authenticatable implements JWTSubject
         'password',
         'role',
         'status',
-        'note'
+        'note',
+        'savemeal',
     ];
 
     protected $hidden = [
