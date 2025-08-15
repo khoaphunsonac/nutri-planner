@@ -136,20 +136,32 @@
                 
                 //tính toán dinh dưỡng
                 
-                    $totalPro = 0;
+                $totalPro = 0;
                     $totalCarbs= 0;
                     $totalFat= 0;
                     $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $pri){
-                        $ingredient = $pri->ingredient;
+                    foreach($latest->recipeIngredients as $recipeIngredient){
+                        $ingredient = $recipeIngredient->ingredient;
                         if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                            $quantity = $recipeIngredient->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                           
+                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            
+                            $totalPro += $pro;
+                            $totalCarbs += $carb;
+                            $totalFat += $fat;
+                            $totalKcal += $recipeIngredient->total_calo ?? 0;
                         }
+                        
                     }
-                
+                    // Làm tròn
+                    $displayPro = round($totalPro, 1);
+                    $displayCarbs = round($totalCarbs, 1);
+                    $displayFat = round($totalFat, 1);
+                    $displayKcal = round($totalKcal);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';
@@ -173,10 +185,10 @@
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
                             <div class="nutrition-info mt-auto pt-2">
                               <div class="d-flex flex-wrap gap-1">
-                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
-                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
-                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
-                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
                               </div>
                             </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}

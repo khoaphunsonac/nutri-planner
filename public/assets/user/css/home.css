@@ -326,6 +326,22 @@ body {
 
 
 /* home 8 món mới nhất*/
+.meal-header {
+    width: 100%;
+    height: 600px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+
+
+
+
 .card.meal-card {
     transition: transform 0.3s;
 }
@@ -357,3 +373,58 @@ body {
       font-size: 0.65rem;
     }
   }
+
+/* step preparation */
+.steps-container {
+    border: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+.step-card {
+    border-left: 10px solid #0d6efd;
+    transition: all 0.3s ease;
+}
+.step-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+}
+.step-badge {
+    min-width: 50px;
+}
+.step-number {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.75rem;
+    text-align: center;
+}
+.text-p{
+    font-size: 1.2rem;
+}
+
+/* container của show meal */
+.wide-container {
+    width: 95%;
+    max-width: 1900px; /* Adjust this value as needed */
+    margin-right: auto;
+    margin-left: auto;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+@media (min-width: 1000px) {
+    .wide-container {
+        width: 90%;
+        max-width: 1800px; /* Even wider on larger screens */
+    }
+}
+
+@media (max-width: 760px) {
+    .wide-container {
+        width: 100%;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+}
+
+

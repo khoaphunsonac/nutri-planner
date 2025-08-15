@@ -46,17 +46,19 @@
         
     </style>
 
-    
-        <div class="  align-items-center text-center" style="margin: 100px 0; background-size: cover; background-position: center;">
-            <div class="container mb-3">
+        
+        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg); ">
+            <div class="container mb-3" style="">
                 <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
-                <!-- <p>11.08 <span>-</span> 17.08</p> -->
+                <div class="scroll-down-icon">
+                    <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
+                </div>
             </div>
         </div>
     
         
         {{-- form lọc + fillter--}}
-        <div class="card p-4 mb-4 d-flex justify-content-around text-center">
+        <div class="card p-4 my-5 d-flex justify-content-around text-center">
             <div class="card-header bg-white border-0 ">
                 <h3 class="card-title mb-0">Tìm kiếm món ăn</h3>
             </div>

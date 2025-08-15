@@ -3,29 +3,31 @@
 @section('content')
 
 <style>
-    .container.my-4 {
-        margin-top: 8rem !important; /* Đè lên mọi margin khác */
-        padding-top: 0 !important;
-    }
-    .card.meal-card {
-        transition: transform 0.3s;
-    }
-    .card.meal-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    .card-img-top {
-        border-bottom: 1px solid #eee;
-    }
-    .card.meal-card:hover img {
-        filter: brightness(70%);
-    }
-    .new{
-        margin-top: 300px;
-    }
+    
+   
+    
 </style>
+<div class="row">
+    <div class="col-md-12">
+        <div class="slider">
+            <div class="sliders">
+                <div class="slide">
+                    <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);  ">
+                        <div class="container mb-3" style="">
+                            <h2 class="display-5 fw-bold text-white shadow-text">Chi tiết món ăn</h2>
+                            
+                            <div class="scroll-down-icon">
+                                <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div >   
+        </div>
+    </div>
+</div>
 
-<div class="container  my-4" >
+<div class="wide-container  my-5" >
     <div class="card shadow-sm p-4">
         <div class="row">
             {{-- Ảnh món ăn --}}
@@ -40,13 +42,13 @@
             {{-- Thông tin chính --}}
             <div class="col-md-7">
                 <h2>{{ $meal->name }}</h2>
-                <p class="text-muted">{{ $meal->description }}</p>
+                <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
                 {{-- Loại bữa ăn --}}
-                <p><strong>Loại bữa ăn:</strong> {{ $meal->mealType->name ?? 'Không xác định' }}</p>
+                <p class="text-p"><strong>Loại bữa ăn:</strong> {{ $meal->mealType->name ?? 'Không xác định' }}</p>
 
                 {{-- Tags --}}
-                <p>
+                <p class="text-p">
                     <strong>Thẻ:</strong> 
                     @forelse($meal->tags as $tag)
                         <span class="badge bg-info text-dark">{{ $tag->name }}</span>
@@ -56,7 +58,7 @@
                 </p>
 
                 {{-- Dị ứng --}}
-                <p>
+                <p class="text-p">
                     <strong>Có thể gây dị ứng:</strong>
                     @forelse($meal->allergens as $allergen)
                         <span class="badge bg-danger">{{ $allergen->name }}</span>
@@ -74,25 +76,39 @@
                     foreach($meal->recipeIngredients as $pri){
                         $ingredient = $pri->ingredient;
                         if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                            $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                            // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                            $totalPro += $pro;
+                            $totalCarbs += $carb;
+                            $totalFat += $fat;
+                            $totalKcal += $pri->total_calo ?? 0;
                         }
                     }
+                    $displayPro = round($totalPro, 1);
+                    $displayCarbs = round($totalCarbs, 1);
+                    $displayFat = round($totalFat, 1);
+                    $displayKcal = round($totalKcal);
                 @endphp
-                <p>
+                <p class="text-p">
                     <strong>Thông tin dinh dưỡng (ước tính):</strong> 
-                    <span class="text-primary">{{ $totalKcal }} kcal</span> | P: {{ $totalPro }} g | C: {{ $totalCarbs }} g | F: {{ $totalFat }} g
+                    <span class="text-primary">{{ $displayKcal }} kcal</span> | P: {{ $displayPro }} g | C: {{ $displayCarbs }} g | F: {{ $displayFat }} g
                 </p>
             </div>
         </div>
 
         {{-- Công thức chi tiết: nguyên liệu + bước làm --}}
         <hr>
-
-        <h4>Công thức nguyên liệu</h4>
-        <table class="table table-bordered">
+        
+        <div class="mb-4">
+            <h4>Nguyên liệu</h4>
+            <hr class="border-bottom border-danger border-5 mt-0" style="width: 130px; ">
+        </div>
+        <table class="table table-bordered text-center">
             <thead>
                 <tr>
                     <th>Nguyên liệu</th>
@@ -101,6 +117,7 @@
                     <th>Protein (g)</th>
                     <th>Carb (g)</th>
                     <th>Fat (g)</th>
+                    <th>Kcal </th>
                 </tr>
             </thead>
             <tbody>
@@ -112,16 +129,65 @@
                         <td>{{ $ingredient->name ?? 'N/A' }}</td>
                         <td>{{ $pri->quantity ?? '-' }}</td>
                         <td>{{ $ingredient->unit ?? '-' }}</td>
-                        <td>{{ $ingredient->protein ?? 0 }}</td>
-                        <td>{{ $ingredient->carb ?? 0 }}</td>
-                        <td>{{ $ingredient->fat ?? 0 }}</td>
+                        <td>{{ $displayPro ?? 0 }}</td>
+                        <td>{{ $displayCarbs ?? 0 }}</td>
+                        <td>{{ $displayFat ?? 0 }}</td>
+                        <td>{{ $pri->total_calo ?? 0 }}</td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
 
-        <h4>Bước thực hiện: </h4>
-        <pre>{{$meal->preparation}}</pre>
+        <hr >
+
+         
+        <!-- <pre>{{$meal->preparation}}</pre> -->
+        <div class="steps-container bg-light p-4 rounded">
+            <div class="mb-4">
+                <h3 class="d-inline-block mb-0">Cách chế biến</h3>
+                <hr class="border-bottom border-danger border-5 mt-0" style="width: 180px; ">
+            </div>
+            @php
+                // Tách các bước từ chuỗi trong DB
+                $steps = preg_split('/\n|\d+\./', $meal->preparation, -1, PREG_SPLIT_NO_EMPTY);
+                $stepCount = count($steps);
+                $half = ceil($stepCount / 2);
+            @endphp
+            
+            <div class="row">
+                {{-- Cột trái --}}
+                <div class="col-md-6">
+                    @foreach(array_slice($steps, 0, $half) as $index => $step)
+                        @if(trim($step))
+                            <div class="step-card mb-3 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center">
+                                    <span class="step-number bg-primary text-white fw-bold rounded-circle   me-3">B{{ $index + 1 }}</span>
+                                    <div class="step-content">
+                                        {{ trim($step) }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+                
+                {{-- Cột phải --}}
+                <div class="col-md-6">
+                    @foreach(array_slice($steps, $half) as $index => $step)
+                        @if(trim($step))
+                            <div class="step-card mb-3 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center">
+                                    <span class="step-number bg-primary text-white fw-bold rounded-circle   me-3">B{{ $index + $half + 1 }}  </span>
+                                    <div class="step-content" style="font-size: 1rem;">
+                                        {{ trim($step) }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
         <a href="{{ route('meal.index') }}" class="btn btn-outline-primary mb-3 text-center gap-2" style="width:200px;">
             <i class="fas fa-arrow-left"></i> Quay lại
@@ -143,16 +209,27 @@
                     $totalCarbs= 0;
                     $totalFat= 0;
                     $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $pri){
-                        $ingredient = $pri->ingredient;
+                    foreach($latest->recipeIngredients as $recipeIngredient){
+                        $ingredient = $recipeIngredient->ingredient;
                         if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                            $quantity = $recipeIngredient->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                           
+                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            
+                            $totalPro += $pro;
+                            $totalCarbs += $carb;
+                            $totalFat += $fat;
+                            $totalKcal += $recipeIngredient->total_calo ?? 0;
                         }
                     }
-                
+                    // Làm tròn
+                    $displayPro = round($totalPro, 1);
+                    $displayCarbs = round($totalCarbs, 1);
+                    $displayFat = round($totalFat, 1);
+                    $displayKcal = round($totalKcal);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';
@@ -176,10 +253,10 @@
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
                             <div class="nutrition-info mt-auto pt-2">
                               <div class="d-flex flex-wrap gap-1">
-                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
-                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
-                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
-                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
                               </div>
                             </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}

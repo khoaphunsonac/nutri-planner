@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-
     {{-- favicon --}}
     <link rel="apple-touch-icon" sizes="57x57"
         href="{{ asset('assets/admin/img/avatar/favicon.ico/apple-icon-57x57.png') }}">
@@ -44,7 +43,7 @@
     {{-- custom css --}}
     <link rel="stylesheet" href="{{ asset('assets/admin/css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/user/css/home.css') }}">
-
+    
     <title>Nutri Planner</title>
 </head>
 
