@@ -46,17 +46,29 @@
         
     </style>
 
-    
-        <div class="  align-items-center text-center" style="margin: 100px 0; background-size: cover; background-position: center;">
-            <div class="container mb-3">
+        
+        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg); ">
+            <div class="container mb-3" style="">
                 <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
-                <!-- <p>11.08 <span>-</span> 17.08</p> -->
+                <div class="scroll-down-icon">
+                    <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
+                </div>
             </div>
         </div>
-    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
         
         {{-- form lọc + fillter--}}
-        <div class="card p-4 mb-4 d-flex justify-content-around text-center">
+        <div class="card p-4 my-5 d-flex justify-content-around text-center">
             <div class="card-header bg-white border-0 ">
                 <h3 class="card-title mb-0">Tìm kiếm món ăn</h3>
             </div>
@@ -164,20 +176,24 @@
                     <div class="row g-4">
                             @foreach ($meals as $meal)
                                 @php
-                                    $totalPro = 0;
+                                   $totalPro = 0;
                                     $totalCarbs= 0;
                                     $totalFat= 0;
                                     $totalKcal= 0;
-                                    
+                                    foreach($meal->recipeIngredients as $pri){
+                                        $ingredient = $pri->ingredient;
+                                        if($ingredient){
+                                            $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                                            // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
 
-                                    foreach ($meal->recipeIngredients as $ing) {
-                                        $ingredient = $ing->ingredient;
-                                        if ($ingredient) {
-                                            $quantity = $ing->quantity ?? 1;
-                                            $totalPro += $ingredient->protein ;
-                                            $totalCarbs += $ingredient->carb ;
-                                            $totalFat += $ingredient->fat ;
-                                            $totalKcal += ($ingredient->protein * 4) + ($ingredient->carb * 4) + ($ingredient->fat * 9);
+                                            $totalPro += $pro;
+                                            $totalCarbs += $carb;
+                                            $totalFat += $fat;
+                                            $totalKcal += $pri->total_calo ?? 0;
                                         }
                                     }
 
@@ -205,7 +221,7 @@
                                                     <p class="card-text text-muted ">{{ Str::limit($meal->description, 80) }}</p>
                                                     <div class="nutrition-info mt-auto pt-2">
                                                         <div class="d-flex flex-wrap gap-1">
-                                                            <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
+                                                            <span class="badge bg-primary rounded-pill">{{ round($totalKcal,1) }} kcal</span>
                                                             <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
                                                             <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
                                                             <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
@@ -216,42 +232,54 @@
                                                 </div>
                                             </a>
 
-                                            {{-- Nút yêu thích (POST) --}}
-                                            <form action="{{ route('meal.favorite', $meal->id) }}" 
-                                                method="POST" 
-                                                class="favorite-form" 
-                                                style="position: absolute; top: 10px; right: 10px;"
-                                            >
-                                                @csrf
-                                                <button type="submit" class="btn btn-favorite" data-id="{{ $meal->id }}" 
-                                                    data-liked="false" {{-- mặc định chưa thích --}}
-                                                    style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
-                                                >
+                                            {{-- Nút yêu thích --}}
+                                            <div style="position: absolute; top: 10px; right: 10px;">
                                                 @php
-                                                    // kiểm tra đã yêu thích chưa
-                                                    $saved = $meal->savemeal && in_array($meal->id, explode('-', $meal->savemeal));
+                                                    $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
                                                 @endphp
-                                                     <i class="fas fa-heart" 
-                                                        style="font-size: 20px; color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
-                                                </button>
-                                            </form>
+
+                                                @if(auth()->check())
+                                                    {{-- Đã đăng nhập → dùng form POST để lưu --}}
+                                                    <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" 
+                                                            class="btn btn-favorite" 
+                                                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                                                            <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                                                        </button>
+                                                    </form>
+                                                @else
+                                                    {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
+                                                    <button class="btn btn-favorite" 
+                                                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
+                                                        onclick="showLoginRegisterPopup()">
+                                                        <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
+                                                    </button>
+                                                @endif
+                                                
+                                            </div>
                                         </div>
                                     
                                 </div>
                             
                             
                         @endforeach
+                        {{-- Popup --}}
+                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
+                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
+                                <p>Hãy chọn một trong hai để tiếp tục</p>
+                                <div style="margin-top:15px;">
+                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
+                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
+                                </div>
+                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
+                            </div>
+                        </div>
                     </div>
                 @else
                     <div class="alert alert-warning text-center mx-auto" style="width: 40%">
                         
-                            {{-- @if(!empty($search)&& !empty($mealTypeName))
-                            Không có kết quả tìm kiếm nào  "<strong>{{ $search }}</strong>" và loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($mealTypeName))
-                            Không có món ăn nào cho loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($search))
-                            Không có kết quả tìm kiếm cho "<strong>{{ $search }}</strong>".
-                        @endif --}}
                         <div class="alert alert-warning">
                             Không có kết quả hiển thị  
                             @if (!empty($searchConditions))
@@ -287,5 +315,11 @@
         });
     });
 
+    function showLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'block';
+    }
+    function closeLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'none';
+    }
 </script>
 @endsection
