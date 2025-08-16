@@ -123,4 +123,68 @@ class AdminAuthController extends Controller
                 ->with('success', 'Đã đăng xuất thành công.');
         }
     }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:accounts,email',
+        ], [
+            'email.required' => 'Email là bắt buộc.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.exists' => 'Email không tồn tại.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput($request->only('email'));
+        }
+
+        // Gửi email đặt lại mật khẩu
+        try {
+            $user = AccountModel::where('email', $request->email)->first();
+            $token = JWTAuth::fromUser($user);
+            Mail::to($user->email)->send(new ResetPasswordMail($token));
+
+            return back()->with('success', 'Đã gửi liên kết đặt lại mật khẩu.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['email' => 'Có lỗi xảy ra. Vui lòng thử lại.']);
+        }
+    }
+
+    public function showResetForm($token)
+    {
+        return view('admin.auth.reset-password', ['token' => $token]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ], [
+            'token.required' => 'Token là bắt buộc.',
+            'password.required' => 'Mật khẩu là bắt buộc.',
+            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
+            'password.confirmed' => 'Mật khẩu xác nhận không khớp.',
+        ]);
+
+        if ($validator->fails()) {
+            return back()
+                ->withErrors($validator)
+                ->withInput($request->only('email'));
+        }
+
+        // Đặt lại mật khẩu
+        try {
+            $user = JWTAuth::setToken($request->token)->authenticate();
+            $user->password = Hash::make($request->password);
+            $user->save();
+
+            return redirect()->route('admin.login')
+                ->with('success', 'Đặt lại mật khẩu thành công.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['token' => 'Có lỗi xảy ra. Vui lòng thử lại.']);
+        }
+    }
 }
