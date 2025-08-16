@@ -45,7 +45,23 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+<<<<<<< HEAD
             
+=======
+
+                <div class="mb-3">
+                    <label for="password_confirmation" class="form-label fw-bold" style="color: #ef6c00;">Nhập lại mật khẩu</label>
+                    <input type="password" id="password_confirmation" name="password_confirmation"
+                        class="form-control border-0 shadow-sm" 
+                        style="border-radius: 10px;"
+                        placeholder="Nhập lại mật khẩu">
+                    @error('password_confirmation')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+
+>>>>>>> bd505a3daf6d0fa5cb74af9e9981d0c3606c106c
                 <button type="submit" 
                         class="btn w-100 shadow-sm"
                         style="background-color: #ed4e3c; 
