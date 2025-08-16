@@ -14,7 +14,7 @@
 
             <form action="{{ route('login.submit') }}" method="POST">
                 @csrf
-                <div class="mb-3">
+                <div class="mb-3">  
                     <label for="username" class="form-label fw-bold" style="color:#f57c00;">Tên đăng ký</label>
                     <input type="text" id="username" name="username" value="{{ old('username') }}" 
                            class="form-control shadow-sm" 
