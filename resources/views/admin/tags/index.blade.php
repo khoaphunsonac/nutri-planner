@@ -22,15 +22,15 @@
     </div>
     
 
-    @if (session('success'))
-    <div class="d-flex justify-content-center">
-        <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
-    </div>
-        
-    @endif
+    {{-- @if (session('success'))
+        <div class="d-flex justify-content-center">
+            <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{session('success')}}</div>
+        </div>
+    @endif --}}
+
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-3">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$totalTags ?? 0}}</h4>
@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$activeTags ?? 0}}</h4>
@@ -54,34 +54,43 @@
                 </div>
             </div>
         </div> --}}
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>{{$usageRate ?? 0}}</h4>
-                    <p class="text-muted mb-0">Sử dụng</p>
+                    <p class="text-muted mb-0">Thẻ được sử dụng</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        {{-- <div class="col-md-3">
             <div class="card text-center -shadow-sm">
                 <div class="card-body">
                     <h4>Coming soon</h4>
                     <p class="text-muted mb-0">Thẻ phổ biến</p>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     {{-- fillter form --}}
-    <form action="" method="GET" class="row g-2 align-items-center mb-5" >
-        <div class="col-md-8"> 
-            <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tên Thẻ..." value="{{$search ?? old($search)}}"  >
-        </div>
-        <div class="col-md-4">
-            <button class="btn btn-primary w-100" type="submit">Lọc</button>
-        </div>
+    <div class="row mt-5">
+        <div class="col-md-12">
+             <div class=" card mb-3 px-3 py-3 shadow-sm ">
+                <form action="" method="GET" class="row g-3 align-items-center" >
+                    <div class="col-md-5"> 
+                        <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm tên Thẻ..." value="{{$search ?? old($search)}}"  >
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-primary w-100" type="submit">Lọc</button>
+                    </div>
 
-    </form>
+                </form>
+            </div>
+        </div>
+    </div>
 
     
     <div class="card shadow-sm mb-5">
@@ -92,7 +101,7 @@
                 @if ($item->total() > 0)
                 Tổng: {{ $item->count()}}/ {{$item->total()}} mục
                 @else
-                    Không có kết quả nào
+                    0 mục
                 @endif
                 
             </small>
@@ -103,7 +112,7 @@
                     <tr>
                         <th width="30">Số thứ tự</th>
                         <th width="150">Tên Thẻ</th>
-                        {{-- <th width="150">Trạng thái</th> --}}
+                        <th width="150">Món ăn</th>
                         <th width="100">Số món ăn</th>
                         <th width="150">Ngày tạo</th>
                         <th width="150" class="text-center">Thao tác</th>
@@ -119,13 +128,22 @@
                                 <td>
                                     {{$phanTu->name}}
                                 </td>
-                                {{-- <td>
-                                    @if ($phanTu['deleted_at'])
-                                        <span class="badge bg-danger">Đã xóa</span>
+                                <td>
+                                    @php
+                                        $totalmeals = $phanTu->meals;
+                                        $total = $totalmeals->count();
+                                    @endphp
+                                    @if ($total)
+                                        @foreach ($totalmeals->take(2) as $meal)
+                                            <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
+                                        @endforeach
+                                        @if ($total > 2)
+                                            <span class=" badge bg-success me-1 text-white ">...</span>
+                                        @endif
                                     @else
-                                        <span class="badge bg-success">Hoạt động</span>
+                                        0
                                     @endif
-                                </td> --}}
+                                </td>
                                 <td>
                                     {{$phanTu->meals_count}}
                                 </td>
@@ -192,9 +210,25 @@
                                 </div>
                             @endforeach
                     @else
-                        <tr>
-                            <td class="text-center text-muted" colspan="6">Không có thẻ nào</td>
-                        </tr>
+                       @if (count($item)>0)
+                            @foreach ($item as $key => $phanTu)
+                                {{-- Phần hiển thị danh sách thẻ như cũ --}}
+                            @endforeach
+                        @else
+                            <tr>
+                                <td class="text-center text-muted" colspan="6">
+                                    @if(!empty($search) && !empty($mealSearch))
+                                        Không tìm thấy thẻ nào phù hợp với tên thẻ "<strong>{{ $search }}</strong>" và món ăn "<strong>{{ $mealSearch }}</strong>"
+                                    @elseif(!empty($search))
+                                        Không tìm thấy thẻ nào phù hợp với tên thẻ "<strong>{{ $search }}</strong>"
+                                    @elseif(!empty($mealSearch))
+                                        Không tìm thấy thẻ nào có món ăn phù hợp với "<strong>{{ $mealSearch }}</strong>"
+                                    @else
+                                        Hiện không có thẻ nào trong hệ thống
+                                    @endif
+                                </td>
+                            </tr>
+                        @endif
                     @endif
                 </tbody>
              </table>
@@ -205,58 +239,61 @@
        
     </div>
     
-    {{-- Mapping tag-meal --}}
-    <div class="card mt-4">
-        <div class="card-header d-flex justify-content-between align-items-center bg-light">
-            <h5 class="mb-0"><i class="bi bi-diagram-3"></i> Danh sách món ăn  theo Thẻ</h5>
-            <small>
-                @if ($tagMeal->total() > 0)
-                    Tổng: {{ $tagMeal->count()}} / {{$tagMeal->total() }} mục
+    
+
+    {{-- Overview --}}
+    
+    <div class="card shadow-sm mt-5">
+        <div class="card-header bg-white  d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan thẻ của món ăn</h5>
+            <small class="text-end">
+                {{--  Tổng số Allergen thỏa query tìm kiếm --}}
+                @if ($mealsForOverview->count() > 0)
+                Tổng: giới hạn {{$mealsForOverview->count() }} mục
                 @else
-                    0
+                    0 mục
                 @endif
-                
             </small>
         </div>
-        <div class="card-body  text-center">
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Thẻ</th>
-                        <th>Món Ăn</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($tagMeal as $tag)
-                        <tr>
-                            <td><strong>{{ $tag->name }}</strong></td>
-                            <td>
-                                @php
-                                    $totalmeals = $tag->meals;
-                                    $total = $totalmeals->count();
-                                @endphp
-                                @if($total)
-                                    @foreach($totalmeals->take(2) as $meal)
-                                        <span class="badge bg-primary me-1">{{ $meal->name }}</span>
-                                        
-                                    @endforeach
-                                    @if ($total > 2)
-                                        <span class=" badge bg-primary me-1 text-white ">...</span>
-                                    @endif
+        <div class="card-body">
+        <div class="row">
+            @foreach($meals->take(10) as $meal)
+                <div class="col-md-6 mb-4">
+                     <a href="{{ route('meals.show', $meal->id) }}" class="text-decoration-none text-dark">
+                        <div class=" list-group-item border-start border-success border-4 p-3 bg-light rounded shadow-sm h-100 hover-shadow">
+                            <h6 class="fw-bold text-dark mb-2 text-truncate" title="{{ $meal->name }}">
+                                <i class="fas fa-utensils text-secondary"></i> {{ $meal->name }}
+                            </h6>
+
+                            <div class="d-flex flex-wrap gap-1">
+                                <strong class="me-2">Thẻ được gán:</strong>
+                                @if($meal->allergens->isEmpty())
+                                    <span class="text-muted">Không thẻ</span>
                                 @else
-                                    <span class="text-muted">Chưa gán món ăn</span>
+                                    @php
+                                        $maxTagsToShow = 3;
+                                        $totalTags = $meal->tags->count();
+                                        $tagsToShow = $meal->tags->take($maxTagsToShow);
+                                    @endphp
+                                    @foreach($tagsToShow as $t)
+                                         <span class="badge bg-danger text-truncate" title="{{ $t->name }}" style="max-width: 120px;">
+                                            {{ $t->name }}
+                                        </span>
+                                    @endforeach
+                                    
+                                    @if($totalTags > $maxTagsToShow)
+                                        <span class="badge bg-danger" title="Còn {{ $totalTags - $maxTagsToShow }} thẻ khác">
+                                            ...
+                                        </span>
+                                    @endif
                                 @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="mt-3 text-end">
-                {{$tagMeal->appends(request()->except('mappingmeal'))->links('pagination::bootstrap-5')}} 
-            </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
         </div>
     </div>
-
        
 
 

@@ -11,13 +11,13 @@
      {{-- Header --}}
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
         <h2>{{isset($item) && $item ? ' Cập nhật Dị ứng:  '. $item->name  : ' Thêm Dị ứng '}}</h2> 
-        <a href="{{route('allergens.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
+        <a href="{{route('allergens.index')}}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Quay lại </a>
     </div>
 
     
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="alert alert-success mt-2 text-center" style="width:300px">{{session('success')}}</div>
-    @endif
+    @endif --}}
 
 
      
@@ -36,7 +36,7 @@
                     <div class="mb-4">
                         <h5 class="form-label fw-bold mb-2">Tên Dị ứng</h5>
                         <input type="text" name="name" class="form-control" 
-                               value="{{ $item->name ?? old('name') }}" placeholder="Nhập tên dị ứng"  style="cursor: pointer">
+                               value="{{ $item->name ?? old('name') }}" placeholder="Nhập tên dị ứng"  style="cursor: text">
                         @error('name')
                             <div class="text-danger mt-1">{{ $message }}</div>
                         @enderror
