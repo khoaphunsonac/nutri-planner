@@ -96,9 +96,14 @@
                         <div class="user-dropdown">
                             <span class="user-name-highlight">Xin chào {{ Auth::user()->username }}</span>
                             <div class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('dashboard') }}">
+                                        <i class="bi bi-speedometer2"></i> Dashboard
+                                    </a>
+                                </li>
                                 <form action="{{ route('register.logout') }}" method="post">
                                  @csrf
-                                 <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                 <button type="submit" class="dropdown-item text-center">Đăng xuất</button>
                                 </form>
                             </div>
                         </div>
