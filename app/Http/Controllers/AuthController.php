@@ -87,6 +87,10 @@ class AuthController extends Controller
             $token = JWTAuth::fromUser($user);
             session(['user_jwt_token' => $token]);
 
+            // nếu là admin thì cho về dashboard luôn
+            if ($user->role === 'admin') {
+            return redirect('admin');
+            }
             return redirect('/')
                 ->with('success', 'Đăng nhập thành công!');
         } catch (JWTException $e) {
