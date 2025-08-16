@@ -96,8 +96,8 @@
                         <div class="user-dropdown">
                             <span class="user-name-highlight">Xin chào {{ Auth::user()->username }}</span>
                             <div class="dropdown-menu">
-                                {{-- nếu admin thì mới có nút dashboard --}}
-                                @if (Auth::user()->username === 'admin')
+                                {{-- nếu role admin thì mới có nút dashboard --}}
+                                @if (Auth::user()->role === 'admin')
                                     <li>
                                     <a class="dropdown-item text-center" href="{{ route('dashboard') }}" >Dashboard</a>
                                 </li>
