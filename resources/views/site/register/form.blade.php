@@ -45,9 +45,6 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
-<<<<<<< HEAD
-            
-=======
 
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label fw-bold" style="color: #ef6c00;">Nhập lại mật khẩu</label>
@@ -61,7 +58,6 @@
                 </div>
 
 
->>>>>>> bd505a3daf6d0fa5cb74af9e9981d0c3606c106c
                 <button type="submit" 
                         class="btn w-100 shadow-sm"
                         style="background-color: #ed4e3c; 
