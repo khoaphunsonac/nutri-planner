@@ -38,21 +38,13 @@ class RegisterRequest extends FormRequest
             'string',
             'min:6',
             'max:20',
-            'regex:/^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d).+$/',
-            // 'confirmed', 
+            'regex:/^(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*\d).+$/'
         ],
-        'password_confirmation' => 'required',
+       
     ];
 }
 
-public function withValidator($validator)
-{
-    $validator->after(function ($validator) {
-        if ($this->password !== $this->password_confirmation) {
-            $validator->errors()->add('password_confirmation', 'Mật khẩu nhập lại không khớp');
-        }
-    });
-}
+
     public function messages(){
     return [
         # username
@@ -69,12 +61,11 @@ public function withValidator($validator)
         'email.unique' => 'Email này đã được sử dụng',
 
         # password
-        'password_confirmation.required' => 'Vui lòng nhập lại mật khẩu',
         'password.required' => 'Vui lòng nhập mật khẩu',
         'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',
         'password.max' => 'Mật khẩu không được vượt quá :max ký tự',
         'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
-        // 'password.confirmed' => 'Mật khẩu nhập lại không khớp', 
+
     ];
 }
 
