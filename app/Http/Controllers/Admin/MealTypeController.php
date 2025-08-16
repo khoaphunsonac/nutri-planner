@@ -13,8 +13,10 @@ class MealTypeController extends Controller
     public function index(Request $request)
     {
         $q = $request->query('q');
+
         $items = MealTypeModel::when($q, fn($qr) => $qr->where('name','like',"%{$q}%"))
-                    ->orderByDesc('id') // bảng bạn không dùng timestamps
+                    ->withCount('meals')              // 👈 THÊM: để dùng $it->meals_count trên list
+                    ->orderByDesc('id')
                     ->paginate(10)
                     ->appends($request->query());
 
@@ -34,21 +36,37 @@ class MealTypeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required','max:100','unique:meal_type,name'],
+            'name' => 'required|max:100|unique:meal_type,name',
+        ], [
+            'name.required' => 'Không được bỏ trống',
+            'name.max'      => 'Không được vượt quá 100 ký tự',
+            'name.unique'   => 'Tên này đã tồn tại',
         ]);
 
         MealTypeModel::create($data);
 
         return redirect()->route('admin.meal_types.index')
-            ->with('success','Tạo loại bữa ăn thành công.');
+            ->with('success', 'Tạo loại bữa ăn thành công.');
     }
 
     // GET /admin/meal_types/{id}
-    public function show($id)
-    {
-        $item = MealTypeModel::findOrFail($id);
-        return view('admin.meal_types.show', compact('item'));
-    }
+   // GET /admin/meal_types/{id}
+// GET /admin/meal_types/{id}
+public function show($id)
+{
+    $item = MealTypeModel::withCount('meals')->findOrFail($id);
+
+    // Danh sách món (meals) thuộc loại này + phân trang
+    $relatedDishes = \App\Models\MealModel::where('meal_type_id', $item->id)
+                        ->orderByDesc('id')
+                        ->paginate(10);
+
+    $relatedCount = $item->meals_count; // hoặc $relatedDishes->total()
+
+    return view('admin.meal_types.show', compact('item','relatedDishes','relatedCount'));
+}
+
+
 
     // GET /admin/meal_types/{id}/edit
     public function edit($id)
@@ -66,7 +84,11 @@ class MealTypeController extends Controller
         $item = MealTypeModel::findOrFail($id);
 
         $data = $request->validate([
-            'name' => ['required','max:100', Rule::unique('meal_type','name')->ignore($item->id)],
+            'name' => 'required|max:100|unique:meal_type,name',
+        ], [
+            'name.required' => 'Không được bỏ trống',
+            'name.max'      => 'Không được vượt quá 100 ký tự',
+            'name.unique'   => 'Tên này đã tồn tại',
         ]);
 
         $item->update($data);
@@ -79,7 +101,7 @@ class MealTypeController extends Controller
     public function delete($id)
     {
         $item = MealTypeModel::findOrFail($id);
-        $item->delete(); // SoftDeletes: xóa mềm; nếu không có deleted_at sẽ xóa cứng
+        $item->delete();
         return redirect()->route('admin.meal_types.index')
             ->with('success','Đã xoá.');
     }
