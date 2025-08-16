@@ -1,7 +1,22 @@
 @extends('admin.layout')
 {{-- trường hợp muốn dữ tk đó lại nhưng lại muốn khoá ((: --}}
 @section('content')
+
 <div class="container mt-4" style="max-width: 600px;">
+    <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb breadcrumb-compact">
+        <li class="breadcrumb-item">
+            <a href="#"><i class="bi bi-house-door"></i></a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('users.index') }}"><i class="bi bi-people-fill me-1"></i>Users Management</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="bi bi-list-ul me-1"></i>Danh sách
+        </li>
+    </ol>
+</nav>
+
     <div class="bg-white p-4 rounded shadow">
         <h4 class="mb-4 text-primary fw-bold">
             <i class="bi bi-person-badge-fill me-2"></i>Chi tiết thông tin người dùng
