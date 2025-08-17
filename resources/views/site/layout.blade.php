@@ -90,6 +90,11 @@
                         PHẢN HỒI
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('') ? 'active' : '' }}" href="{{ route('') }}">
+                        LIÊN HỆ
+                    </a>
+                </li>
                 </ul>
                 <div class="right-menu">
                     @if (Auth::check())
