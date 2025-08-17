@@ -1,0 +1,359 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* Ẩn thanh cuộn ngang */
+}
+
+.slider {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    /* Luôn full chiều cao màn hình */
+}
+
+.sliders {
+    display: flex;
+    transition: transform 0.8s ease;
+}
+
+.slide {
+    min-width: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.slide img {
+    width: 100%;
+    height: 100vh;
+    /* Ảnh cao = màn hình */
+    object-fit: cover;
+    /* Ảnh fill khung, không méo */
+}
+
+/* Chữ căn giữa trên ảnh */
+
+.slide p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* căn giữa cả ngang lẫn dọc */
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    text-shadow: 2px 2px 5px black;
+    line-height: 1.5;
+}
+
+/* ----------- ảnh cắt chéo ------------- */
+
+.main-about {
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    background-color: #191919;
+    color: white;
+    gap: 40px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-about .image {
+    flex: 0.9;
+    overflow: hidden;
+    position: relative;
+}
+
+.main-about .image img {
+    width: 90%;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
+    clip-path: polygon(0 0, 81% 0, 100% 100%, 0 100%);
+}
+
+.main-about .content {
+    flex: 1.2;
+    max-width: 550px;
+    padding: 0 40px;
+    /* text-align: center; */
+}
+
+.main-about .title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.main-about .content p {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 90%;
+    color: #ccc;
+    line-height: 1.6;
+}
+
+/* Viền đỏ dưới tiêu đề */
+
+.render-meal {
+    background-color: #e91f2c;
+}
+
+.section-divider {
+    color: #ffffff;
+}
+
+.main-about .title {
+    position: relative;
+    /* các thuộc tính khác giữ nguyên */
+}
+
+.main-about .title::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    /* đặt ở giữa ngang */
+    transform: translateX(-83%);
+    /* dịch sang trái 50% chiều rộng gạch */
+    width: 60%;
+    height: 8px;
+    background-color: #e91f2c;
+    border-radius: 2px;
+}
+
+.main-about p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #ccc;
+}
+
+/* ----------- màu các món tiêu biểu ---------- */
+
+.content-meal {
+    max-width: 1200px;
+    /* giới hạn chiều rộng tổng */
+    margin: 0 auto;
+    /* căn giữa */
+    display: flex;
+    flex-wrap: wrap;
+    /* cho xuống dòng */
+    justify-content: center;
+    /* căn giữa các item */
+    gap: 20px;
+    /* khoảng cách dọc và ngang */
+    padding: 20px;
+}
+
+.content-meal a {
+    text-decoration: none;
+    color: inherit;
+    width: calc((100% - 3 * 40px) / 4);
+    /* 4 sản phẩm trên 1 dòng, trừ khoảng cách */
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.content-meal a:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.meal-item {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 1px;
+    background-color: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.meal-item img {
+    width: 100%;
+    height: auto;
+    /* Bỏ chiều cao cứng */
+    object-fit: contain;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+
+.meal-item h3 {
+    font-size: 1.2rem;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.meal-item p {
+    font-size: 0.95rem;
+    color: #666;
+}
+
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+}
+.section-title-hr {
+        width: 300px;
+        height: 4px;
+        background-color: #ffffff;
+        border: none;
+        border-radius: 2px;
+        margin: 0 auto 70px; /* Giảm margin-top và tăng margin-bottom */
+        display: block;
+    }
+
+.new-meals-container {
+        padding-top: 20px;
+        padding-bottom: 50px;
+    }
+
+.section-divider {
+    width: 80px;
+    height: 4px;
+    background-color: #f39c12;
+    /* màu vàng cam nổi bật */
+    border: none;
+    margin: 0 auto 30px auto;
+    /* căn giữa và cách dưới 30px */
+    border-radius: 2px;
+}
+
+/* footer */
+
+.footer-main {
+    background-color: #000;
+    /* nền đen */
+    color: #eee;
+    /* chữ sáng màu */
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+.footer-main a {
+    color: #f39c12;
+    /* màu vàng cam nổi bật cho link */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-main a:hover {
+    color: #e91f2c;
+    /* đổi màu khi hover */
+}
+
+.footer-main h4 {
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer-main p,
+.footer-main ul {
+    margin: 0 0 15px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer-main ul li {
+    margin-bottom: 10px;
+}
+
+.footer-main .social a {
+    margin-right: 15px;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.footer-main .social a:hover {
+    transform: scale(1.1);
+}
+
+.footer-main .social img {
+    width: 28px;
+    height: 28px;
+}
+
+.footer-main img[alt="fitfoodvn"] {
+    max-width: 180px;
+    height: auto;
+    display: block;
+}
+
+.footer-main .form-search input.form-control {
+    border-radius: 20px;
+    border: 1px solid #444;
+    background-color: #222;
+    color: #eee;
+    padding: 8px 15px;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.footer-main .form-search input.form-control::placeholder {
+    color: #888;
+}
+
+.footer-main .form-search input.form-control:focus {
+    outline: none;
+    border-color: #f39c12;
+    background-color: #111;
+    color: #fff;
+}
+
+.footer-main .copyright {
+    text-align: center;
+    color: #666;
+    margin-top: 30px;
+    font-size: 13px;
+}
+
+/* icon nhấn vào */
+
+
+
+/* home 8 món mới nhất*/
+.card.meal-card {
+    transition: transform 0.3s;
+}
+.card.meal-card:hover {
+    transform: translateY(-5px) !important;;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;;
+}
+.card-img-top {
+    border-bottom: 1px solid #eee;
+}
+.card.meal-card:hover img {
+    filter: brightness(70%) !important;;
+}
+
+  .object-fit-cover {
+    object-fit: cover;
+  }
+  
+  .nutrition-info .badge {
+    font-size: 0.75rem;
+    padding: 0.35em 0.65em;
+  }
+  
+  @media (max-width: 768px) {
+    .card-title {
+      font-size: 1rem !important;
+    }
+    .nutrition-info .badge {
+      font-size: 0.65rem;
+    }
+  }

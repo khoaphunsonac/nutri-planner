@@ -19,7 +19,7 @@ class MealModel extends Model
         'meal_type_id',
         'preparation',
         'image_url',
-        'description'
+        'description',
     ];
 
     protected $dates = ['created_at', 'updated_at', 'deleted_at'];
