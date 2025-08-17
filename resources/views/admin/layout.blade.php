@@ -94,15 +94,15 @@
         </a>
         {{-- hiện vãn chưa có link được nha anh em test link bên anh em đi --}}
         <a href="{{ route('dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
-        <a href="{{ route('meals.index') }}"><i class="bi bi-egg-fried"></i> Món ăn</a>
-        <a href="{{ route('ingredients.index') }}"><i class="bi bi-basket"></i> Nguyên liệu</a>
         <a href="{{ route('users.index') }}"><i class="bi bi-people"></i> Người dùng</a>
-        <a href="{{ route('allergens.index') }}"><i class="bi bi-exclamation-triangle"></i> Dị ứng</a>
-        <a href="{{ route('tags.index') }}"><i class="bi bi-tags"></i> Thẻ</a> <!-- Đã thêm mục này -->
-        <a href="{{ route('contact.index') }}"><i class="bi bi-envelope"></i> Liên hệ</a>
-        <a href="{{ route('feedbacks.index') }}"><i class="bi bi-chat-dots"></i> Phản hồi</a>
-        <a href="{{ route('diettypes.index') }}"><i class="bi bi-list-ul"></i> Loại chế độ ăn</a>
         <a href="{{ route('admin.meal_types.index') }}"><i class="bi bi-grid"></i> Loại món ăn</a>
+        <a href="{{ route('diettypes.index') }}"><i class="bi bi-list-ul"></i> Loại chế độ ăn</a>
+        <a href="{{ route('ingredients.index') }}"><i class="bi bi-basket"></i> Nguyên liệu</a>
+        <a href="{{ route('meals.index') }}"><i class="bi bi-egg-fried"></i> Món ăn</a>
+        <a href="{{ route('allergens.index') }}"><i class="bi bi-exclamation-triangle"></i> Dị ứng</a>
+        <a href="{{ route('tags.index') }}"><i class="bi bi-tags"></i> Thẻ</a>
+        <a href="{{ route('feedbacks.index') }}"><i class="bi bi-chat-dots"></i> Phản hồi</a>
+        <a href="{{ route('contact.index') }}"><i class="bi bi-envelope"></i> Liên hệ</a>
     </aside>
 
     <!-- Main content mọi content kế thừa của anh em sẽ vô đây -->
