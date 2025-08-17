@@ -2,30 +2,17 @@
 
 @section('content')
 
-<style>
-    .container.my-4 {
-        margin-top: 8rem !important; /* Đè lên mọi margin khác */
-        padding-top: 0 !important;
-    }
-    .card.meal-card {
-        transition: transform 0.3s;
-    }
-    .card.meal-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    }
-    .card-img-top {
-        border-bottom: 1px solid #eee;
-    }
-    .card.meal-card:hover img {
-        filter: brightness(70%);
-    }
-    .new{
-        margin-top: 300px;
-    }
-</style>
+        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);">
+            <div class="container mb-3" style="">
+                <h2 class="display-5 fw-bold text-white shadow-text">Chi tiết món ăn</h2>
+                <div class="scroll-down-icon">
+                    <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
+                </div>
+                
+            </div>
+        </div>
 
-<div class="container  my-4" >
+<div class="wide-container  my-5" >
     <div class="card shadow-sm p-4">
         <div class="row">
             {{-- Ảnh món ăn --}}
@@ -38,15 +25,54 @@
             </div>
             
             {{-- Thông tin chính --}}
-            <div class="col-md-7">
+            <div class="col-md-7"> 
+                 {{-- Nút yêu thích --}}
+                <div style="position: absolute; top: 10px; right: 10px;">
+                    @php
+                        $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                    @endphp
+
+                    @if(auth()->check())
+                        {{-- Đã đăng nhập → dùng form POST để lưu --}}
+                        <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
+                            @csrf
+                            <button type="submit" 
+                                class="btn btn-favorite"
+                                data-id="{{ $meal->id }}"
+                                aria-label="Yêu thích" 
+                                style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                                <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                            </button>
+                        </form>
+                    @else
+                        {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
+                        <button class="btn btn-favorite" 
+                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
+                            onclick="showLoginRegisterPopup()">
+                            <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
+                        </button>
+                    @endif
+                </div>
+                {{-- Popup --}}
+                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
+                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
+                                <p>Hãy chọn một trong hai để tiếp tục</p>
+                                <div style="margin-top:15px;">
+                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
+                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
+                                </div>
+                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
+                            </div>
+                        </div>
                 <h2>{{ $meal->name }}</h2>
-                <p class="text-muted">{{ $meal->description }}</p>
+                <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
                 {{-- Loại bữa ăn --}}
-                <p><strong>Loại bữa ăn:</strong> {{ $meal->mealType->name ?? 'Không xác định' }}</p>
+                <p class="text-p"><strong>Loại bữa ăn:</strong> {{ $meal->mealType->name ?? 'Không xác định' }}</p>
 
                 {{-- Tags --}}
-                <p>
+                <p class="text-p">
                     <strong>Thẻ:</strong> 
                     @forelse($meal->tags as $tag)
                         <span class="badge bg-info text-dark">{{ $tag->name }}</span>
@@ -56,7 +82,7 @@
                 </p>
 
                 {{-- Dị ứng --}}
-                <p>
+                <p class="text-p">
                     <strong>Có thể gây dị ứng:</strong>
                     @forelse($meal->allergens as $allergen)
                         <span class="badge bg-danger">{{ $allergen->name }}</span>
@@ -68,31 +94,96 @@
                 {{-- Thông tin dinh dưỡng tổng --}}
                 @php
                     $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($meal->recipeIngredients as $pri){
+                    $totalCarbs = 0;
+                    $totalFat = 0;
+                    $totalKcal = 0;
+                    
+                    // Mảng chuyển đổi đơn vị về gram
+                    $unitToGram = [
+                        'g' => 1,
+                        'kg' => 1000,
+                        'ml' => 1, // Giả sử 1ml ≈ 1g cho chất lỏng
+                        'l' => 1000,
+                        'muỗng canh' => 15, // 1 muỗng canh ≈ 15g
+                        'muỗng cà phê' => 5, // 1 muỗng cà phê ≈ 5g
+                        'cốc' => 200, // 1 cốc ≈ 200g
+                        'lát' => 25, // 1 lát ≈ 25g (có thể điều chỉnh)
+                        'gói' => 100, // 1 gói ≈ 100g (có thể điều chỉnh)
+                        'cái' => 100, // 1 cái ≈ 100g (có thể điều chỉnh)
+                    ];
+                @endphp
+
+                {{-- Tính toán trước để có thể sử dụng ở cả phần tổng và bảng chi tiết --}}
+                @php
+                    $ingredientNutritions = [];
+                    
+                    foreach($meal->recipeIngredients as $pri) {
                         $ingredient = $pri->ingredient;
-                        if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                        if($ingredient) {
+                            $quantity = $pri->quantity ?? 0;
+                            $unit = $ingredient->unit ?? 'g';
+                            
+                            // Chuyển đổi quantity về gram
+                            $quantityInGram = $quantity * ($unitToGram[$unit] ?? 1);
+                            
+                            // Tính tỷ lệ dựa trên 100g (vì thông tin dinh dưỡng trong DB tính cho 100g)
+                            $ratio = $quantityInGram / 100;
+                            
+                            // Tính toán P/C/F cho nguyên liệu này
+                            $pro = ($ingredient->protein ?? 0) * $ratio;
+                            $carb = ($ingredient->carb ?? 0) * $ratio;
+                            $fat = ($ingredient->fat ?? 0) * $ratio;
+                            
+                            // Tính calo: ưu tiên total_calo từ DB, nếu không có thì tính từ P/C/F
+                            if(isset($pri->total_calo) && $pri->total_calo > 0) {
+                                $kcal = $pri->total_calo;
+                            } else {
+                                $kcal = ($pro * 4) + ($carb * 4) + ($fat * 9);
+                            }
+                            
+                            // Lưu thông tin để hiển thị trong bảng
+                            $ingredientNutritions[] = [
+                                'name' => $ingredient->name,
+                                'quantity' => $quantity,
+                                'unit' => $unit,
+                                'protein' => round($pro, 1),
+                                'carb' => round($carb, 1),
+                                'fat' => round($fat, 1),
+                                'kcal' => round($kcal, 1)
+                            ];
+                            
+                            // Cộng vào tổng
+                            $totalPro += $pro;
+                            $totalCarbs += $carb;
+                            $totalFat += $fat;
+                            $totalKcal += $kcal;
                         }
                     }
+                    
+                    $displayPro = round($totalPro,);
+                    $displayCarbs = round($totalCarbs);
+                    $displayFat = round($totalFat);
+                    $displayKcal = round($totalKcal, 1);
                 @endphp
-                <p>
-                    <strong>Thông tin dinh dưỡng (ước tính):</strong> 
-                    <span class="text-primary">{{ $totalKcal }} kcal</span> | P: {{ $totalPro }} g | C: {{ $totalCarbs }} g | F: {{ $totalFat }} g
-                </p>
+
+                <div class="nutrition-summary mb-4">
+                    <h4>Thông tin dinh dưỡng (ước tính):</h4>
+                    <div class="total-nutrition mb-3">
+                        <strong class="text-primary">{{ $displayKcal }} kcal </strong> | P: {{ $displayPro }}g | C: {{ $displayCarbs }}g | F: {{ $displayFat }}g
+                    </div>
+                    
+                </div>
             </div>
         </div>
 
         {{-- Công thức chi tiết: nguyên liệu + bước làm --}}
         <hr>
-
-        <h4>Công thức nguyên liệu</h4>
-        <table class="table table-bordered">
+        
+        <div class="mb-4">
+            <h4>Nguyên liệu</h4>
+            <hr class="border-bottom border-danger border-5 mt-0" style="width: 150px; ">
+        </div>
+        <table class="table table-bordered text-center">
             <thead>
                 <tr>
                     <th>Nguyên liệu</th>
@@ -101,27 +192,83 @@
                     <th>Protein (g)</th>
                     <th>Carb (g)</th>
                     <th>Fat (g)</th>
+                    <th>Kcal </th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($meal->recipeIngredients as $pri)
-                    @php
-                        $ingredient = $pri->ingredient;
-                    @endphp
-                    <tr>
-                        <td>{{ $ingredient->name ?? 'N/A' }}</td>
-                        <td>{{ $pri->quantity ?? '-' }}</td>
-                        <td>{{ $ingredient->unit ?? '-' }}</td>
-                        <td>{{ $ingredient->protein ?? 0 }}</td>
-                        <td>{{ $ingredient->carb ?? 0 }}</td>
-                        <td>{{ $ingredient->fat ?? 0 }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
+             <tbody>
+        @foreach($ingredientNutritions as $nutrition)
+            <tr>
+                <td>{{ $nutrition['name'] }}</td>
+                <td>{{ $nutrition['quantity'] }}</td>
+                <td>{{ $nutrition['unit'] }}</td>
+                <td>{{ $nutrition['protein'] }}</td>
+                <td>{{ $nutrition['carb'] }}</td>
+                <td>{{ $nutrition['fat'] }}</td>
+                <td>{{ $nutrition['kcal'] }}</td>
+            </tr>
+        @endforeach
+        {{-- Dòng tổng cộng --}}
+        <tr class="table-warning">
+            <td><strong>TỔNG CỘNG </strong>(làm tròn số)</td>
+            <td colspan="2">-</td>
+            <td><strong>{{ $displayPro }}</strong></td>
+            <td><strong>{{ $displayCarbs }}</strong></td>
+            <td><strong>{{ $displayFat }}</strong></td>
+            <td><strong>{{ $displayKcal }}</strong></td>
+        </tr>
+    </tbody>
         </table>
 
-        <h4>Bước thực hiện: </h4>
-        <pre>{{$meal->preparation}}</pre>
+        <hr >
+
+         
+        <!-- <pre>{{$meal->preparation}}</pre> -->
+        <div class="steps-container bg-light p-4 rounded">
+            <div class="mb-4">
+                <h3 class="d-inline-block mb-0">Cách chế biến</h3>
+                <hr class="border-bottom border-danger border-5 mt-0" style="width: 200px; ">
+            </div>
+            @php
+                // Tách các bước từ chuỗi trong DB
+                $steps = preg_split('/\n|\d+\./', $meal->preparation, -1, PREG_SPLIT_NO_EMPTY);
+                $stepCount = count($steps);
+                $half = ceil($stepCount / 2);
+            @endphp
+            
+            <div class="row">
+                {{-- Cột trái --}}
+                <div class="col-md-6">
+                    @foreach(array_slice($steps, 0, $half) as $index => $step)
+                        @if(trim($step))
+                            <div class="step-card mb-3 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center">
+                                    <span class="step-number bg-primary text-white fw-bold rounded-circle   me-3">B{{ $index + 1 }}</span>
+                                    <div class="step-content">
+                                        {{ trim($step) }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+                
+                {{-- Cột phải --}}
+                <div class="col-md-6">
+                    @foreach(array_slice($steps, $half) as $index => $step)
+                        @if(trim($step))
+                            <div class="step-card mb-3 p-3 bg-white rounded shadow-sm">
+                                <div class="d-flex align-items-center">
+                                    <span class="step-number bg-primary text-white fw-bold rounded-circle   me-3">B{{ $index + $half + 1 }}  </span>
+                                    <div class="step-content" style="font-size: 1rem;">
+                                        {{ trim($step) }}
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+            </div>
+        </div>
 
         <a href="{{ route('meal.index') }}" class="btn btn-outline-primary mb-3 text-center gap-2" style="width:200px;">
             <i class="fas fa-arrow-left"></i> Quay lại
@@ -133,16 +280,39 @@
 <div class="container new ">
     <h4 class="mb-4" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Món ăn mới nhất</h4>
     <div class="row">
-        @foreach ($latestMeals as $latest)
+       
+            @foreach ($latestMeals as $latest)
             @php
+                
                 //tính toán dinh dưỡng
-                $totalKcal = 0;
-                foreach ($latest->recipeIngredients as$pri) {
-                    $ingredient = $pri->ingredient;
-                    if($ingredient){
-                        $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
+                
+                    $totalPro = 0;
+                    $totalCarbs= 0;
+                    $totalFat= 0;
+                    $totalKcal= 0;
+                    foreach($latest->recipeIngredients as $recipeIngredient){
+                        $ingredient = $recipeIngredient->ingredient;
+                        if($ingredient){
+                            $quantity = $recipeIngredient->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                           
+                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                            
+                            $totalPro += $pro;
+                            $totalCarbs += $carb;
+                            $totalFat += $fat;
+                            $totalKcal += $recipeIngredient->total_calo ?? 0;
+                        }
                     }
-                }
+                    // Làm tròn
+                    $displayPro = round($totalPro, 1);
+                    $displayCarbs = round($totalCarbs, 1);
+                    $displayFat = round($totalFat, 1);
+                    $displayKcal = round($totalKcal, 1);
+
+                // hiển thị ảnh
                 $image = $meal->image_url ?? '';
                 $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                               
@@ -162,14 +332,16 @@
                         <div class="card-body ">
                             <h4 class="card-title my-3">{{ $latest->name }}</h4>
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
-                            <p class="mb-2 my-4">
-                                <strong>{{$totalKcal}} kcal</strong> | 
-                                P: {{$totalPro}} g |
-                                C: {{$totalCarbs}} g |
-                                F: {{$totalFat}} g 
-                            </p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
+                              </div>
+                            </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
-                    
+                          
                         </div>
                     </a>
                 </div>
@@ -177,4 +349,84 @@
         @endforeach
     </div>
 </div>
+
+
+<script>
+    
+
+    function showLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'block';
+    }
+    function closeLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'none';
+    }
+
+
+ document.addEventListener('DOMContentLoaded', function() {
+    // Hàm cập nhật giỏ hàng
+    function updateCartCount(count) {
+        // Cập nhật badge số lượng
+        const badge = document.getElementById('favoriteCountBadge');
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    // Xử lý click nút tim
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Kiểm tra đăng nhập
+            const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+            if (!isLoggedIn) {
+                showLoginRegisterPopup();
+                return;
+            }
+
+            const mealId = this.dataset.id;
+            const icon = this.querySelector('i');
+            
+            try {
+                const response = await fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // 1. Cập nhật icon tim
+                    icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+                    
+                    // 2. Cập nhật số lượng giỏ hàng
+                    updateCartCount(data.favoriteCount);
+                    
+                    // 3. Hiển thị thông báo
+                    showToast(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            }
+        });
+    });
+
+    // Hàm hiển thị popup đăng nhập
+    // function showLoginRegisterPopup() {
+    //     document.getElementById('loginRegisterPopup').style.display = 'block';
+    // }
+    
+    // Hàm hiển thị thông báo
+    function showToast(message, type = 'success') {
+        // Sử dụng thư viện toast hoặc alert đơn giản
+        alert(message);
+    }
+});
+</script>
 @endsection

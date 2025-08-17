@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\SearchFillterRequest;
+use App\Models\AccountModel;
 use App\Models\AllergenModel;
 use App\Models\DietTypeModel;
 use App\Models\MealModel;
@@ -11,12 +12,15 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Auth;
 
 class MealsController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     public $controllerName = "meals";
     public $pathViewController = "site.meals.";
+
+    
 
     public function index(SearchFillterRequest $request){
 
@@ -25,8 +29,7 @@ class MealsController extends BaseController
         $search = $params['search'] ?? '';
         
         $mealType = $params['meal_type'] ?? '';
-        $caloriesMin = $params['calories_min'] ?? '';
-        $caloriesMax = $params['calories_max'] ?? '';
+        $caloriesRange = $params['calories_range'] ?? '';
         $allergen = $params['allergen'] ?? '';
         $diet = $params['diet'] ?? '';
 
@@ -37,7 +40,7 @@ class MealsController extends BaseController
 
         // khởi tạo query  lấy từ model gốc
         $meals = MealModel::with('recipeIngredients.ingredient')
-                            ->withSum('recipeIngredients as total_calories', 'total_calo') // Sửa đổi ở đây
+                            ->withSum('recipeIngredients as total_calories', 'total_calo') // Sum calo ở đây
                             ->orderBy('id','desc' );
 
         // Gom điều kiện tìm kiếm thành mảng cho bên hiển thị form k tìm thấy
@@ -71,14 +74,14 @@ class MealsController extends BaseController
            
         }
 
-        //lọc theo allergen
+        //lọc bỏ allergen  lấy món không có allergen
         if(!empty($allergen)){
-            $allergentName = AllergenModel::find($allergen)?->name ?? $allergen; // Lấy tên diet từ DB
-            $meals = $meals->whereHas('allergens',function($q) use($allergen){
+            $allergenName = AllergenModel::find($allergen)?->name ?? $allergen; 
+            $meals = $meals->whereDoesntHave('allergens',function($q) use($allergen){ 
                         $q->where('allergens.id',$allergen);
                     });
-               if($allergentName){
-                    $searchConditions[] = 'chất dị ứng " ' . $allergentName. ' "';
+               if($allergenName){
+                    $searchConditions[] = 'loại bỏ món có chất dị ứng " ' . $allergenName. ' "';
 
                 }
 
@@ -87,7 +90,7 @@ class MealsController extends BaseController
 
         //lọc theo mealtype
         if(!empty($mealType)){
-            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; // Lấy tên diet từ DB
+            $mealTypeName = MealTypeModel::find($mealType)?->name ?? $mealType; 
             $meals = $meals->where('meals.meal_type_id',$mealType);
             if($mealTypeName){
                     $searchConditions[] = 'chế độ ăn " ' . $mealTypeName. ' "';
@@ -96,16 +99,19 @@ class MealsController extends BaseController
         }
 
         //lọc theo calories
-        if(!empty($caloriesMin )){
-            $meals = $meals->having('total_calories','>=',$caloriesMin);
-                    
-            $searchConditions[] = 'Calories Min " ' . $caloriesMin. ' "';
-        }
-        if(!empty($caloriesMax)){
-            $meals = $meals->having('total_calories','<=',$caloriesMax);
-            $searchConditions[] = 'Calories Max " ' . $caloriesMax. ' "';
-        }
+        if(!empty($caloriesRange )){
+            // tách chuỗi "min-max"
+            [$caloriesMin,$caloriesMax] = explode('-', $caloriesRange) + [null,null];
 
+            if($caloriesMin !== null){
+                $meals = $meals->having('total_calories','>=',(int)$caloriesMin);
+            }
+            if($caloriesMax !== null){
+                $meals = $meals->having('total_calories','<=',(int)$caloriesMax);
+                
+            }
+            $searchConditions[] = 'Calories (đơn vị Kcal) từ ' . $caloriesMin. ' đến ' . $caloriesMax;
+        }
         // lay du lieu phan trang
         $meals = $meals->paginate(9,'*','meals_page');
 
@@ -114,8 +120,7 @@ class MealsController extends BaseController
             'search'=>$search,
             'diet'=>$diet,
             'mealType'=>$mealType,
-            'caloriesMin'=>$caloriesMin,
-            'caloriesMax'=>$caloriesMax,
+            'caloriesRange'=>$caloriesRange,
             'allergen'=>$allergen,
             'dietTypes'=>$dietTypes,
             'mealTypes'=>$mealTypes,
@@ -132,14 +137,105 @@ class MealsController extends BaseController
                                 'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
                             ])->findOrFail($id);
         // lấy 8 món mới nhất (k có món đang xem)
-        $latestMeals = MealModel::where('id','!=',$id)
+        $latestMeals = MealModel::with(['tags',
+                                'mealType',
+                                'ingredients',
+                                'allergens',
+                                'recipeIngredients.ingredient', // lấy nguyên liệu qua bảng trung gian
+                            ])->where('id','!=',$id)
                                 ->orderBy('created_at','desc')
                                 ->take(8)
                                 ->get();
 
+        $saved = false;
+        $favoriteCount = 0;
+        if (auth()->check()) {
+            $savedMeals = auth()->user()->savemeal ? explode('-', auth()->user()->savemeal) : [];
+            $saved = in_array($meal->id, $savedMeals);
+            $favoriteCount = count($savedMeals);
+        }
+
         return view($this->pathViewController.'show',[
             'meal'=>$meal,
             'latestMeals'=>$latestMeals,
+            'saved'=>$saved,
+            'favoriteCount' => $favoriteCount,
         ]);
+    }
+
+    
+
+    public function favorite($id){
+        // ktra dn
+        $user = auth()->user();
+        
+        // lay tai khoan
+        $account = AccountModel::find($user->id); // lấy user đang đăng nhập
+        if (!$account) {
+            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
+        }
+
+        // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
+        $savedMeals  = [];
+
+        if (!empty($account->savemeal)) {
+            $savedMeals = explode('-', $account->savemeal);
+            // loại bỏ phần tử rỗng nếu có = cách duyệt mảng
+            $cleanMeals = [];
+            foreach ($savedMeals as $meal) {
+                if ($meal !== '' && $meal !== null) {
+                    $cleanMeals[] = $meal;
+                }
+            }
+            $savedMeals  = $cleanMeals;
+        } 
+        // ktra meal co trong danh sach chua
+        $found = false;
+        foreach($savedMeals as $key => $mealId){
+            if($mealId == $id){
+                unset($savedMeals[$key]);
+                $found = true;
+                break;
+            }
+        }
+        // nếu k có thì thêm vào 
+        if(!$found){
+            $savedMeals[] = $id;
+        }
+
+        // Ghép mảng lại thành chuỗi 1-2-3
+        $account->savemeal = implode('-', $savedMeals);
+        $account->save();
+
+        return response()->json([
+            'status'  => 'success',
+            'saved'   => !$found, // true nếu vừa thêm, false nếu vừa gỡ
+            'message' => $found ? 'Đã bỏ thích món ăn' : 'Đã thích món ăn',
+            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới
+        ]);
+    
+    }
+
+
+    public function showsavemeals(){
+        $account = auth()->user(); // lấy user đang đăng nhập
+        if (!$account) {
+            return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
+        }
+        // tách chuỗi thành mảng
+        $savedMealIds = $account->savemeal ? explode('-', $account->savemeal) : [];
+
+        // lấy dữ liệu các meal theo ID
+        $meals = !empty($savedMealIds) 
+        ? MealModel::whereIn('id', $savedMealIds)->get() 
+        : [];
+
+        return view($this->pathViewController.'showsavemeals',[
+                'meals'=>$meals,
+                'favoriteCount' => count($savedMealIds),
+                "status"=>"success",
+                "saved"=>true, // hoặc false nếu bỏ like,
+                "message"=>"Thông báo thành công"
+            ]); 
     }
 }

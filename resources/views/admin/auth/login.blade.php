@@ -243,6 +243,13 @@
                         <i class="bi bi-box-arrow-in-right me-2"></i>
                         Sign In
                     </button>
+                    {{-- thêm nút khi logiut về form thì có nút để về trang home --}}
+                    <div class="d-flex justify-content-center mt-3">
+                        <a href="{{ route('home') }}" 
+                        class="btn btn-outline-dark px-4 py-2 rounded">
+                        Quay về trang chủ
+                        </a>
+                    </div>
                 </form>
 
                 <div class="text-center mt-4">

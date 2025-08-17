@@ -36,28 +36,48 @@
             filter: brightness(70%);
         }
 
+        .btn-favorite{
+            cursor: pointer;
+        }
+        .btn-favorite{
+            transform: scale(1.1);
+            transition: 0.2s;
+        }
         
     </style>
 
-    
-        <div class="  align-items-center text-center" style="margin: 100px 0; background-size: cover; background-position: center;">
-            <div class="container mb-3">
+        
+        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg); ">
+            <div class="container mb-3" style="">
                 <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
-                <!-- <p>11.08 <span>-</span> 17.08</p> -->
+                <div class="scroll-down-icon">
+                    <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
+                </div>
             </div>
         </div>
-    
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @elseif(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
         
         {{-- form lọc + fillter--}}
-        <div class="card p-4 mb-4 d-flex justify-content-around text-center">
-            <div class="card-header bg-white border-0 text-center">
+        <div class="card p-4 my-5 d-flex justify-content-around text-center">
+            <div class="card-header bg-white border-0 ">
                 <h3 class="card-title mb-0">Tìm kiếm món ăn</h3>
             </div>
             <div class="card-body ">
             <form action="{{route('meal.index')}}" class="mb-4" method="GET">
+                <!-- search -->
                 <div class="row g-2">
                     {{-- search --}}
-                    <div class="col-md-5">
+                    <div class="col-md-9">
                         <input type="text" name="search" class="form-control @error('search') is-invalid @enderror" value="{{$search ?? old($search)}}" placeholder="Tìm món ăn, nguyên liệu hoặc chế độ ăn...">
                         {{-- Hiển thị thông báo lỗi --}}
                         @error('search')
@@ -66,32 +86,46 @@
                             </p>
                         @enderror
                     </div>
-                    {{-- calo min --}}
-                    <div class="col-md-2">
-                        <input type="number" name="calories_min" class="form-control text-center" id="" value="{{$caloriesMin ?? old($caloriesMin)}}" placeholder="Calories Min...">
-                    </div >
-                    {{-- calo max --}}
-                    <div class="col-md-2">
-                        <input type="number" name="calories_max" class="form-control text-center" id="" value="{{$caloriesMax ?? old($caloriesMax)}}" placeholder="Calories Max...">
-                    </div>
+                    
                     {{-- Submit button --}}
-                    <div class="col-md-2 ">
+                    <div class="col-md-3 ">
                         <button class="btn btn-primary w-100">Tìm</button>
                     </div>
                 </div>
-                <div class="row g-2 mt-2 align-items-center">
-                    <div class="d-flex align-items-center mb-4">
-                    {{-- <ul class="nav nav-tabs mb-4">
-                        <li class="nav-item">
-                            <a href="{{ route('meal.index', ['tab' => 'thuc-don']) }}" class="nav-link active fw-bold text-dark" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Thực đơn</a>
-                        </li>
-                    </ul> --}}
-                    {{-- <input type="submit" name="tab" value="{{ request('tab', 'thuc-don') }}" class="m-2"> --}}
+                <!-- fillter -->
+                <div class="row g-2 mt-2 align-items-center  my-4" >
+                    
+
+                    {{-- Calories--}}
+                    <div class="col-md-3" >
+                        <select name="calories_range" 
+                            class="form-select text-center" 
+                            onchange="this.form.submit()" 
+                            style="cursor: pointer"
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="bottom" 
+                            title="1 Calorie (dinh dưỡng) = 1 Kcal =  1000 calories (khoa học)"
+                        >
+                            <option value="">-- Chọn khoảng Calories (Kcal) --</option>
+                            <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
+                            <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
+                            <option value="200-400" {{ request('calories_range') == '200-400' ? 'selected' : '' }}>200 - 400</option>
+                            <option value="400-600" {{ request('calories_range') == '400-600' ? 'selected' : '' }}>400 - 600</option>
+                            <option value="600-800" {{ request('calories_range') == '600-800' ? 'selected' : '' }}>600 - 800</option>
+                            <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
+                            <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
+                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
+                            <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
+                            <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
+                            <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
+                            <option value="1800-2100" {{ request('calories_range') == '1800-2100' ? 'selected' : '' }}>1800 - 2100</option>
+                        </select>
+                    </div >
                     
                     {{-- fillter  diettype --}}
-                    <div class="col-md-3">
-                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()">
-                            <option value="">-- Chọn Chế độ ăn --</option>
+                    <div class="col-md-3" >
+                        <select name="diet" class="form-select me-2 text-center" onchange="this.form.submit()" style="cursor: pointer">
+                            <option value="">-- Chọn chế độ ăn --</option>
                             @foreach($dietTypes as $diet)
                                 <option value="{{ $diet->id }}" {{ request('diet') == $diet->id ? 'selected' : '' }}>
                                     {{ $diet->name }}
@@ -99,11 +133,12 @@
                             @endforeach
                         </select>
                     </div>
+                    
 
                     {{-- fillter  mealTypeFill--}}
                     <div class="col-md-3 ">
-                        <select name="meal_type" class="form-select me-2 text-center" onchange="this.form.submit()">
-                            <option value="">-- Chọn Bữa ăn --</option>
+                        <select name="meal_type" class="form-select me-2 text-center" onchange="this.form.submit()" style="cursor: pointer">
+                            <option value="">-- Chọn bữa ăn --</option>
                             @foreach($mealTypes as $mealType)
                                 <option value="{{ $mealType->id }}" {{ request('meal_type') == $mealType->id ? 'selected' : '' }}>
                                     {{ $mealType->name }}
@@ -113,16 +148,19 @@
                     </div>
 
                     {{-- fillter  allergenFill--}}
-                    <div class="col-md-3">
-                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()">
-                            <option value="">-- Chọn Chất dị ứng --</option>
+                    <div class="col-md-3 position-relative">
+                        <select name="allergen" class="form-select text-center" onchange="this.form.submit()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Chọn để loại bỏ món ăn có chất dị ứng bạn không muốn. Ví dụ: đậu phộng, hải sản,..." style="cursor: pointer">
+                            <option value="">-- Chọn chất dị ứng --</option>
                             @foreach($allergens as $allergen)
                                 <option value="{{ $allergen->id }}" {{ request('allergen') == $allergen->id ? 'selected' : '' }}>
                                     {{ $allergen->name }}
                                 </option>
                             @endforeach
+                            
+
                         </select>
                     </div>
+
                 </div>
                 
                 
@@ -138,71 +176,112 @@
                     <div class="row g-4">
                             @foreach ($meals as $meal)
                                 @php
-                                    $totalPro = 0;
+                                   $totalPro = 0;
                                     $totalCarbs= 0;
                                     $totalFat= 0;
                                     $totalKcal= 0;
-                                    
+                                    foreach($meal->recipeIngredients as $pri){
+                                        $ingredient = $pri->ingredient;
+                                        if($ingredient){
+                                            $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                                            // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
 
-                                    foreach ($meal->recipeIngredients as $ing) {
-                                        // Ưu tiên dùng giá trị đã tính sẵn trong DB (nếu có)
-                                        if (isset($ing->total_calo)) {
-                                            $totalKcal += $ing->total_calo;
-                                        } else {
-                                            // Tính thủ công nếu không có sẵn
-                                            $totalKcal += ($ing->ingredient->protein * 4 + $ing->ingredient->carb * 4 + $ing->ingredient->fat * 9) * ($ing->quantity ?? 1);
+                                            $totalPro += $pro;
+                                            $totalCarbs += $carb;
+                                            $totalFat += $fat;
+                                            $totalKcal += $pri->total_calo ?? 0;
                                         }
-                                        
-                                        // Tính protein, carb, fat (bắt buộc tính thủ công nếu không lưu sẵn)
-                                        $totalPro += ($ing->ingredient->protein ?? 0) * ($ing->quantity ?? 1);
-                                        $totalCarbs += ($ing->ingredient->carb ?? 0) * ($ing->quantity ?? 1);
-                                        $totalFat += ($ing->ingredient->fat ?? 0) * ($ing->quantity ?? 1);
                                     }
+
+                                    
                                 @endphp
                             
                                 <div class="col-md-4 ">
                                     
-                                        <div class="card meal-card shadow-sm h-100" >
+                                        <div class="card meal-card shadow-sm h-100" data-url="{{ route('meal.show', $meal->id) }}" >
                                                 @php
                                                     $image = $meal->image_url ?? '';
                                                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                                    
+                                                     
                                                 @endphp
                                             
                                         
+                                            
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
+                                                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
                                                 
-                                                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
-                                                
+
                                                 <div class="card-body ">
                                                     <h4 class="card-title my-3">{{ $meal->name }}</h4>
                                                     <p class="card-text text-muted ">{{ Str::limit($meal->description, 80) }}</p>
-                                                    <p class="mb-2 my-4">
-                                                        <strong>{{$totalKcal}} kcal</strong> | 
-                                                        P: {{$totalPro}} g |
-                                                        C: {{$totalCarbs}} g |
-                                                        F: {{$totalFat}} g 
-                                                    </p>
+                                                    <div class="nutrition-info mt-auto pt-2">
+                                                        <div class="d-flex flex-wrap gap-1">
+                                                            <span class="badge bg-primary rounded-pill">{{ round($totalKcal,1) }} kcal</span>
+                                                            <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
+                                                            <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
+                                                            <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                                        </div>
+                                                        </div>
                                                     {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                                             
                                                 </div>
-                                            </a>
+                                            
+                                             </a>
+                                            {{-- Nút yêu thích --}}
+                                            <div style="position: absolute; top: 10px; right: 10px; display: inline;"  class="favorite-form">
+                                                @php
+                                                    $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                                                @endphp
+
+                                                @if(auth()->check())
+                                                    {{-- Đã đăng nhập → dùng form POST để lưu --}}
+                                                    
+                                                        <button type="button" 
+                                                            class="btn btn-favorite " 
+                                                            data-id="{{ $meal->id }}" 
+                                                            aria-label="Yêu thích"
+                                                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                                                            <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
+                                                        </button>
+                                                    
+                                                @else
+                                                    {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
+                                                    <button class="btn btn-favorite" 
+                                                        type="button" 
+                                                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
+                                                        onclick="showLoginRegisterPopup()">
+                                                        <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
+                                                    </button>
+                                                @endif
+                                                
+                                            </div>
                                         </div>
                                     
                                 </div>
                             
                             
                         @endforeach
+                        {{-- Popup --}}
+                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
+                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
+                                <p>Hãy chọn một trong hai để tiếp tục</p>
+                                <div style="margin-top:15px;">
+                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
+                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
+                                </div>
+                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
+                            </div>
+                        </div>
                     </div>
                 @else
                     <div class="alert alert-warning text-center mx-auto" style="width: 40%">
                         
-                            {{-- @if(!empty($search)&& !empty($mealTypeName))
-                            Không có kết quả tìm kiếm nào  "<strong>{{ $search }}</strong>" và loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($mealTypeName))
-                            Không có món ăn nào cho loại "<strong>{{ $mealTypeName }}</strong>"
-                        @elseif(!empty($search))
-                            Không có kết quả tìm kiếm cho "<strong>{{ $search }}</strong>".
-                        @endif --}}
                         <div class="alert alert-warning">
                             Không có kết quả hiển thị  
                             @if (!empty($searchConditions))
@@ -223,4 +302,76 @@
 
         </div>
    
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script >
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
+
+    // document.addEventListener('DOMContentLoaded', function () {
+    // document.querySelectorAll('.favorite-form').forEach(function (form) {
+    //         form.addEventListener('click', function (event) {
+    //             event.stopPropagation(); // Ngăn click lan ra ngoài
+    //         });
+    //     });
+    // });
+
+    function showLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'block';
+    }
+    function closeLoginRegisterPopup(){
+        document.getElementById('loginRegisterPopup').style.display = 'none';
+    }
+
+
+document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!this.dataset.id) {
+            showLoginRegisterPopup();
+            return;
+        }
+
+        const mealId = this.dataset.id;
+        const icon = this.querySelector('i');
+        
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // 1. Cập nhật icon tim
+                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+                
+                // 2. Cập nhật số lượng trong giỏ hàng
+                const badge = document.getElementById('favoriteCountBadge');
+                if (data.favoriteCount > 0) {
+                    badge.textContent = data.favoriteCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+                // 3. Hiển thị thông báo
+                alert(data.message); // Có thể thay bằng toast đẹp hơn
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Lỗi hệ thống');
+        }
+    });
+});
+
+    
+</script>
 @endsection

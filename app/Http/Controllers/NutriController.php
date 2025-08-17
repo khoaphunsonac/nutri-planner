@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\IngredientModel;
-use Illuminate\Http\Request;
 
 class NutriController extends Controller
 {
-    // Hiển thị trang Nutri Calculator
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->query('search', null);
-        // Lấy tất cả nguyên liệu. Có thể paginate nếu danh sách dài.
-        $ingredients = IngredientModel::when($search, function ($q, $search) {
-            return $q->where('name', 'LIKE', "%{$search}%");
-        })->orderBy('name')->get();
+        // Lấy tất cả nguyên liệu từ DB (chỉ lấy các field cần)
+        $ingredients = IngredientModel::select('id', 'name', 'unit', 'protein', 'carb', 'fat')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($item) {
+                $item->calories = round(($item->protein * 4) + ($item->carb * 4) + ($item->fat * 9), 1);
+                return $item;
+            });
 
-        return view('site.nutri-calc', compact('ingredients', 'search'));
+        return view('site.nutri-calc', [
+            'ingredients' => $ingredients
+        ]);
     }
 }

@@ -48,74 +48,90 @@
 
 {{-- display sp tiêu biểu --}}
 </div>
-<div class="row" style="margin-top: 2px">
+  <div class="row mt-2" >
   <div class="col-md-12">
-    <div class="render-meal">
-      <div style=" padding-top: 30px;">
-          <h2 class="section-title" style="color: rgb(236, 236, 236);">Sản phẩm tiêu biểu</h2>
-          <hr style="width: 20%; height: 4px; background-color: #ffffff; border: none; border-radius: 2px; margin: 10px auto 0;">
+    <div class="render-meal new-meals-container">
+      <div class="" style=" padding-top: 30px;">
+          <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
+          <hr class="section-title-hr" >
       </div>
-      <div class="content-meal">
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
+
+      {{-- hiển thị 8 món mới nhất --}}
+      <div class=" container new  "> 
+      
+        <div class="row g-4">
+      
+          @foreach ($latestMeals as $latest)
+            @php
+                
+                //tính toán dinh dưỡng
+                
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
+                      }
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
+
+                // hiển thị ảnh
+                $image = $meal->image_url ?? '';
+                $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                              
+            @endphp
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
+                <div class="card meal-card shadow-sm h-100" >
+                        @php
+                            $image = $latest->image_url ?? '';
+                            $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                        @endphp
+                    
+                
+                    <a href="{{ route('meal.show', $latest->id) }}" class="text-decoration-none text-dark">
+                        
+                        <img src="{{ $imageURL }}" alt="{{ $latest->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                        
+                        <div class="card-body ">
+                            <h4 class="card-title my-3">{{ $latest->name }}</h4>
+                            <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
+                              </div>
+                            </div>
+                            {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
+                          
+                        </div>
+                    </a>
+                </div>
+            </div>
+          @endforeach
       </div>
     </div>
   </div>
 </div>
+
 <div style="background-color: #ebebeb; padding: 50px 0;">
     <div class="container text-center my-5">
     <h2 style="letter-spacing: 2px;">
@@ -144,44 +160,6 @@
         </div>
     </div>
 </div>
-</div>
-{{----------- sau nhớ xem lại footer vì đag coppy từ bản gốc đang link lung tung -----------}}
-<div class="row">
-    <footer class="footer-main">
-    <div class="container">
-        <a href="/" class="mb-4 d-block">
-            <img src="{{ asset('assets/admin/img/avatar/logochinh.png') }}" style="width: 130px;" />
-        </a>
-        <div class="widget-footer mb-4">
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                <h4>Công ty TNHH NUTRI PLANNER</h4>
-                <p>
-                    <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam<br/>
-                    <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br/>
-                    <strong>Email</strong> info@fitfood.vn.<br/>
-                    <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
-                </p>  
-              </div>
-            <div class="col-md-3 mb-3">
-            <h4>Theo dõi chúng tôi tại </h4>
-                <div class="social mb-3">
-                    <a href="https://www.facebook.com/fitfoodvietnam" target="_blank">
-                      <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="fitfoodvietnam" border="0"/>
-                        </a>
-                        <a href="https://www.instagram.com/fitfoodvn" target="_blank">
-                            <img src="https://cdn-icons-png.flaticon.com/512/174/174855.png" alt="fitfoodvn" border="0"/>
-                        </a>
-                        <a href="https://www.youtube.com/watch?v=CJ6eTsFdd1I" target="_blank">
-                            <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="fitfoodvn" border="0"/>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p class="copyright mb-0">© Copyright 2025 NUTRI PLANNER. All rights reserved.</p>
-    </div>
-</footer>
 </div>
 
 {{-- js --}}

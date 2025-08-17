@@ -22,11 +22,11 @@
     </div>
     
 
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="d-flex justify-content-center">
-            <div class="alert alert-success my-4 text-center" style="max-width: 300px; margin: 0 auto;">{{session('success')}}</div>
+            <div class="alert alert-success my-4 text-center" style="max-width: 500px; margin: 0 auto;">{{session('success')}}</div>
         </div>
-    @endif
+    @endif --}}
     {{-- Dashboard summary --}}
     <div>
         <div class="row g-3 mb-4">
@@ -81,16 +81,6 @@
     <div class="row mt-5">
         <div class="col-md-12">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
-                {{-- fillter form --}}
-                {{-- <form action="" method="GET" class="row g-2 align-items-center" >
-                    <div class="col-md-8"> 
-                        <input type="text" name="search" class="form-control" id="" placeholder="Tìm kiếm Allergen..." value="{{$search ?? old($search)}}">
-                    </div>
-                    <div class="col-md-4">
-                        <button class="btn btn-primary w-100" type="submit">Lọc</button>
-                    </div>
-
-                </form> --}}
                     
                         <form action="" method="GET" class="row g-2 align-items-center">
                             
@@ -165,13 +155,6 @@
                                     @else
                                         0
                                     @endif
-                                    {{-- @if ($phanTu->meals->count()>0)
-                                        @foreach ($phanTu->meals as $meal)
-                                            <span class="badge bg-success mb-1">{{ $meal->name  }}</span>
-                                        @endforeach
-                                    @else
-                                        0
-                                    @endif --}}
                                 </td>
                                 <td>
                                     {{ $phanTu->meals_count ?? 0 }}
@@ -253,7 +236,17 @@
 
                     @else
                         <tr>
-                            <td class="text-center text-muted" colspan="6">Không có kết quả nào</td>
+                            <td class="text-center text-muted" colspan="6">
+                                @if(!empty($search) && !empty($mealSearch))
+                                    Không tìm thấy chất dị ứng nào phù hợp với tên dị ứng "<strong>{{ $search }}</strong>" và món ăn "<strong>{{ $mealSearch }}</strong>"
+                                @elseif(!empty($search))
+                                    Không tìm thấy chất dị ứng nào phù hợp với tên dị ứng "<strong>{{ $search }}</strong>"
+                                @elseif(!empty($mealSearch))
+                                    Không tìm thấy chất dị ứng nào có món ăn phù hợp với "<strong>{{ $mealSearch }}</strong>"
+                                @else
+                                    Hiện không có chất dị ứng nào trong hệ thống
+                                @endif
+                            </td>
                         </tr>
                     @endif
                 </tbody>
@@ -267,9 +260,7 @@
         </div>
         </div>
 
-        {{-- <div class="d-flex justify-content-center mt-3">
-            {{$item->links('pagination::bootstrap-5')}}
-        </div> --}}
+        
         
     </div>
 
@@ -373,8 +364,8 @@
             <h5 class="mb-0"><i class="bi bi-list-ul"></i> Tổng quan chất gây dị ứng của món ăn</h5>
             <small class="text-end">
                 {{--  Tổng số Allergen thỏa query tìm kiếm --}}
-                @if ($item->total() > 0)
-                Tổng: giới hạn {{$totalMeals }} mục
+                @if ($meals->count() > 0)
+                Tổng: giới hạn {{$meals->count() }} mục
                 @else
                     0 mục
                 @endif
@@ -395,13 +386,22 @@
                                 @if($meal->allergens->isEmpty())
                                     <span class="text-muted">Không gây dị ứng</span>
                                 @else
-                                    @foreach($meal->allergens as $a)
-                                        
-                                                <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">
-                                                    {{ $a->name }}
-                                                </span>
-                                        
+                                @php
+                                    $maxAllergensToShow = 3;
+                                    $totalAllergens = $meal->allergens->count();
+                                    $allergensToShow = $meal->allergens->take($maxAllergensToShow);
+                                @endphp
+                                    @foreach($allergensToShow as $a)
+                                        <span class="badge bg-danger text-truncate" title="{{ $a->name }}" style="max-width: 120px;">
+                                            {{ $a->name }}
+                                        </span>
                                     @endforeach
+                                    
+                                    @if($totalAllergens > $maxAllergensToShow)
+                                        <span class="badge bg-danger" title="Còn {{ $totalAllergens - $maxAllergensToShow }} chất gây dị ứng khác">
+                                            ...
+                                        </span>
+                                    @endif
                                 @endif
                             </div>
                         </div>
