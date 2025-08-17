@@ -165,20 +165,25 @@
             {{-- Cards grid (giữ nguyên routes/logic) --}}
             @if($items->count())
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-3">
-                    @foreach($items as $it)
+                    @foreach($items as $index => $it)
                         <div class="col">
                             <div class="card border-0 shadow-sm rounded-4 h-100 card-hover"
                                  role="button"
                                  onclick="window.location='{{ route('admin.meal_types.show', $it->id) }}'">
                                 <div class="card-body p-4">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <span class="badge bg-dark-subtle text-dark-emphasis border">{{ $it->id }}</span>
+                                        <span class="badge bg-dark-subtle text-dark-emphasis border">{{ $index + 1 }}</span>
                                         <small class="text-muted">{{ $it->created_at?->format('d/m/Y H:i') ?? '—' }}</small>
                                     </div>
-
+                                    
                                     <h5 class="card-title mb-2">{{ $it->name }}</h5>
-                                    <p class="card-text text-muted small mb-4">Loại bữa ăn • dùng để phân nhóm món</p>
-
+                                    <p class="card-text text-muted small mb-2">Loại bữa ăn • dùng để phân nhóm món</p>
+                                    
+                                    {{-- Hiện số món được gán --}}
+                                    <p class="small mb-4">
+                                        <i class="bi bi-egg-fried me-1"></i>{{ $it->meals_count ?? 0 }} món được gán
+                                    </p>
+                                    
                                     <div class="d-flex gap-2">
                                         <a href="{{ route('admin.meal_types.show', $it->id) }}"
                                            class="btn btn-outline-secondary btn-sm"
