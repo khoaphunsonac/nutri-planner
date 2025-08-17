@@ -195,8 +195,4 @@ use Illuminate\Support\Facades\View;
         # redirect về trang trước
         return redirect()->back()->with('success', 'Đã cập nhật trạng thái tài khoản');
     }
-
-
-
-    
 }
