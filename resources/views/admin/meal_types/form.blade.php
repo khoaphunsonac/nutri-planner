@@ -25,7 +25,7 @@
             <label class="form-label">Tên loại bữa ăn</label>
             <input name="name" class="form-control"
                    value="{{ old('name', $item->name ?? '') }}"
-                   required maxlength="100" placeholder="Ví dụ: Breakfast">
+                   maxlength="100" placeholder="Ví dụ: Breakfast">
             @error('name') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
         </div>
 

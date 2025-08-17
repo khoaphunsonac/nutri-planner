@@ -15,7 +15,7 @@
     {{-- Header --}}
     <div class="d-flex justify-content-between align-items-lg-center mb-4">
         <h2>{{isset($item) && $item ? ' Cập nhật Thẻ:  '. $item->name  : ' Thêm Thẻ '}}</h2>
-        <a href="{{route('tags.index')}}" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại </a>
+        <a href="{{route('tags.index')}}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Quay lại </a>
     </div>
  
 
@@ -36,7 +36,7 @@
                          {{-- Tên thẻ --}}
                         <div class=" mb-4">
                             <h4 for="name" class="form-label fw-bold mb-2">Tên Thẻ</h4>
-                            <input type="text" name="name" class="form-control" id=""  value="{{ $item->name ?? old('name') }}" style="cursor: pointer">
+                            <input type="text" name="name" class="form-control" id=""  value="{{ $item->name ?? old('name') }}" style="cursor: text">
                             @error('name')
                                 <p class="text-danger">{{$message}}</p>
                             @enderror
@@ -57,7 +57,7 @@
                                                     value="{{ $meal->id }}"
                                                     id="meal_{{ $meal->id }}"
                                                     {{  in_array($meal->id, $selectedMeals) ? 'checked' : ''  }} style="cursor: pointer">
-                                                <label class="form-check-label" for="meal_{{ $meal->id }}" >
+                                                <label class="form-check-label" for="meal_{{ $meal->id }}" style="cursor: pointer">
                                                     {{ $meal->name }}
                                                 </label>
                                             </div>

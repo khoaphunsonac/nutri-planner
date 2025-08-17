@@ -48,134 +48,90 @@
 
 {{-- display sp tiêu biểu --}}
 </div>
-<div class="row" style="margin-top: 2px">
+  <div class="row mt-2" >
   <div class="col-md-12">
-    <div class="render-meal">
-      <div style=" padding-top: 30px;">
-          <h2 class="section-title" style="color: rgb(236, 236, 236);">Sản phẩm tiêu biểu</h2>
-          <hr style="width: 20%; height: 4px; background-color: #ffffff; border: none; border-radius: 2px; margin: 10px auto 0;">
+    <div class="render-meal new-meals-container">
+      <div class="" style=" padding-top: 30px;">
+          <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
+          <hr class="section-title-hr" >
       </div>
-      <!-- <div class="content-meal">
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-      </div> -->
+
       {{-- hiển thị 8 món mới nhất --}}
-      <div class="container new ">
-          <h4 class="section-title my-5" style=" border-bottom:3px solid rgb(236, 236, 236); display: inline-block; padding-bottom: 4px;"style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Món ăn mới nhất</h4>
-          
-          <div class="row">
-              @foreach ($latestMeals as $latest)
-                  @php
-                      //tính toán dinh dưỡng
-                      $totalKcal = 0;
-                      $totalPro = 0;
-                      $totalCarbs = 0;
-                      $totalFat = 0;
+      <div class=" container new  "> 
+      
+        <div class="row g-4">
+      
+          @foreach ($latestMeals as $latest)
+            @php
+                
+                //tính toán dinh dưỡng
+                
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
 
-                      foreach ($latest->recipeIngredients as $pri) {
-                          $ingredient = $pri->ingredient;
-                          if ($ingredient) {
-                              $quantity = $pri->quantity ?? 1;
-
-                              $totalPro += ($ingredient->protein ?? 0) * $quantity;
-                              $totalCarbs += ($ingredient->carb ?? 0) * $quantity;
-                              $totalFat += ($ingredient->fat ?? 0) * $quantity;
-
-                              $totalKcal += (($ingredient->protein ?? 0) * 4 + ($ingredient->carb ?? 0) * 4 + ($ingredient->fat ?? 0) * 9) * $quantity;
-                          }
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
                       }
-                      $image = $meal->image_url ?? '';
-                      $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
-                                                    
-                  @endphp
-                  <div class="col-md-3 mb-4" >
-                      <div class="card meal-card shadow-sm h-100" >
-                              @php
-                                  $image = $latest->image_url ?? '';
-                                  $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
-                              @endphp
-                          
-                      
-                          <a href="{{ route('meal.show', $latest->id) }}" class="text-decoration-none text-dark">
-                              
-                              <img src="{{ $imageURL }}" alt="{{ $latest->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
-                              
-                              <div class="card-body ">
-                                  <h4 class="card-title my-3">{{ $latest->name }}</h4>
-                                  <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
-                                  <p class="mb-2 my-4">
-                                      <strong>{{$totalKcal}} kcal</strong> | 
-                                      P: {{$totalPro}} g |
-                                      C: {{$totalCarbs}} g |
-                                      F: {{$totalFat}} g 
-                                  </p>
-                                  {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
-                          
-                              </div>
-                          </a>
-                      </div>
-                  </div>
-              @endforeach
-          </div>
-      </div>
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
 
-  </div>
+                // hiển thị ảnh
+                $image = $meal->image_url ?? '';
+                $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                                              
+            @endphp
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
+                <div class="card meal-card shadow-sm h-100" >
+                        @php
+                            $image = $latest->image_url ?? '';
+                            $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                        @endphp
+                    
+                
+                    <a href="{{ route('meal.show', $latest->id) }}" class="text-decoration-none text-dark">
+                        
+                        <img src="{{ $imageURL }}" alt="{{ $latest->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                        
+                        <div class="card-body ">
+                            <h4 class="card-title my-3">{{ $latest->name }}</h4>
+                            <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
+                            <div class="nutrition-info mt-auto pt-2">
+                              <div class="d-flex flex-wrap gap-1">
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
+                              </div>
+                            </div>
+                            {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
+                          
+                        </div>
+                    </a>
+                </div>
+            </div>
+          @endforeach
+      </div>
+    </div>
   </div>
 </div>
+
 <div style="background-color: #ebebeb; padding: 50px 0;">
     <div class="container text-center my-5">
     <h2 style="letter-spacing: 2px;">
