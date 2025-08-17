@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\NutriController;
+use App\Http\Controllers\PasswordResetLinkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
@@ -197,3 +199,9 @@ Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.s
 //Feedback
 Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
 Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');
+
+//Forget Password
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
