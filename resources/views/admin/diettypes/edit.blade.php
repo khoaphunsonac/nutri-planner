@@ -36,6 +36,26 @@
                     <input type="text" name="name" id="name" class="form-control"
                            value="{{ old('name', $diet->name) }}" required>
                 </div>
+                <div class="mb-3">
+        <label class="form-label fw-semibold">Chọn món ăn liên quan</label>
+        <div class="row">
+            @foreach($meals as $meal)
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="meals[]"
+                               value="{{ $meal->id }}"
+                               id="meal_{{ $meal->id }}"
+                               {{ in_array($meal->id, $diet->meals->pluck('id')->toArray()) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="meal_{{ $meal->id }}">
+                            {{ $meal->name }}
+                        </label>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
 
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-save"></i> Cập nhật

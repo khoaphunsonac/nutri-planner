@@ -4,7 +4,7 @@
 @section('content')
 @php
     // màu theme hiện đại hơn
-    $dark = '#343941';
+    $dark = '#111111';
     $muted = '#6C757D';
     $light = '#ADB5BD';
     $accent = '#E83850';
@@ -765,12 +765,31 @@
         savedResults.push(results);
         localStorage.setItem('tdeeResults', JSON.stringify(savedResults));
 
-        // Download as JSON
-        const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+        // Export to Excel (CSV)
+        const headers = [
+            'Thời gian', 'Giới tính', 'Tuổi', 'Chiều cao (cm)', 'Cân nặng (kg)', 'Hoạt động', 'BMR', 'TDEE', 'Giảm cân', 'Tăng cân'
+        ];
+        const values = [
+            results.timestamp,
+            results.gender,
+            results.age,
+            results.height,
+            results.weight,
+            results.activity,
+            results.bmr,
+            results.tdee,
+            results.lose,
+            results.gain
+        ];
+
+        // Add UTF-8 BOM for proper Vietnamese encoding
+        let csvContent = '\uFEFF' + headers.join(',') + '\n' + values.map(v => `"${v}"`).join(',');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        const filename = `tdee-results-${new Date().toISOString().slice(0,10)}.json`;
-        
+        const filename = `tdee-results-${new Date().toISOString().slice(0,10)}.csv`;
+
         a.href = url;
         a.download = filename;
         document.body.appendChild(a);
