@@ -95,9 +95,16 @@
                         <div class="user-dropdown">
                             <span class="user-name-highlight">Xin chào {{ Auth::user()->username }}</span>
                             <div class="dropdown-menu">
+                                {{-- nếu role admin thì mới có nút dashboard --}}
+                                @if (Auth::user()->role === 'admin')
+                                    <li>
+                                    <a class="dropdown-item text-center" href="{{ route('dashboard') }}" >Dashboard</a>
+                                </li>
+                                @endif
+                                <div class="dropdown-divider"></div> 
                                 <form action="{{ route('register.logout') }}" method="post">
                                  @csrf
-                                 <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                 <button type="submit" class="dropdown-item text-center">Đăng xuất</button>
                                 </form>
                             </div>
                         </div>

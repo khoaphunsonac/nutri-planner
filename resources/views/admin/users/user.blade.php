@@ -64,7 +64,7 @@
             name="keyword" 
             value="{{ request('keyword') }}" 
             class="form-control me-2 shadow-sm" 
-            placeholder="Tìm kiếm tài khoản user..."
+            placeholder="Tìm kiếm tài khoản người dùng..."
             style="border-radius: 50px;"
         >
         <button type="submit" class="btn btn-primary px-4" style="border-radius: 50px;">
@@ -128,7 +128,7 @@
         <h5 class="mb-0">Danh sách người dùng</h5>
         <small class="text-muted" style="font-size: 20px">
             @if ($accounts->count() > 0)
-                Tổng: <span style="color: blue">{{ $accounts->count() }}</span> mục
+                Tổng: <span style="color: blue">{{ $accounts->count() }}</span> tài khoản trang hiện tại<i></i>
             @else
                 Không có người dùng nào
             @endif
@@ -145,6 +145,7 @@
                     <th class="text-primary">Vai trò</th>
                     <th class="text-primary">Phản hồi</th>
                     <th class="text-primary">Trạng thái</th>
+                    <th class="text-primary" width="300">Món yêu thích</th>
                     <th colspan="2">Thao tác</th>
                 </tr>   
             </thead>
@@ -152,12 +153,13 @@
                 @forelse ($accounts as $item)
                 {{-- hiển thị riêng môi admin --}}
                     <tr style="cursor: pointer;" onclick="window.location='{{ route($shareUser . 'form', ['id' => $item->id]) }}'">
-                        <td class="fw-bold text-primary">
+                       <td class="fw-bold text-primary">
                             <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
                                 style="width:50px">
-                                {{ $item->id }}
+                                {{ ($accounts->currentPage() - 1) * $accounts->perPage() + $loop->iteration }}
                             </span>
                         </td>
+
                         <td class="text-center">
                             <strong>{{ $item->username }}</strong>
                         </td>
@@ -175,6 +177,25 @@
                         </td>
                         <td class="{{ $item->status === 'active' ? 'text-success' : 'text-danger' }}">
                             {{ $item->status === 'active' ? 'Hoạt động' : 'Đã bị khoá' }}
+                        </td>
+                        @php
+                            $preview = $item->savemeal_preview; // mảng tối đa 3 meal
+                            $total = $item->savemeal_total;     // tổng số meal
+                        @endphp
+
+                        <td>
+                            @if ($total > 0)
+                                @foreach ($preview as $meal)
+                                    <span class="badge bg-success mb-1">{{ $meal->name }}</span>
+                                @endforeach
+
+                                {{-- Nếu nhiều hơn 3 thì thêm dấu ... --}}
+                                @if ($total > 3)
+                                    <span class="badge bg-success mb-1">...</span>
+                                @endif
+                            @else
+                                0
+                            @endif
                         </td>
                         <td class="text-center" onclick="event.stopPropagation();">
                             <a href="{{ route($shareUser . 'form', ['id' => $item->id]) }}"

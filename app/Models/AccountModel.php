@@ -88,4 +88,42 @@ class AccountModel extends Authenticatable implements JWTSubject
             'email' => $this->email
         ];
     }
+
+
+
+
+    public function getSavemealPreviewAttribute()
+    {
+        if (empty($this->savemeal)) {
+            return [];
+        }
+
+        // Tách chuỗi "18-17-15-10" thành mảng ID
+        $mealIds = explode('-', $this->savemeal);
+
+        $result = [];
+        $count = 0;
+        foreach ($mealIds as $id) {
+            if ($count > 2) { 
+                break;
+            }
+            $meal = \App\Models\MealModel::find($id); // lấy meal theo id
+            if ($meal) {
+                $result[] = $meal;
+                $count++;
+            }
+        }
+
+        return $result;
+    }
+
+    public function getSavemealTotalAttribute()
+    {
+        if (empty($this->savemeal)) {
+            return 0;
+        }
+
+        $mealIds = explode('-', $this->savemeal);
+        return count($mealIds);
+    }
 }

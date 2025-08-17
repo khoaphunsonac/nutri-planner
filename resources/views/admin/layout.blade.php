@@ -61,6 +61,11 @@
                         {{-- <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Hồ sơ</a></li> --}}
                         {{-- <li><hr class="dropdown-divider"></li> --}}
                         <li>
+                            <a class="dropdown-item" href="{{ route('home') }}">
+                                <i class="bi bi-house"></i> Trang chủ
+                            </a>
+                        </li>
+                        <li>
                             <form method="POST" action="{{ route('admin.logout') }}" class="d-inline">
                                 @csrf
                                 <button type="submit" class="dropdown-item text-danger">

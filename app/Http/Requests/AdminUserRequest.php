@@ -56,7 +56,6 @@ class AdminUserRequest extends FormRequest
             'email.regex' => 'Email chứa ít nhất 1 chữ cái, 1 số và kết thúc bằng .com',
 
             # password
-            'password.required' => 'Vui lòng nhập mật khẩu',
             'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',
             'password.max' => 'Mật khẩu không được vượt quá :max ký tự',
             'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
