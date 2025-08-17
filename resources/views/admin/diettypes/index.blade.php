@@ -79,14 +79,19 @@
                             <tr onclick="window.location='{{ route('diettypes.show',$diet->id) }}'" style="cursor: pointer;">
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $diet->name }}</td>
-                                <td>
-                                    {{-- Hiển thị danh sách món ăn --}}
-                                    @if ($diet->meals->isNotEmpty())
-                                        {{ $diet->meals->pluck('name')->join(', ') }}
-                                    @else
-                                        <span class="text-muted">Chưa có</span>
-                                    @endif
-                                </td>
+                               <td class="text-center">
+                        @if ($diet->meals->isNotEmpty())
+                        @foreach ($diet->meals->take(3) as $meal)
+            <span class="badge bg-success me-1">{{ $meal->name }}</span>
+        @endforeach
+
+        @if ($diet->meals->count() > 3)
+            <span class="badge bg-success">…</span>
+        @endif
+    @else
+        <span class="text-muted">Chưa có</span>
+    @endif
+</td>
                                 <td>{{ $diet->meals->count() }}</td>
                                 <td>{{ $diet->created_at?->format('d/m/Y H:i') }}</td>
                                 <td class="text-center" onclick="event.stopPropagation()">
