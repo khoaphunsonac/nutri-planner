@@ -66,16 +66,29 @@
                 <table class="table table-hover table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th width="50">ID</th>
+                            <th width="50">STT</th>
                             <th width="300">Tên loại</th>
+                            <th>Món ăn</th>
+                            <th width="120">Số Món Ăn</th>
+                            <th width="180">Ngày Tạo</th>
                             <th width="200" class="text-center">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($dietTypes as $diet)
-                            <tr onclick="window.location='{{ route('diettypes.show', $diet->id) }}'" style="cursor: pointer;">
-                                <td>{{ $diet->id }}</td>
+                        @forelse ($dietTypes as $index => $diet)
+                            <tr onclick="window.location='{{ route('diettypes.show',$diet->id) }}'" style="cursor: pointer;">
+                                <td>{{ $index + 1 }}</td>
                                 <td>{{ $diet->name }}</td>
+                                <td>
+                                    {{-- Hiển thị danh sách món ăn --}}
+                                    @if ($diet->meals->isNotEmpty())
+                                        {{ $diet->meals->pluck('name')->join(', ') }}
+                                    @else
+                                        <span class="text-muted">Chưa có</span>
+                                    @endif
+                                </td>
+                                <td>{{ $diet->meals->count() }}</td>
+                                <td>{{ $diet->created_at?->format('d/m/Y H:i') }}</td>
                                 <td class="text-center" onclick="event.stopPropagation()">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('diettypes.show', $diet->id) }}" class="btn btn-sm btn-info me-2" onclick="event.stopPropagation()">
@@ -94,7 +107,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center text-muted">Không có loại chế độ ăn nào</td>
+                                <td colspan="6" class="text-center text-muted">Không có loại chế độ ăn nào</td>
                             </tr>
                         @endforelse
                     </tbody>
