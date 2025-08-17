@@ -40,7 +40,7 @@
                 </div>
 
                 {{-- Password (ẩn) --}}
-                <input type="hidden" name="password" value="{{ $item->password }}">
+                {{-- <input type="hidden" name="password" value="{{ $item->password }}"> --}}
 
                 {{-- Role --}}
                 <div class="col-md-6">

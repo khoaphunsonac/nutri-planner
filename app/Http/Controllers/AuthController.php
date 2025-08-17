@@ -27,7 +27,7 @@ class AuthController extends Controller
     /**
      * Đăng nhập web và tạo JWT token
      */
-    public function webLogin(Request $request)
+   public function webLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
 

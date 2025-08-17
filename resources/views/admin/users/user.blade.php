@@ -26,15 +26,7 @@
             <a href="{{ route($shareUser.'index') }}" class="text-decoration-none">Quản lý tài khoản admin và người dùng</a>
         </small>
     </div>
-</div>
-    {{-- Hiển thị thông báo nếu cap nhat ok --}}
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show text-center" role="alert"
-        style="font-size: 25px">
-            <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
+</div>  
 
 {{-- Dashboard summary --}}
 <div class="row g-3 mb-4 d-flex justify-content-between align-items-center">

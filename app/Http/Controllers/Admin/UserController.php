@@ -126,29 +126,60 @@ use Illuminate\Support\Facades\View;
         }
         return redirect(route('users.index', ['id' => $id]));
     }
-    public function save(Request $request, $id = null){
-        # validate chung luôn
-        $request->validate([
-            "note" => "nullable|min:4|max:255"
-        ],[
-            "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
-            "note.min" => "Nhập ít nhất :min ký tự",
-            "note.max" => "Nhập tối đa :max ký tự",
-        ]);
+    // public function save(Request $request, $id = null){
+    //     # validate chung luôn
+    //     $request->validate([
+    //         "note" => "nullable|min:4|max:255"
+    //     ],[
+    //         "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
+    //         "note.min" => "Nhập ít nhất :min ký tự",
+    //         "note.max" => "Nhập tối đa :max ký tự",
+    //     ]);
 
-        $account = $id ? AccountModel::find($id) : new AccountModel();
+    //     $account = $id ? AccountModel::find($id) : new AccountModel();
 
-        $account->username = $request->username;
-        $account->email = $request->email;
-        if ($request->password) {
-            $account->password = bcrypt($request->password);
-        }
-        $account->status = $request->status ?? 'inactive';
-        $account->note = $request->note; # lý do khoá
-        $account->save();
+    //     $account->username = $request->username;
+    //     $account->email = $request->email;
+    //     if ($request->password) {
+    //         $account->password = bcrypt($request->password);
+    //     }
+    //     $account->status = $request->status ?? 'inactive';
+    //     $account->note = $request->note; # lý do khoá
+    //     $account->save();
 
-        return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
-    }   
+    //     return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
+    // }   
+    public function save(Request $request, $id = null)
+{
+    // Validate lý do khoá nếu có
+    $request->validate([
+        "note" => "nullable|min:4|max:255"
+    ],[
+        "note.nullable" => "Hãy ghi lý do khoá tài khoản này",
+        "note.min" => "Nhập ít nhất :min ký tự",
+        "note.max" => "Nhập tối đa :max ký tự",
+    ]);
+
+    // Lấy account nếu $id có, nếu không thì tạo mới
+    $account = $id ? AccountModel::find($id) : new AccountModel();
+
+    // Cập nhật thông tin cơ bản (username/email)
+    $account->username = $request->username;
+    $account->email = $request->email;
+
+    // Chỉ cập nhật mật khẩu nếu người dùng nhập mới
+    if ($request->filled('password')) {
+        $account->password = bcrypt($request->password);
+    }
+
+    // Cập nhật trạng thái và note
+    $account->status = $request->status ?? 'inactive';
+    $account->note = $request->note;
+
+    $account->save();
+
+    return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
+}
 
     # mở khoá tk
     public function status(Request $request){
