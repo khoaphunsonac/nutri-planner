@@ -188,7 +188,7 @@
                                 <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990,
                                 Vietnam<br />
                                 <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br />
-                                <strong>Email</strong> info@fitfood.vn.<br />
+                                <strong>Email</strong> info@nutriplanner.vn.<br />
                                 <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
                             </p>
                         </div>

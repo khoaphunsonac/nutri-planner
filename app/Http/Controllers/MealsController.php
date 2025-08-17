@@ -148,15 +148,18 @@ class MealsController extends BaseController
                                 ->get();
 
         $saved = false;
+        $favoriteCount = 0;
         if (auth()->check()) {
             $savedMeals = auth()->user()->savemeal ? explode('-', auth()->user()->savemeal) : [];
             $saved = in_array($meal->id, $savedMeals);
+            $favoriteCount = count($savedMeals);
         }
 
         return view($this->pathViewController.'show',[
             'meal'=>$meal,
             'latestMeals'=>$latestMeals,
             'saved'=>$saved,
+            'favoriteCount' => $favoriteCount,
         ]);
     }
 

@@ -212,7 +212,7 @@
                                             
                                         
                                             
-                                                
+                                            <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
                                                 <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
                                                 
 
@@ -231,7 +231,7 @@
                                             
                                                 </div>
                                             
-
+                                             </a>
                                             {{-- Nút yêu thích --}}
                                             <div style="position: absolute; top: 10px; right: 10px; display: inline;"  class="favorite-form">
                                                 @php

@@ -37,7 +37,9 @@
                         <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
                             @csrf
                             <button type="submit" 
-                                class="btn btn-favorite" 
+                                class="btn btn-favorite"
+                                data-id="{{ $meal->id }}"
+                                aria-label="Yêu thích" 
                                 style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
                                 <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
                             </button>
@@ -51,6 +53,18 @@
                         </button>
                     @endif
                 </div>
+                {{-- Popup --}}
+                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
+                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
+                                <p>Hãy chọn một trong hai để tiếp tục</p>
+                                <div style="margin-top:15px;">
+                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
+                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
+                                </div>
+                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
+                            </div>
+                        </div>
                 <h2>{{ $meal->name }}</h2>
                 <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
@@ -338,13 +352,7 @@
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.favorite-form').forEach(function (form) {
-            form.addEventListener('click', function (event) {
-                event.stopPropagation(); // Ngăn click lan ra ngoài
-            });
-        });
-    });
+    
 
     function showLoginRegisterPopup(){
         document.getElementById('loginRegisterPopup').style.display = 'block';
@@ -352,5 +360,73 @@
     function closeLoginRegisterPopup(){
         document.getElementById('loginRegisterPopup').style.display = 'none';
     }
+
+
+ document.addEventListener('DOMContentLoaded', function() {
+    // Hàm cập nhật giỏ hàng
+    function updateCartCount(count) {
+        // Cập nhật badge số lượng
+        const badge = document.getElementById('favoriteCountBadge');
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    // Xử lý click nút tim
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Kiểm tra đăng nhập
+            const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+            if (!isLoggedIn) {
+                showLoginRegisterPopup();
+                return;
+            }
+
+            const mealId = this.dataset.id;
+            const icon = this.querySelector('i');
+            
+            try {
+                const response = await fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // 1. Cập nhật icon tim
+                    icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+                    
+                    // 2. Cập nhật số lượng giỏ hàng
+                    updateCartCount(data.favoriteCount);
+                    
+                    // 3. Hiển thị thông báo
+                    showToast(data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra', 'error');
+            }
+        });
+    });
+
+    // Hàm hiển thị popup đăng nhập
+    // function showLoginRegisterPopup() {
+    //     document.getElementById('loginRegisterPopup').style.display = 'block';
+    // }
+    
+    // Hàm hiển thị thông báo
+    function showToast(message, type = 'success') {
+        // Sử dụng thư viện toast hoặc alert đơn giản
+        alert(message);
+    }
+});
 </script>
 @endsection
