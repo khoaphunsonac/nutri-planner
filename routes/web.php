@@ -4,7 +4,6 @@ use App\Http\Controllers\NutriController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\DietTypeController;
@@ -15,6 +14,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
 use App\Http\Controllers\FeedbackController as SiteFeedbackController;
@@ -34,14 +34,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminAuthController::class, 'login'])->name('login.submit');
     Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
-
-     // Thêm route cho forgot password
-    Route::post('/password/email', [AdminAuthController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('/password/reset/{token}', [AdminAuthController::class, 'showResetForm'])->name('password.reset');
-    Route::post('/password/reset', [AdminAuthController::class, 'resetPassword'])->name('password.update');
 });
-
-
 
 // Group Admin (Protected with JWT)
 Route::prefix('admin')->middleware('admin')->group(function () {
@@ -186,14 +179,7 @@ $mealController = MealsController::class;
 Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
     Route::get('/', [$mealController, 'index'])->name('index');
     Route::get('/show/{id}', [$mealController, 'show'])->name('show');
-
-
-    Route::post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite')->middleware('user');
-    Route::get('/favorites', [$mealController, 'showsavemeals'])->name('showsavemeals')->middleware('user');
-
-    //chỉ user mới được like
-    // Route::middleware('user')-> post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');
-
+    Route::post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');
 });
 
 // Home
@@ -206,8 +192,8 @@ Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc')
 Route::view('/tdee', 'site.tdee')->name('tdee');
 
 //Contact
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
+Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.store');
 //Feedback
 Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
 Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');

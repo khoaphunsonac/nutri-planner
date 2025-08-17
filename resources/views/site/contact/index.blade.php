@@ -76,7 +76,7 @@
 
                         {{-- Họ tên --}}
                         <div class="mb-3">
-                            <label for="contacts-name" class="form-label contact-label">Họ tên</label>
+                            <label for="contact-name" class="form-label contact-label">Họ tên</label>
                             <div class="input-group">
                                 <input
                                     id="contact-name"
@@ -93,7 +93,7 @@
 
                         {{-- Email --}}
                         <div class="mb-3">
-                            <label for="contact-email" class="form-label contactslabel">Email</label>
+                            <label for="contact-email" class="form-label contact-label">Email</label>
                             <div class="input-group">
                                 <input
                                     id="contact-email"
@@ -111,7 +111,7 @@
 
                         {{-- Nội dung --}}
                         <div class="mb-3">
-                            <label for="contacts-message" class="form-label contact-label">Nội dung</label>
+                            <label for="contact-message" class="form-label contact-label">Nội dung</label>
                             <div class="position-relative">
                                 <textarea
                                     id="contact-message"
@@ -132,9 +132,7 @@
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="bi bi-send me-2"></i>Gửi
                             </button>
-                            <a href="#" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-2"></i>Về trang chủ
-                            </a>
+                           
                         </div>
                     </form>
 

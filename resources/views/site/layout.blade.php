@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
     {{-- favicon --}}
     <link rel="apple-touch-icon" sizes="57x57"
         href="{{ asset('assets/admin/img/avatar/favicon.ico/apple-icon-57x57.png') }}">
@@ -113,52 +114,9 @@
                         <a href="{{ route('login') }}" class="nav-link text-light">Đăng Nhập</a>
                     @endif
 
-                    {{-- Nút giỏ hàng --}}
-                    <div class="cart-icon" style="cursor: pointer;">
-                        <a href="#" onclick="handleCartClick()">
-                            <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                            {{-- @php
-                                $favorites = [];
-                                if(auth()->check()) {
-                                    $favorites = array_filter(explode('-', auth()->user()->savemeal ?? ''));
-                                }
-                                $favoriteCount = count($favorites);
-                            @endphp
-                            @if($favoriteCount > 0)
-                                <span class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
-                            @endif --}}
-                             @php
-                                $favoriteCount = 0;
-                                if(auth()->check() && !empty(auth()->user()->savemeal)) {
-                                    $favorites = explode('-', auth()->user()->savemeal);
-                                    // Đếm số lượng ID hợp lệ (không rỗng)
-                                    foreach($favorites as $id) {
-                                        if(!empty($id)) $favoriteCount++;
-                                    }
-                                }
-                            @endphp
-                            @if($favoriteCount > 0)
-                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
-                            @else
-                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger" style="display:none;"></span>
-                            @endif
-                        </a>
-                    </div>
-                    {{-- Popup --}}
-                    <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
-                        <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
-                            <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
-                            <p>Hãy chọn một trong hai để tiếp tục</p>
-                            <div style="margin-top:15px;">
-                                <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;">
-                                    <i class="bi bi-lock"></i> Đăng nhập
-                                </a>
-                                <a href="{{ route('register.submit') }}" class="btn btn-success">
-                                    <i class="bi bi-person-plus-fill me-2"></i> Đăng ký
-                                </a>
-                            </div>
-                            <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
-                        </div>
+                    <div class="cart-icon">
+                        <img src="https://cdn-icons-png.flaticon.com/512/833/833314.png" alt="cart" width="20">
+                        <span>0</span>
                     </div>
                 </div>
 
@@ -188,7 +146,7 @@
                                 <strong>Địa chỉ</strong> 778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990,
                                 Vietnam<br />
                                 <strong>Điện thoại</strong> (+84) 932 788 120 [hotline]<br />
-                                <strong>Email</strong> info@nutriplanner.vn.<br />
+                                <strong>Email</strong> info@fitfood.vn.<br />
                                 <strong>MST</strong> 0313272749 do Sở kế hoạch và đầu tư TPHCM cấp ngày 26/05/2015
                             </p>
                         </div>
@@ -225,21 +183,6 @@
                 behavior: 'smooth' // hiệu ứng cuộn mượt
             });
         });
-
-        /* Script xử lý giỏ hàng */
-        function handleCartClick() {
-            @if(auth()->check())
-                // Nếu đã đăng nhập → chuyển đến trang giỏ hàng
-                window.location.href = "{{ route('meal.showsavemeals') }}";
-            @else
-                // Nếu chưa đăng nhập → hiện popup
-                document.getElementById('loginRegisterPopup').style.display = 'block';
-            @endif
-        }
-
-        function closeLoginRegisterPopup() {
-            document.getElementById('loginRegisterPopup').style.display = 'none';
-        }
     </script>
 </body>
 
