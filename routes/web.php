@@ -192,8 +192,8 @@ Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc')
 Route::view('/tdee', 'site.tdee')->name('tdee');
 
 //Contact
-Route::get('/contacts', [ContactsController::class, 'index'])->name('contacts.index');
-Route::post('/contacts', [ContactsController::class, 'store'])->name('contacts.store');
+Route::get('/contacts', [ContactsController::class, 'index'])->name('site.index');
+Route::post('/contacts', [ContactsController::class, 'store'])->name('site.store');
 //Feedback
 Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
 Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');

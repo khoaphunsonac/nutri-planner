@@ -71,7 +71,7 @@
             <div class="card card-glass shadow-lg border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
 
-                    <form action="{{ route('contacts.store') }}" method="POST" novalidate>
+                    <form action="{{ route('site.store') }}" method="POST" novalidate>
                         @csrf
 
                         {{-- Họ tên --}}
@@ -88,7 +88,7 @@
                                     autocomplete="name">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="tiny-muted mt-1">Cho cái tên đi</div>
+                            <div class="tiny-muted mt-1">Nhập họ và tên của bạn</div>
                         </div>
 
                         {{-- Email --}}
@@ -134,15 +134,13 @@
                             </button>
                            
                         </div>
-                    </form>
+                  </form>
 
                 </div>
             </div>
 
             {{-- Info box nhỏ (tùy chọn) --}}
-            <div class="text-center tiny-muted mt-3">
-                <i class="bi bi-shield-check me-1"></i>Thông tin của bạn được bảo mật theo chính sách riêng tư.
-            </div>
+          
         </div>
     </div>
 </div>
