@@ -28,9 +28,8 @@ class AuthController extends Controller
      * Đăng nhập web và tạo JWT token
      */
    public function webLogin(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-
+{
+    $validator = Validator::make($request->all(), [
         "username" => "required|string|min:4|max:40",
         'password' => [
             'required',
@@ -51,58 +50,50 @@ class AuthController extends Controller
         'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',
         'password.max' => 'Mật khẩu không được vượt quá :max ký tự',
         // 'password.regex' => 'Mật khẩu phải có ít nhất 1 chữ hoa và 1 chữ số',
-        ]);
+    ]);
 
-        if ($validator->fails()) {
-            return back()
-                ->withErrors($validator)
-                ->withInput($request->only('username'));
-        }
-
-        try {
-            $user = AccountModel::where('username', $request->username)->first();
-
-            if (!$user) {
-                return back()
-                    ->withErrors(['username' => 'Tên đăng nhập hoặc mật khẩu không đúng.'])
-                    ->withInput($request->only('username'));
-            }
-
-            if ($user->status !== 'active') {
-                return back()
-                    ->withErrors(['username' => 'Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt.'])
-                    ->withInput($request->only('username'));
-            }
-
-            if (!Hash::check($request->password, $user->password)) {
-                return back()
-                    ->withErrors(['username' => 'Tên đăng nhập hoặc mật khẩu không đúng.'])
-                    ->withInput($request->only('username'));
-            }
-
-            // Đăng nhập session
-            Auth::login($user);
-
-            // Tạo JWT token và lưu vào session
-            $token = JWTAuth::fromUser($user);
-            session(['user_jwt_token' => $token]);
-
-            // nếu là admin thì cho về dashboard luôn
-            if ($user->role === 'admin') {
-            return redirect('admin');
-            }
-            return redirect('/')
-                ->with('success', 'Đăng nhập thành công!');
-        } catch (JWTException $e) {
-            return back()
-                ->withErrors(['username' => 'Không thể tạo token. Vui lòng thử lại.'])
-                ->withInput($request->only('username'));
-        } catch (\Exception $e) {
-            return back()
-                ->withErrors(['username' => 'Có lỗi xảy ra. Vui lòng thử lại.'])
-                ->withInput($request->only('username'));
-        }
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput($request->only('username'));
     }
+
+    try {
+        $user = AccountModel::where('username', $request->username)->first();
+        if(!$user){
+            return back()->withErrors(['username' => 'Tên đăng nhập hoặc mật khẩu không đúng.'])
+                         ->withInput($request->only('username'));
+        }
+
+        // Refresh user để chắc chắn lấy dữ liệu mới nhất
+        $user->refresh();
+
+        if($user->status !== 'active'){
+            return back()->withErrors(['username' => 'Tài khoản của bạn đã bị khóa hoặc chưa được kích hoạt.'])
+                         ->withInput($request->only('username'));
+        }
+
+        if(!Hash::check($request->password, $user->password)){
+            return back()->withErrors(['username' => 'Tên đăng nhập hoặc mật khẩu không đúng.'])
+                         ->withInput($request->only('username'));
+        }
+
+        // Login và tạo JWT
+        Auth::login($user);
+        session()->forget('user_jwt_token');
+        $token = JWTAuth::fromUser($user);
+        session(['user_jwt_token' => $token]);
+
+        if($user->role === 'admin') return redirect('admin');
+
+        return redirect('/')->with('success', 'Đăng nhập thành công!');
+
+    } catch (JWTException $e) {
+        return back()->withErrors(['username' => 'Không thể tạo token. Vui lòng thử lại.'])
+                     ->withInput($request->only('username'));
+    } catch (\Exception $e){
+        return back()->withErrors(['username' => 'Có lỗi xảy ra. Vui lòng thử lại.'])
+                     ->withInput($request->only('username'));
+    }
+}
 
     /**
      * Đăng nhập và tạo JWT token (API)

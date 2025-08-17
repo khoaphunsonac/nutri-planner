@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\DietTypeRequest;
 use App\Models\DietTypeModel;
 use Illuminate\Http\Request;
+use App\Models\MealModel;
 
 class DietTypeController extends Controller
 {
@@ -44,9 +45,11 @@ class DietTypeController extends Controller
     // Hiển thị form chỉnh sửa
     public function edit($id)
     {
-        $diet = DietTypeModel::findOrFail($id);
+        $diet = DietTypeModel::with('meals')->findOrFail($id);
+        $meals = MealModel::all(); // lấy danh sách tất cả món ăn
         return view('Admin.diettypes.edit', [
-            'diet' => $diet
+            'diet' => $diet,
+            'meals' => $meals
         ]);
     }
 
@@ -57,6 +60,16 @@ class DietTypeController extends Controller
         $dietType->update([
             'name' => $request->name
         ]);
+        // Cập nhật mối quan hệ với các món ăn
+        // Cập nhật lại quan hệ món ăn
+        // 1. Xóa hết meal cũ (set diettype_id = null)
+        $dietType->meals()->update(['diet_type_id' => null]);
+
+        // 2. Gán lại meal mới nếu có chọn
+        if ($request->has('meals')) {
+            MealModel::whereIn('id', $request->meals)
+                ->update(['diet_type_id' => $dietType->id]);
+        }
 
         return redirect()->route('diettypes.index')->with('success', 'Cập nhật thành công!');
     }

@@ -55,79 +55,9 @@
           <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
           <hr class="section-title-hr" >
       </div>
-      <!-- <div class="content-meal">
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-      </div> -->
 
       {{-- hiển thị 8 món mới nhất --}}
       <div class=" container new  "> 
-        {{-- <div class="section-header my-5" style=" color: white;">
-          <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
-          <hr style="
-              display: inline-block;
-              width: 19%; 
-              height: 4px; 
-              background-color: #ffffff; 
-              border: none; 
-              border-radius: 2px; 
-              vertical-align: middle;
-          ">
-        </div> --}}
       
         <div class="row g-4">
       
@@ -136,20 +66,31 @@
                 
                 //tính toán dinh dưỡng
                 
-                    $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $pri){
-                        $ingredient = $pri->ingredient;
-                        if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
-                        }
-                    }
-                
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
+                      }
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';
@@ -173,10 +114,10 @@
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
                             <div class="nutrition-info mt-auto pt-2">
                               <div class="d-flex flex-wrap gap-1">
-                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
-                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
-                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
-                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
                               </div>
                             </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
