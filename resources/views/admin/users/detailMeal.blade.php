@@ -16,6 +16,7 @@
         </li>
     </ol>
 </nav>
+{{-- chi tiết món khi ấn vào --}}
     <div class="row">
         <div class="col-md-12">
             @if (!empty($users))
