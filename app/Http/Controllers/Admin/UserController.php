@@ -55,10 +55,19 @@ use Illuminate\Support\Facades\View;
         return view($this->viewPath.'detail', [
             "id" => $id,
             "item" => $item,
-            "btn" => $btn
+            "btn" => $btn,
         ]);
     }
+    public function detail(Request $request){
+        $id = $request->id;
 
+        $users = AccountModel::find($id);
+        // dd($meal);   
+        return view($this->viewPath.'detailMeal', [
+            'id' => $id,
+            'users' => $users,
+        ]);
+    }
     public function edit(Request $request){ # chỉnh sửa cho admin
         $id = $request->id;
         $adminAccount = AccountModel::where('role', 'admin')->first();

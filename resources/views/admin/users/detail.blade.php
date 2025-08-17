@@ -1,7 +1,32 @@
 @extends('admin.layout')
+
+
 @section('content')
 
-<div class="container mt-1">
+<style>
+    .preview-box {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    transition: all 0.3s ease;
+    background-color: #ebfcff;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.preview-box:hover {
+    border-color: #006de1; /* xanh nổi bật */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+}
+
+.preview-box .list-group-item {
+    border: none; /* bỏ viền item gốc */
+    padding: 8px 0;
+}
+
+</style>
+
+<div class="container-fluid mt-1">
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb breadcrumb-compact">
             <li class="breadcrumb-item">
@@ -61,24 +86,29 @@
                     <input type="hidden" name="status" id="statusInput" value="{{ $item->status }}">
                 </div>
 
-
                 {{-- Món yêu thích --}}
                 <div class="col-12">
                     @php
                         $preview = $item->savemeal_preview;
                         $total = $item->savemeal_total;
                     @endphp
-                    <label class="form-label">Món yêu thích</label>
-                    <textarea class="form-control" rows="4" style="resize: none; background-color: #f8f9fa;" disabled>
-@if ($total > 0)
-@foreach ($preview as $meal)
-- {{ $meal->name }}
-@endforeach
-@else
-Không có món yêu thích
-@endif
-                    </textarea>
-                </div>
+                    <label class="form-label">Món yêu thích <span style="color: rgb(255, 88, 28)">(Tổng: {{ $total }})</span></label>
+
+                    @if ($total > 0)
+                        <a href="{{ route('users.detail', ['id' => $id]) }}" class="text-decoration-none">
+                            <div class="list-group preview-box">
+                                @foreach ($preview as $meal)
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <span>{{ $meal->name }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </a>
+
+                        @else
+                            <p class="text-muted fst-italic">Không có món yêu thích</p>
+                        @endif
+                    </div>
 
                 {{-- Toggle button --}}
                 <div class="col-md-6">

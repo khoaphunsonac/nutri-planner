@@ -178,12 +178,12 @@
                         <td>
                             @if ($total > 0)
                                 @foreach ($preview as $meal)
-                                    <span class="badge bg-success mb-1">{{ $meal->name }}</span>
+                                    <span class="badge bg-primary mb-1">{{ $meal->name }}</span>
                                 @endforeach
 
                                 {{-- Nếu nhiều hơn 3 thì thêm dấu ... --}}
                                 @if ($total > 3)
-                                    <span class="badge bg-success mb-1">...</span>
+                                    <span class="badge bg-primary mb-1">...</span>
                                 @endif
                             @else
                                 0
