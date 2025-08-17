@@ -25,7 +25,7 @@
     {{-- Thông tin chính --}}
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <p><strong>ID:</strong> {{ $diet->id }}</p>
+            <p><strong>ID:</strong> {{$diet->id }}</p>
             <p><strong>Tên loại:</strong> {{ $diet->name }}</p>
         </div>
     </div>
@@ -44,18 +44,18 @@
                 <table class="table table-hover table-bordered align-middle mb-0">
                     <thead class="table-light">
                         <tr class="text-center">
-                            <th width="50">ID</th>
+                            <th width="50">STT</th>
                             <th>Tên món ăn</th>
                             <th>Hình ảnh</th>
                             <th>Mô tả</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($diet->meals as $meal)
+                        @foreach ($diet->meals as $index => $meal)
                             <tr>
                                 <td class="text-center clickable-cell">
                                     <a href="{{ route('meals.show', $meal->id) }}" class="full-cell-link">
-                                        {{ $meal->id }}
+                                        {{ $index + 1 }}
                                     </a>
                                 </td>
                                 <td class="clickable-cell">
@@ -66,7 +66,8 @@
                                 <td class="text-center clickable-cell">
                                     <a href="{{ route('meals.show', $meal->id) }}" class="full-cell-link">
                                         @if ($meal->image_url)
-                                            <img src="{{ $meal->image_url }}" alt="Ảnh" style="max-height: 50px;" class="img-thumbnail">
+                                        
+                                            <img src="{{ asset('uploads/meals/' . $meal->image_url) }}" alt="{{$meal->name}}" style="max-height: 50px;" class="img-thumbnail">
                                         @else
                                             <span class="text-muted">Không có ảnh</span>
                                         @endif
