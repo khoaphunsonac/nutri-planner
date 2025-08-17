@@ -107,18 +107,13 @@
                             title="1 Calorie (dinh dưỡng) = 1 Kcal =  1000 calories (khoa học)"
                         >
                             <option value="">-- Chọn khoảng Calories (Kcal) --</option>
-                            <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
                             <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
-                            <option value="200-400" {{ request('calories_range') == '200-400' ? 'selected' : '' }}>200 - 400</option>
-                            <option value="400-600" {{ request('calories_range') == '400-600' ? 'selected' : '' }}>400 - 600</option>
-                            <option value="600-800" {{ request('calories_range') == '600-800' ? 'selected' : '' }}>600 - 800</option>
                             <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
-                            <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
-                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
-                            <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
-                            <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
-                            <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
-                            <option value="1800-2100" {{ request('calories_range') == '1800-2100' ? 'selected' : '' }}>1800 - 2100</option>
+                            <option value="1000 - 1500" {{ request('calories_range') == '1000 - 1500' ? 'selected' : '' }}>1000 - 1500</option>
+                            <option value="1500 - 2000" {{ request('calories_range') == '1500 - 2000' ? 'selected' : '' }}>1500 - 2000</option>
+                            <option value="2000 - 2500" {{ request('calories_range') == '2000 - 2500' ? 'selected' : '' }}>2000 - 2500</option>
+                            <option value="2500 - 3000" {{ request('calories_range') == '2500 - 3000' ? 'selected' : '' }}>2500 - 3000</option>
+
                         </select>
                     </div >
                     

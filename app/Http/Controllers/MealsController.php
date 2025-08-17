@@ -166,14 +166,11 @@ class MealsController extends BaseController
     
 
     public function favorite($id){
-        // ktra dn
-        $user = auth()->user();
+    
         
         // lay tai khoan
-        $account = AccountModel::find($user->id); // lấy user đang đăng nhập
-        if (!$account) {
-            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
-        }
+        $account = AccountModel::find(auth()->user()); // lấy user đang đăng nhập
+       
 
         // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
         $savedMeals  = [];
