@@ -11,13 +11,13 @@
     </nav>
      {{-- Header --}}
      <div class=" d-flex justify-content-between align-items-center mb-3">
-            <h5 class="mb-0">📝 Thông tin chi tiết Dị ứng <span class="fw-semibold text-success"> {{ $item->name }} </span></h5>
+            <h5 class="mb-0">📝 Thông tin chi tiết Dị ứng: <span class="fw-semibold text-success"> {{ $item->name }} </span></h5>
             <div>
                 <a href="{{ route('allergens.form', ['id' => $item->id]) }}" class="btn btn-sm btn-warning me-2">
                     <i class="bi bi-pencil-square"></i> Chỉnh sửa
                 </a>
                 <a href="{{ route('allergens.index') }}" class="btn btn-outline-secondary btn-sm">
-                    <i class="fas fa-arrow-left"></i> Quay lại
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại
                 </a>
             </div>
         </div>

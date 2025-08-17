@@ -23,6 +23,7 @@ class AllergenController extends BaseController
     //================Allergen CRUD================
     public function index(Request $request){
         $id = $request->id;
+        // Phần "Tổng quan" - luôn lấy 10 món mới nhất, không bị ảnh hưởng bởi search
         $meals = MealModel::with('allergens')->latest()->take(10)->get();
         $mealAllergens = MealAllergenModel::with(['meal','allergen'])->get();
         $allergen = AllergenModel::all();
@@ -66,10 +67,11 @@ class AllergenController extends BaseController
             }
         }
         
-        $totalMeals = count($meals);
+        $totalMeals = $meals->count();// Sẽ luôn là 10 hoặc ít hơn nếu không đủ
         // $totalMappings = count($mealAllergens);
         $usageRate =  $totalAllergens > 0 ? round(($activeAllergens/$totalAllergens) *100) . '%' : '0%';
-        
+
+        // Phần "Danh sách Dị ứng" - có pagination và search
         $item = $query->orderBy('id','desc')->paginate(10 );
         // Clone để đếm số mục sau lọc
         $totalMappings = MealAllergenModel::count();
@@ -79,6 +81,9 @@ class AllergenController extends BaseController
         $perPage = $item->perPage();
         $currentPage = $item->currentPage();
         $startIndex = $total - ($currentPage - 1) * $perPage;
+
+        // Thêm phần lấy danh sách món ăn phân trang cho modal
+        $mealsForModal = MealModel::query()->paginate(10); // Phân trang 10 món ăn mỗi trang
         return view($this->pathViewController.'index',[
             'allergen'=> $allergen,
             'meals'=>$meals,
@@ -96,7 +101,8 @@ class AllergenController extends BaseController
             'mealSearch'=>$mealSearch,
             'allergenSearch'=>$allergenSearch,
             'startIndex'=>$startIndex,
-            'totalMeals'=>$totalMeals
+            'totalMeals'=>$totalMeals,
+            'mealsForModal'=>$mealsForModal,
         ]);
     }
 
