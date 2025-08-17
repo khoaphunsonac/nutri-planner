@@ -27,6 +27,7 @@ class AllergenController extends BaseController
         $meals = MealModel::with('allergens')->latest()->take(10)->get();
         $mealAllergens = MealAllergenModel::with(['meal','allergen'])->get();
         $allergen = AllergenModel::all();
+        $allMeals = MealModel::select('id','name')->get(); // Lấy tất cả meals cho modal
         
         $params = $request->all();
         $search = $params['search'] ?? '';
@@ -101,8 +102,8 @@ class AllergenController extends BaseController
             'mealSearch'=>$mealSearch,
             'allergenSearch'=>$allergenSearch,
             'startIndex'=>$startIndex,
-            'totalMeals'=>$totalMeals,
             'mealsForModal'=>$mealsForModal,
+            'allMeals'=>$allMeals,
         ]);
     }
 

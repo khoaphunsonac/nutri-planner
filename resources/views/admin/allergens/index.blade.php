@@ -82,19 +82,19 @@
         <div class="col-md-12">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
                     
-                        <form action="" method="GET" class="row g-2 align-items-center">
-                            
-                            <div class="col-sm-5">
-                                <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo dị ứng... " value="{{$allergenSearch ?? old($allergenSearch)}}">
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
-                            </div>
-                            <div class="col-sm-2">
-                                <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i> Tìm
-                                </button>
-                            </div>
-                        </form>
+                <form action="" method="GET" class="row g-2 align-items-center">
+                    
+                    <div class="col-sm-5">
+                        <input type="text" name="allergenSearch"  id="allergenSearch" class="form-control" placeholder="Tìm theo dị ứng... " value="{{$allergenSearch ?? old($allergenSearch)}}">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="mealSearch" id="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
+                    </div>
+                    <div class="col-sm-2"> 
+                        <button class="btn btn-sm btn-outline-success w-100" id="clearSearch" type="submit"> <i class="bi bi-search"></i> Tìm
+                        </button>
+                    </div>
+                </form>
                    
             </div>
         </div>
@@ -202,8 +202,8 @@
                                                 <div class="row">
                                                     <div class="col-12" style="max-height: 300px; overflow-y: auto;">
                                                         <div class="row">
-                                                            @foreach ($meals as $meal)
-                                                                <div class="col-md-6 mb-2"> <!-- 2 cột -->
+                                                            @foreach ($allMeals as $meal)
+                                                                <div class="col-md-4 mb-2"> <!-- 2 cột -->
                                                                     <div class="form-check text-truncate" title="{{ $meal->name }}">
                                                                         <input 
                                                                             class="form-check-input" 
@@ -418,5 +418,21 @@
                 window.location = url;
             }
         }
+
+    const allergenInput = document.getElementById('allergenSearch');
+    const mealInput = document.getElementById('mealSearch');
+    const form = document.getElementById('searchForm');
+
+    // onchange tự submit form khi thay đổi
+    allergenInput.addEventListener('change', () => form.submit());
+    mealInput.addEventListener('change', () => form.submit());
+
+    // nút Xóa chỉ xóa ô có dữ liệu
+    document.getElementById('clearSearch').addEventListener('click', () => {
+        if(allergenInput.value !== '') allergenInput.value = '';
+        if(mealInput.value !== '') mealInput.value = '';
+        form.submit(); // submit lại form để load dữ liệu mới
+    });
+
     </script>
 @endsection

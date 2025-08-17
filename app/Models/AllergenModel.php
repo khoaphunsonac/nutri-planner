@@ -12,7 +12,6 @@ class AllergenModel extends Model
 
     protected $table = 'allergens';
     protected $primaryKey = 'id';
-     public $timestamps = false;
     protected $fillable = [
         'name'
     ];
