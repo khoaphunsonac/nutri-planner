@@ -117,7 +117,7 @@
                     <div class="cart-icon" style="cursor: pointer;">
                         <a href="#" onclick="handleCartClick()">
                             <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                            @php
+                            {{-- @php
                                 $favorites = [];
                                 if(auth()->check()) {
                                     $favorites = array_filter(explode('-', auth()->user()->savemeal ?? ''));
@@ -126,6 +126,21 @@
                             @endphp
                             @if($favoriteCount > 0)
                                 <span class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
+                            @endif --}}
+                             @php
+                                $favoriteCount = 0;
+                                if(auth()->check() && !empty(auth()->user()->savemeal)) {
+                                    $favorites = explode('-', auth()->user()->savemeal);
+                                    // Đếm số lượng ID hợp lệ (không rỗng)
+                                    foreach($favorites as $id) {
+                                        if(!empty($id)) $favoriteCount++;
+                                    }
+                                }
+                            @endphp
+                            @if($favoriteCount > 0)
+                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
+                            @else
+                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger" style="display:none;"></span>
                             @endif
                         </a>
                     </div>

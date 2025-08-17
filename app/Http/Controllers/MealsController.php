@@ -169,7 +169,7 @@ class MealsController extends BaseController
         // lay tai khoan
         $account = AccountModel::find($user->id); // lấy user đang đăng nhập
         if (!$account) {
-            return back()->with('error', 'Tài khoản không tồn tại');
+            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
         }
 
         // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
@@ -204,28 +204,35 @@ class MealsController extends BaseController
         $account->savemeal = implode('-', $savedMeals);
         $account->save();
 
-            if ($account->save()) {
-                return back()->with('success', 'Đã cập nhật yêu thích thành công!');
-            } else {
-                return back()->with('error', 'Có lỗi xảy ra khi cập nhật');
-            }
-        }
-
-
-        public function showsavemeals(){
-            $account = auth()->user(); // lấy user đang đăng nhập
-            if (!$account) {
-                return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
-            }
-            // tách chuỗi thành mảng
-            $savedMealIds = $account->savemeal ? explode('-', $account->savemeal) : [];
-
-            // lấy dữ liệu các meal theo ID
-            $meals = MealModel::whereIn('id', $savedMealIds)->get();
-
-            return view($this->pathViewController.'showsavemeals',[
-                    'meals'=>$meals,
-                    
-                ]); 
-        }
+        return response()->json([
+            'status'  => 'success',
+            'saved'   => !$found, // true nếu vừa thêm, false nếu vừa gỡ
+            'message' => $found ? 'Đã bỏ thích món ăn' : 'Đã thích món ăn',
+            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới
+        ]);
+    
     }
+
+
+    public function showsavemeals(){
+        $account = auth()->user(); // lấy user đang đăng nhập
+        if (!$account) {
+            return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
+        }
+        // tách chuỗi thành mảng
+        $savedMealIds = $account->savemeal ? explode('-', $account->savemeal) : [];
+
+        // lấy dữ liệu các meal theo ID
+        $meals = !empty($savedMealIds) 
+        ? MealModel::whereIn('id', $savedMealIds)->get() 
+        : [];
+
+        return view($this->pathViewController.'showsavemeals',[
+                'meals'=>$meals,
+                'favoriteCount' => count($savedMealIds),
+                "status"=>"success",
+                "saved"=>true, // hoặc false nếu bỏ like,
+                "message"=>"Thông báo thành công"
+            ]); 
+    }
+}

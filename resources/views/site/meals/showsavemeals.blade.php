@@ -1,7 +1,7 @@
 @extends('site.layout')
 
 @section('content')
-    <style>
+<style>
     .shadow-text {
         text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
     }
@@ -57,7 +57,7 @@
         color: red;
     }
         
-    </style>
+</style>
 
 
     <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg); ">
@@ -123,16 +123,16 @@
                                 </div>
                             </div>
                         </a>
-
-                        <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form">
-                            @csrf
-                            @php
-                                $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
-                            @endphp
-                            <button type="submit" class="favorite-btn {{ $saved ? 'liked' : '' }}">
-                                <i class="fas fa-heart"></i>
+                        <div style="position: absolute; top: 10px; right: 10px; display: inline;"  class="favorite-form">
+                            <div class="favorite-btn-container ">
+                            <button type="button" 
+                                    class="btn btn-favorite {{ auth()->check() && in_array($meal->id, explode('-', auth()->user()->savemeal ?? '')) ? 'liked' : '' }}" 
+                                    data-meal-id="{{ $meal->id }}"
+                                    style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                                <i class="fas fa-heart" style="color: {{ auth()->check() && in_array($meal->id, explode('-', auth()->user()->savemeal ?? '')) ? 'red' : 'gray' }};"></i>
                             </button>
-                        </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             @endforeach
@@ -145,12 +145,117 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.favorite-form').forEach(function (form) {
-                form.addEventListener('click', function (event) {
-                    event.stopPropagation(); // Ngăn click lan ra ngoài
+        // document.addEventListener('DOMContentLoaded', function () {
+        // document.querySelectorAll('.favorite-form').forEach(function (form) {
+        //         form.addEventListener('click', function (event) {
+        //             event.stopPropagation(); // Ngăn click lan ra ngoài
+        //         });
+        //     });
+        // });
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Hàm hiển thị dialog xác nhận
+    function showConfirmDialog(message, callback) {
+        if (confirm(message)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    }
+
+    // Xử lý sự kiện click nút tim
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const mealId = this.dataset.mealId;
+            const icon = this.querySelector('i');
+            const isCurrentlyLiked = icon.style.color === 'red';
+            
+            // Nếu đang liked (màu đỏ) thì hiển thị xác nhận
+            if (isCurrentlyLiked) {
+                showConfirmDialog('Bạn có chắc muốn bỏ thích món ăn này?', async (confirmed) => {
+                    if (confirmed) {
+                        await processLikeAction(mealId, icon, false);
+                    }
                 });
-            });
+            } else {
+                // Nếu đang unliked thì like luôn không cần hỏi
+                await processLikeAction(mealId, icon, true);
+            }
         });
+    });
+
+    // Hàm xử lý like/unlike
+    async function processLikeAction(mealId, icon, shouldLike) {
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // 1. Cập nhật icon tim
+                icon.style.color = data.saved ? 'red' : 'gray';
+                
+                // 2. Cập nhật số lượng giỏ hàng
+                updateCartCount(data.favoriteCount);
+                
+                // 3. Nếu bỏ like thì xóa card
+                if (!data.saved) {
+                    removeMealCard(mealId);
+                }
+                
+                // 4. Hiển thị thông báo
+                showToast(data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showToast('Có lỗi xảy ra', true);
+        }
+    }
+
+    // Hàm xóa card
+    function removeMealCard(mealId) {
+        const card = document.querySelector(`.col-md-4 [data-meal-id="${mealId}"]`)?.closest('.col-md-4');
+        if (card) {
+            card.remove();
+            checkEmptyList();
+        }
+    }
+
+    // Kiểm tra danh sách trống
+    function checkEmptyList() {
+        const container = document.querySelector('.row.g-4');
+        if (container && container.querySelectorAll('.col-md-4').length === 0) {
+            container.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <p class="text-muted">Bạn chưa lưu món ăn nào.</p>
+                </div>
+            `;
+        }
+    }
+
+    // Hàm cập nhật giỏ hàng
+    function updateCartCount(count) {
+        const badge = document.getElementById('favoriteCountBadge');
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    // Hàm hiển thị thông báo đơn giản
+    function showToast(message, isError = false) {
+        alert(message); // Có thể thay bằng toast đẹp hơn
+    }
+});
     </script>
 @endsection

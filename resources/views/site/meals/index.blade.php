@@ -202,7 +202,7 @@
                             
                                 <div class="col-md-4 ">
                                     
-                                        <div class="card meal-card shadow-sm h-100" >
+                                        <div class="card meal-card shadow-sm h-100" data-url="{{ route('meal.show', $meal->id) }}" >
                                                 @php
                                                     $image = $meal->image_url ?? '';
                                                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
@@ -211,7 +211,7 @@
                                                 @endphp
                                             
                                         
-                                            <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
+                                            
                                                 
                                                 <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
                                                 
@@ -230,27 +230,29 @@
                                                     {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                                             
                                                 </div>
-                                            </a>
+                                            
 
                                             {{-- Nút yêu thích --}}
-                                            <div style="position: absolute; top: 10px; right: 10px;">
+                                            <div style="position: absolute; top: 10px; right: 10px; display: inline;"  class="favorite-form">
                                                 @php
                                                     $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
                                                 @endphp
 
                                                 @if(auth()->check())
                                                     {{-- Đã đăng nhập → dùng form POST để lưu --}}
-                                                    <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
-                                                        @csrf
-                                                        <button type="submit" 
-                                                            class="btn btn-favorite" 
+                                                    
+                                                        <button type="button" 
+                                                            class="btn btn-favorite " 
+                                                            data-id="{{ $meal->id }}" 
+                                                            aria-label="Yêu thích"
                                                             style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
                                                             <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
                                                         </button>
-                                                    </form>
+                                                    
                                                 @else
                                                     {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
                                                     <button class="btn btn-favorite" 
+                                                        type="button" 
                                                         style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
                                                         onclick="showLoginRegisterPopup()">
                                                         <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
@@ -300,20 +302,20 @@
 
         </div>
    
-
-<script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script >
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.favorite-form').forEach(function (form) {
-            form.addEventListener('click', function (event) {
-                event.stopPropagation(); // Ngăn click lan ra ngoài
-            });
-        });
-    });
+    // document.addEventListener('DOMContentLoaded', function () {
+    // document.querySelectorAll('.favorite-form').forEach(function (form) {
+    //         form.addEventListener('click', function (event) {
+    //             event.stopPropagation(); // Ngăn click lan ra ngoài
+    //         });
+    //     });
+    // });
 
     function showLoginRegisterPopup(){
         document.getElementById('loginRegisterPopup').style.display = 'block';
@@ -321,5 +323,55 @@
     function closeLoginRegisterPopup(){
         document.getElementById('loginRegisterPopup').style.display = 'none';
     }
+
+
+document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        if (!this.dataset.id) {
+            showLoginRegisterPopup();
+            return;
+        }
+
+        const mealId = this.dataset.id;
+        const icon = this.querySelector('i');
+        
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // 1. Cập nhật icon tim
+                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+                
+                // 2. Cập nhật số lượng trong giỏ hàng
+                const badge = document.getElementById('favoriteCountBadge');
+                if (data.favoriteCount > 0) {
+                    badge.textContent = data.favoriteCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+                // 3. Hiển thị thông báo
+                alert(data.message); // Có thể thay bằng toast đẹp hơn
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Lỗi hệ thống');
+        }
+    });
+});
+
+    
 </script>
 @endsection
