@@ -123,7 +123,7 @@
             <tr>
               <th style="width:80px">#</th>
               <th>Tên loại bữa ăn</th>
-              <th class="text-center" style="width:160px">Số món được gán</th>
+              <th class="text-center" style="width:160px">Số món ăn</th>
               <th style="width:180px">Ngày tạo</th>
               <th class="text-end" style="width:160px">Hành động</th>
             </tr>
@@ -136,21 +136,24 @@
                           : $loop->iteration;
               @endphp
               <tr>
-                <td>{{ $stt }}</td>
+                <td><a>{{ $stt }}</a></td>
 
                 <td>
-                  <a href="{{ route('admin.meal_types.show', $it->id) }}" 
-                    class="text-decoration-none text-dark fw-normal">
-                    {{ $it->name }}
+                  <span class="text-decoration-none text-dark fw-normal" 
+                  style="cursor:pointer" 
+                  onclick="window.location='{{ route('admin.meal_types.show', $it->id) }}'">
+                {{ $it->name }}
+            </span>
+            
                  </a>                               
                 </td>
 
                 <td class="text-center">
-                  {{ $it->meals_count ?? 0 }}
+                  <a>{{ $it->meals_count ?? 0 }}</a>
                 </td>
 
                 <td class="text-muted">
-                  {{ $it->created_at?->format('d/m/Y H:i') ?? '—' }}
+                  <a>{{ $it->created_at?->format('d/m/Y H:i') ?? '—' }}</a>
                 </td>
 
                 <td class="text-end">
