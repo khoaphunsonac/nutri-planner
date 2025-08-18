@@ -155,15 +155,6 @@
 
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Hàm hiển thị dialog xác nhận
-    function showConfirmDialog(message, callback) {
-        if (confirm(message)) {
-            callback(true);
-        } else {
-            callback(false);
-        }
-    }
-
     // Xử lý sự kiện click nút tim
     document.querySelectorAll('.btn-favorite').forEach(btn => {
         btn.addEventListener('click', async function(e) {
@@ -172,90 +163,50 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const mealId = this.dataset.mealId;
             const icon = this.querySelector('i');
-            const isCurrentlyLiked = icon.style.color === 'red';
             
-            // Nếu đang liked (màu đỏ) thì hiển thị xác nhận
-            if (isCurrentlyLiked) {
-                showConfirmDialog('Bạn có chắc muốn bỏ thích món ăn này?', async (confirmed) => {
-                    if (confirmed) {
-                        await processLikeAction(mealId, icon, false);
+            try {
+                const response = await fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
                     }
                 });
-            } else {
-                // Nếu đang unliked thì like luôn không cần hỏi
-                await processLikeAction(mealId, icon, true);
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // 1. Cập nhật icon tim
+                    icon.style.color = data.saved ? 'red' : 'gray';
+                    
+                    // 2. Cập nhật số lượng giỏ hàng
+                    document.getElementById('favoriteCountBadge').textContent = data.favoriteCount;
+                    if (data.favoriteCount === 0) {
+                        document.getElementById('favoriteCountBadge').style.display = 'none';
+                    }
+                    
+                    // 3. Nếu bỏ like thì xóa card ngay lập tức
+                    if (!data.saved) {
+                        this.closest('.col-md-4').remove();
+                        
+                        // Kiểm tra nếu hết món
+                        if (document.querySelectorAll('.col-md-4').length === 0) {
+                            document.querySelector('.row').innerHTML = `
+                                <div class="col-12 text-center py-5">
+                                    <p class="text-muted">Bạn chưa lưu món ăn nào.</p>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra');
             }
         });
     });
-
-    // Hàm xử lý like/unlike
-    async function processLikeAction(mealId, icon, shouldLike) {
-        try {
-            const response = await fetch(`/meals/favorite/${mealId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                // 1. Cập nhật icon tim
-                icon.style.color = data.saved ? 'red' : 'gray';
-                
-                // 2. Cập nhật số lượng giỏ hàng
-                updateCartCount(data.favoriteCount);
-                
-                // 3. Nếu bỏ like thì xóa card
-                if (!data.saved) {
-                    removeMealCard(mealId);
-                }
-                
-                // 4. Hiển thị thông báo
-                showToast(data.message);
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showToast('Có lỗi xảy ra', true);
-        }
-    }
-
-    // Hàm xóa card
-    function removeMealCard(mealId) {
-        const card = document.querySelector(`.col-md-4 [data-meal-id="${mealId}"]`)?.closest('.col-md-4');
-        if (card) {
-            card.remove();
-            checkEmptyList();
-        }
-    }
-
-    // Kiểm tra danh sách trống
-    function checkEmptyList() {
-        const container = document.querySelector('.row.g-4');
-        if (container && container.querySelectorAll('.col-md-4').length === 0) {
-            container.innerHTML = `
-                <div class="col-12 text-center py-5">
-                    <p class="text-muted">Bạn chưa lưu món ăn nào.</p>
-                </div>
-            `;
-        }
-    }
-
-    // Hàm cập nhật giỏ hàng
-    function updateCartCount(count) {
-        const badge = document.getElementById('favoriteCountBadge');
-        if (badge) {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'inline-block' : 'none';
-        }
-    }
-
-    // Hàm hiển thị thông báo đơn giản
-    function showToast(message, isError = false) {
-        alert(message); // Có thể thay bằng toast đẹp hơn
-    }
 });
+
     </script>
 @endsection
