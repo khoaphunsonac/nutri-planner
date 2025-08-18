@@ -82,7 +82,7 @@ class AuthController extends Controller
         $token = JWTAuth::fromUser($user);
         session(['user_jwt_token' => $token]);
 
-        if($user->role === 'admin') return redirect('admin');
+        if($user->role === 'admin') return redirect('/');
 
         return redirect('/')->with('success', 'Đăng nhập thành công!');
 
