@@ -155,7 +155,7 @@
                                     <div class="btn-group" role="group">
                                         <a href="{{route('tags.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
                                         <a href="{{route('tags.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
-                                        <form action="{{route('tags.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')">
+                                        <form action="{{route('tags.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa tag này không?')" onclick="event.stopPropagation()">
                                             @csrf
                                             
                                             <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash " ></i></button>
@@ -296,6 +296,13 @@
     </div>
        
 
-
+<script>ư
+    function handleRowClick(event, url) {
+            // Kiểm tra nếu click vào phần tử không phải là thao tác (button, a, input, etc.)
+            if (!event.target.closest('.btn-group, button, a, input, form')) {
+                window.location = url;
+            }
+        }
+</script>
 
 @endsection

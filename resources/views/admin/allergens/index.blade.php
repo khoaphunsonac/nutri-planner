@@ -82,19 +82,19 @@
         <div class="col-md-12">
              <div class=" card mb-1 px-3 py-3 shadow-sm ">
                     
-                        <form action="" method="GET" class="row g-2 align-items-center">
-                            
-                            <div class="col-sm-5">
-                                <input type="text" name="allergenSearch" class="form-control" placeholder="Tìm theo dị ứng... " value="{{$allergenSearch ?? old($allergenSearch)}}">
-                            </div>
-                            <div class="col-sm-5">
-                                <input type="text" name="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
-                            </div>
-                            <div class="col-sm-2">
-                                <button class="btn btn-sm btn-outline-success w-100" type="submit"> <i class="bi bi-search"></i> Tìm
-                                </button>
-                            </div>
-                        </form>
+                <form action="" method="GET" class="row g-2 align-items-center">
+                    
+                    <div class="col-sm-5">
+                        <input type="text" name="allergenSearch"  id="allergenSearch" class="form-control" placeholder="Tìm theo dị ứng... " value="{{$allergenSearch ?? old($allergenSearch)}}">
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" name="mealSearch" id="mealSearch" class="form-control" placeholder="Tìm theo món ăn... " value="{{$mealSearch ?? old($mealSearch)}}">
+                    </div>
+                    <div class="col-sm-2"> 
+                        <button class="btn btn-sm btn-outline-success w-100" id="clearSearch" type="submit"> <i class="bi bi-search"></i> Tìm
+                        </button>
+                    </div>
+                </form>
                    
             </div>
         </div>
@@ -132,7 +132,7 @@
                 <tbody>
                     @if (count($item)>0)
                         @foreach ($item as $key => $phanTu)
-                            <tr onclick="window.location='{{ route('allergens.show', $phanTu->id) }}'" style="cursor: pointer;">
+                            <tr onclick="handleRowClick(event, '{{ route('allergens.show', $phanTu->id) }}')" style="cursor: pointer;">
                                 
                                 <td class="align-middle text-center">
                                     <span class=" d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">{{$startIndex - $key}} </span>
@@ -167,7 +167,7 @@
                                     <div class="btn-group" role="group">
                                         <a href="{{route('allergens.show',['id'=>$phanTu->id])}}" class="btn btn-sm btn-info rounded  me-3" title="chi tiết"><i class="bi bi-eye" ></i></a>
                                         <a href="{{route('allergens.form',['id'=>$phanTu->id])}}" class="btn btn-sm btn-warning rounded  me-3" title="Sửa"><i class="bi bi-pencil-square" ></i></a>
-                                        <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Dị ứng này không?')">
+                                        <form action="{{route('allergens.delete',['id'=>$phanTu->id])}}" method="POST" style="display:inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa Dị ứng này không?')" onclick="event.stopPropagation()">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-danger me-3" title="Xóa"><i class="bi bi-trash" ></i></button>
                                         </form>
@@ -202,8 +202,8 @@
                                                 <div class="row">
                                                     <div class="col-12" style="max-height: 300px; overflow-y: auto;">
                                                         <div class="row">
-                                                            @foreach ($meals as $meal)
-                                                                <div class="col-md-6 mb-2"> <!-- 2 cột -->
+                                                            @foreach ($allMeals as $meal)
+                                                                <div class="col-md-4 mb-2"> <!-- 2 cột -->
                                                                     <div class="form-check text-truncate" title="{{ $meal->name }}">
                                                                         <input 
                                                                             class="form-check-input" 
@@ -411,4 +411,28 @@
         </div>
     </div>
 
+    <script>
+        function handleRowClick(event, url) {
+            // Kiểm tra nếu click vào phần tử không phải là thao tác (button, a, input, etc.)
+            if (!event.target.closest('.btn-group, button, a, input, form')) {
+                window.location = url;
+            }
+        }
+
+    const allergenInput = document.getElementById('allergenSearch');
+    const mealInput = document.getElementById('mealSearch');
+    const form = document.getElementById('searchForm');
+
+    // onchange tự submit form khi thay đổi
+    allergenInput.addEventListener('change', () => form.submit());
+    mealInput.addEventListener('change', () => form.submit());
+
+    // nút Xóa chỉ xóa ô có dữ liệu
+    document.getElementById('clearSearch').addEventListener('click', () => {
+        if(allergenInput.value !== '') allergenInput.value = '';
+        if(mealInput.value !== '') mealInput.value = '';
+        form.submit(); // submit lại form để load dữ liệu mới
+    });
+
+    </script>
 @endsection
