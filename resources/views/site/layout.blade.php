@@ -116,27 +116,17 @@
 
                     {{-- Nút giỏ hàng --}}
                     <div class="cart-icon" style="cursor: pointer;">
-                        <a href="#" onclick="handleCartClick()">
-                            <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                            {{-- @php
-                                $favorites = [];
-                                if(auth()->check()) {
-                                    $favorites = array_filter(explode('-', auth()->user()->savemeal ?? ''));
-                                }
-                                $favoriteCount = count($favorites);
-                            @endphp
-                            @if($favoriteCount > 0)
-                                <span class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
-                            @endif --}}
+                        <a href="{{ route('meal.showsavemeals') }}" >
+                            <!-- <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i> -->
+                            <img src="{{ asset('assets/admin/img/meal/cooking.png') }}" class="cart" alt="Logo" > 
+                            
                              @php
                                 $favoriteCount = 0;
-                                if(auth()->check() && !empty(auth()->user()->savemeal)) {
-                                    $favorites = explode('-', auth()->user()->savemeal);
-                                    // Đếm số lượng ID hợp lệ (không rỗng)
-                                    foreach($favorites as $id) {
-                                        if(!empty($id)) $favoriteCount++;
+                                $favoriteCount = 0;
+                                    if(auth()->check() && !empty(auth()->user()->savemeal)) {
+                                        $savedIds = array_filter(explode('-', auth()->user()->savemeal));
+                                        $favoriteCount = App\Models\MealModel::whereIn('id', $savedIds)->count();
                                     }
-                                }
                             @endphp
                             @if($favoriteCount > 0)
                                 <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
