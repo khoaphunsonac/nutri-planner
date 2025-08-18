@@ -47,8 +47,8 @@
     </style>
 
         
-        <div class=" meal-header align-items-center text-center" style="background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg); ">
-            <div class="container mb-3" style="">
+        <div class=" meal-header align-items-center text-center" >
+            <div class="container mb-3" >
                 <h2 class="display-5 fw-bold text-white shadow-text">Kế hoạch món ăn mỗi bữa</h2>
                 <div class="scroll-down-icon">
                     <i class="fas fa-arrow-down text-white fa-3x animate-bounce"></i>
@@ -77,20 +77,19 @@
                 <!-- search -->
                 <div class="row g-2">
                     {{-- search --}}
-                    <div class="col-md-9">
-                        <input type="text" name="search" class="form-control @error('search') is-invalid @enderror" value="{{$search ?? old($search)}}" placeholder="Tìm món ăn, nguyên liệu hoặc chế độ ăn...">
-                        {{-- Hiển thị thông báo lỗi --}}
-                        @error('search')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                        @enderror
+                    <div class="col-md-10">
+                        <input type="text" name="search" class="form-control @error('search') is-invalid @enderror" value="{{$search ?? old($search)}}" placeholder="Tìm món ăn, nguyên liệu hoặc chế độ ăn..." onchange="this.form.submit()"> {{-- tự động submit khi thay đổi --}}
+                        
                     </div>
                     
                     {{-- Submit button --}}
-                    <div class="col-md-3 ">
-                        <button class="btn btn-primary w-100">Tìm</button>
+                    <div class="col-md-2 ">
+                       <button type="button" class="btn btn-secondary w-100"
+                                onclick="document.querySelector('input[name=search]').value = '';">
+                            Xóa
+                        </button>
                     </div>
+                    
                 </div>
                 <!-- fillter -->
                 <div class="row g-2 mt-2 align-items-center  my-4" >
@@ -107,18 +106,13 @@
                             title="1 Calorie (dinh dưỡng) = 1 Kcal =  1000 calories (khoa học)"
                         >
                             <option value="">-- Chọn khoảng Calories (Kcal) --</option>
-                            <option value="0-200" {{ request('calories_range') == '0-200' ? 'selected' : '' }}>0 - 200</option>
                             <option value="0-500" {{ request('calories_range') == '0-500' ? 'selected' : '' }}>0 - 500</option>
-                            <option value="200-400" {{ request('calories_range') == '200-400' ? 'selected' : '' }}>200 - 400</option>
-                            <option value="400-600" {{ request('calories_range') == '400-600' ? 'selected' : '' }}>400 - 600</option>
-                            <option value="600-800" {{ request('calories_range') == '600-800' ? 'selected' : '' }}>600 - 800</option>
                             <option value="500-1000" {{ request('calories_range') == '500-1000' ? 'selected' : '' }}>500 - 1000</option>
-                            <option value="800-1000" {{ request('calories_range') == '800-1000' ? 'selected' : '' }}>800 - 1000</option>
-                            <option value="1000-1500" {{ request('calories_range') == '1000-1500' ? 'selected' : '' }}>1000 - 1500</option>
-                            <option value="1000-1200" {{ request('calories_range') == '1000-1200' ? 'selected' : '' }}>1000 - 1200</option>
-                            <option value="1200-1500" {{ request('calories_range') == '1200-1500' ? 'selected' : '' }}>1200 - 1500</option>
-                            <option value="1500-1800" {{ request('calories_range') == '1500-1800' ? 'selected' : '' }}>1500 - 1800</option>
-                            <option value="1800-2100" {{ request('calories_range') == '1800-2100' ? 'selected' : '' }}>1800 - 2100</option>
+                            <option value="1000 - 1500" {{ request('calories_range') == '1000 - 1500' ? 'selected' : '' }}>1000 - 1500</option>
+                            <option value="1500 - 2000" {{ request('calories_range') == '1500 - 2000' ? 'selected' : '' }}>1500 - 2000</option>
+                            <option value="2000 - 2500" {{ request('calories_range') == '2000 - 2500' ? 'selected' : '' }}>2000 - 2500</option>
+                            <option value="2500 - 3000" {{ request('calories_range') == '2500 - 3000' ? 'selected' : '' }}>2500 - 3000</option>
+
                         </select>
                     </div >
                     
@@ -213,7 +207,10 @@
                                         
                                             
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
-                                                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                                                <div class="image-wrapper " style="position: relative; width: 100%; padding-top: 75%; /* 4:3 ratio */ overflow: hidden;">
+                                                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}" 
+                                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 80%; object-fit: cover;border-radius: 10px;">
+                                                </div>
                                                 
 
                                                 <div class="card-body ">
@@ -234,30 +231,24 @@
                                              </a>
                                             {{-- Nút yêu thích --}}
                                             <div style="position: absolute; top: 10px; right: 10px; display: inline;"  class="favorite-form">
+                                                
                                                 @php
-                                                    $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                                                    $user = auth()->user();
+                                                    $liked = false;
+                                                    if ($user && $user->savemeal) {
+                                                        $liked = in_array($meal->id, explode('-', $user->savemeal));
+                                                    }
                                                 @endphp
 
-                                                @if(auth()->check())
-                                                    {{-- Đã đăng nhập → dùng form POST để lưu --}}
                                                     
-                                                        <button type="button" 
-                                                            class="btn btn-favorite " 
-                                                            data-id="{{ $meal->id }}" 
-                                                            aria-label="Yêu thích"
-                                                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
-                                                            <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
-                                                        </button>
+                                                <button type="button" 
+                                                    class="btn btn-favorite " 
+                                                    data-id="{{ $meal->id }}" 
+                                                    aria-label="Yêu thích"
+                                                    style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
                                                     
-                                                @else
-                                                    {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
-                                                    <button class="btn btn-favorite" 
-                                                        type="button" 
-                                                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
-                                                        onclick="showLoginRegisterPopup()">
-                                                        <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
-                                                    </button>
-                                                @endif
+                                                    <i class="fas fa-heart" style="color:  {{$liked ? 'red' : 'rgba(255,255,255,0.7)'}} ; font-size: 20px;"></i>
+                                                </button>
                                                 
                                             </div>
                                         </div>
@@ -266,17 +257,7 @@
                             
                             
                         @endforeach
-                        {{-- Popup --}}
-                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
-                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
-                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
-                                <p>Hãy chọn một trong hai để tiếp tục</p>
-                                <div style="margin-top:15px;">
-                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
-                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
-                                </div>
-                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
-                            </div>
+                        
                         </div>
                     </div>
                 @else
@@ -317,61 +298,109 @@
     //     });
     // });
 
-    function showLoginRegisterPopup(){
-        document.getElementById('loginRegisterPopup').style.display = 'block';
-    }
-    function closeLoginRegisterPopup(){
-        document.getElementById('loginRegisterPopup').style.display = 'none';
-    }
+    // function showLoginRegisterPopup(){
+    //     document.getElementById('loginRegisterPopup').style.display = 'block';
+    // }
+    // function closeLoginRegisterPopup(){
+    //     document.getElementById('loginRegisterPopup').style.display = 'none';
+    // }
 
 
-document.querySelectorAll('.btn-favorite').forEach(btn => {
-    btn.addEventListener('click', async function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (!this.dataset.id) {
-            showLoginRegisterPopup();
-            return;
-        }
-
-        const mealId = this.dataset.id;
-        const icon = this.querySelector('i');
-        
-        try {
-            const response = await fetch(`/meals/favorite/${mealId}`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            const data = await response.json();
+    // document.querySelectorAll('.btn-favorite').forEach(btn => {
+    //     btn.addEventListener('click', async function(e) {
+    //         e.preventDefault();
+    //         e.stopPropagation();
             
-            if (data.status === 'success') {
-                // 1. Cập nhật icon tim
-                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
-                
-                // 2. Cập nhật số lượng trong giỏ hàng
-                const badge = document.getElementById('favoriteCountBadge');
-                if (data.favoriteCount > 0) {
-                    badge.textContent = data.favoriteCount;
-                    badge.style.display = 'inline-block';
-                } else {
-                    badge.style.display = 'none';
-                }
-                
-                // 3. Hiển thị thông báo
-                alert(data.message); // Có thể thay bằng toast đẹp hơn
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Lỗi hệ thống');
-        }
-    });
-});
+    //         const mealId = this.dataset.id;
+    //         const icon = this.querySelector('i');
+            
+    //         try {
+    //             const response = await fetch(`/meals/favorite/${mealId}`, {
+    //                 method: 'POST',
+    //                 headers: {
+    //                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
+    //                     'Accept': 'application/json',   //  ép Laravel trả JSON
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             });
+    //             // Nếu server redirect về login
+    //             if (response.redirected) {
+    //                 window.location.href = response.url;
+    //                 return;
+    //             }
 
-    
+    //             const data = await response.json();
+                
+    //             if (data.status === 'success') {
+    //                 if (data.status === 'success') {
+    //                     // 1. Cập nhật icon tim
+    //                     icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+                        
+    //                     // 2. Cập nhật số lượng trong giỏ hàng
+    //                     const badge = document.getElementById('favoriteCountBadge');
+    //                     if (data.favoriteCount > 0) {
+    //                         badge.textContent = data.favoriteCount;
+    //                         badge.style.display = 'inline-block';
+    //                     } else {
+    //                         badge.style.display = 'none';
+    //                     }
+                    
+    //                 }
+    //             } catch (error) {
+    //                 console.error('Error:', error);
+    //                 // fallback về login nếu lỗi
+    //                 window.location.href = "{{ route('login') }}";
+    //             }
+    //     });
+    // });
+
+    document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const mealId = this.dataset.id;
+            const icon = this.querySelector('i');
+            
+            try {
+                const response = await fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Nếu chưa đăng nhập → backend trả 401
+                if (response.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // 1. Đổi màu icon tim
+                    icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+
+                    // 2. Update badge số lượng
+                    const badge = document.getElementById('favoriteCountBadge');
+                    if (data.favoriteCount > 0) {
+                        badge.textContent = data.favoriteCount;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                
+                // fallback về login nếu có lỗi không mong muốn
+                window.location.href = "{{ route('login') }}";
+            }
+        });
+    });
+
+
 </script>
 @endsection
