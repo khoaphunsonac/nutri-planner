@@ -151,22 +151,75 @@
                     </div>
 
                     {{-- Phân trang (nếu là paginator) --}}
-                    @if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <small class="text-muted">
-                                Hiển thị {{ $relatedDishes->firstItem() }}–{{ $relatedDishes->lastItem() }} /
-                                {{ $relatedDishes->total() }}
-                            </small>
-                            {{ $relatedDishes->onEachSide(1)->links('pagination::bootstrap-5') }}
-                        </div>
                     
-                @else
-                    <div class="text-muted fst-italic">Chưa có món ăn nào được phân vào loại bữa ăn này.</div>
-                @endif
-            </div>
-        </div>
+@if (method_exists($relatedDishes, 'hasPages') && $relatedDishes->hasPages())
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-muted">
+            Hiển thị {{ $relatedDishes->firstItem() }}–{{ $relatedDishes->lastItem() }} / {{ $relatedDishes->total() }}
+        </small>
 
+        @php
+            $paginator = $relatedDishes;
+            $elements  = $paginator->elements();
+        @endphp
+
+        @if ($paginator->hasPages())
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm justify-content-center mb-0">
+                    {{-- Previous Page Link --}}
+                    @if ($paginator->onFirstPage())
+                        <li class="page-item disabled">
+                            <span class="page-link px-2"><i class="bi bi-chevron-left"></i></span>
+                        </li>
+                    @else
+                        <li class="page-item">
+                            <a class="page-link px-2" href="{{ $paginator->previousPageUrl() }}" rel="prev">
+                                <i class="bi bi-chevron-left"></i>
+                            </a>
+                        </li>
+                    @endif
+
+                    {{-- Pagination Elements --}}
+                    @foreach ($elements as $element)
+                        {{-- "Three Dots" Separator --}}
+                        @if (is_string($element))
+                            <li class="page-item disabled"><span class="page-link px-2">{{ $element }}</span></li>
+                        @endif
+
+                        {{-- Array Of Links --}}
+                        @if (is_array($element))
+                            @foreach ($element as $page => $url)
+                                @if ($page == $paginator->currentPage())
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link px-2">{{ $page }}</span>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link px-2" href="{{ $url }}">{{ $page }}</a>
+                                    </li>
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+
+                    {{-- Next Page Link --}}
+                    @if ($paginator->hasMorePages())
+                        <li class="page-item">
+                            <a class="page-link px-2" href="{{ $paginator->nextPageUrl() }}" rel="next">
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </li>
+                    @else
+                        <li class="page-item disabled">
+                            <span class="page-link px-2"><i class="bi bi-chevron-right"></i></span>
+                        </li>
+                    @endif
+                </ul>
+            </nav>
+        @endif
     </div>
+@endif
+
 
     {{-- polish nhỏ để đồng bộ và rõ ràng --}}
     <style>

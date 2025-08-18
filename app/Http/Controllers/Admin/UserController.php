@@ -3,169 +3,108 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminUserRequest;
-use App\Http\Requests\LockedUserRequest;
-use App\Models\AccountModel;
+use App\Models\MealTypeModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash; // mới thêm này
-use Illuminate\Support\Facades\View;
+use Illuminate\Validation\Rule;
 
-    class UserController extends Controller
+class MealTypeController extends Controller
 {
-    public $viewPath = 'admin.users.';
-    public $myController = 'users.';
-
-    public function __construct()
+    // GET /admin/meal_types
+    public function index(Request $request)
     {
-        View::share('shareUser', $this->myController);
+        $q    = $request->query('q');
+        $from = $request->query('from');
+        $to   = $request->query('to');
+
+        $items = MealTypeModel::query()
+            ->when($q,   fn ($qr) => $qr->where('name', 'like', "%{$q}%"))
+            ->when($from, fn ($qr) => $qr->whereDate('created_at', '>=', $from))
+            ->when($to,   fn ($qr) => $qr->whereDate('created_at', '<=', $to))
+            ->withCount('meals')              // dùng $it->meals_count trên list
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->appends($request->query());     // giữ query khi chuyển trang
+
+        return view('admin.meal_types.index', compact('items', 'q'));
     }
-    # sau mở rộng truyền về dashboard
-    
-    public function index(Request $request){ # ko bắt buộc phải có tham số trên route mới chạy đc
-        # chỉ lấy 7 user mỗi trang
-        $keyword = $request->get('keyword');    
 
-        $query = AccountModel::query(); # truy vấn
-        if($keyword){
-            $query->where("username", "like", "%{$keyword}%");
-        }   
-        $accounts = $query->withCount('feedback')->where('role', 'user')->paginate(7); 
-        
-        # hiển thị mỗi admin
-        $Admin = AccountModel::where('role', 'admin')->first(); 
-
-        # hiển thị tài khoản bị khoá
-        $lockedUsers = AccountModel::where("status", "inactive")->count();
-        return view($this->viewPath.'user', [
-            "accounts" => $accounts,
-            "Admin" => $Admin,
-
-            # hiển thị tk bị lock
-            "lockedUsers" => $lockedUsers
-        ]);
-    }
-    public function form(Request $request){
-        $id = $request->id;
-        $item = null;
-        $btn = '';
-        if($id){
-            $item = AccountModel::where("id", $id)->first();
-            $btn = $item ? 'lưu thay đổi' : '';
-        }
-        return view($this->viewPath.'detail', [
-            "id" => $id,
-            "item" => $item,
-            "btn" => $btn
+    // GET /admin/meal_types/create
+    public function create()
+    {
+        return view('admin.meal_types.form', [
+            'mode' => 'create',
+            'item' => null,
         ]);
     }
 
-    public function edit(Request $request){ # chỉnh sửa cho admin
-        $id = $request->id;
-        $adminAccount = AccountModel::where('role', 'admin')->first();
-        $btnUpdate = $adminAccount ? 'Cập nhật' : '';
-        return view($this->viewPath.'formAdmin', [
-            "id" => $id,
-            "adminAccount" => $adminAccount,
-            "btnUpdate" => $btnUpdate
-        ]);
-    }
-    public function update(AdminUserRequest $request){
-    // Tìm tài khoản admin
-    $admin = AccountModel::where('role', 'admin')->first();
-
-    // Nếu không tìm thấy
-    if (!$admin) {
-        return redirect()->back()->with('error', 'Không tìm thấy tài khoản quản trị');
-    }
-
-    // Biến này để kiểm tra có thay đổi gì không
-    $daThayDoi = false;
-
-    // So sánh và gán username
-    $usernameMoi = $request->username;
-    if ($admin->username !== $usernameMoi) {
-        $admin->username = $usernameMoi;
-        $daThayDoi = true;
-    }
-
-    // So sánh và gán email
-    $emailMoi = $request->email;
-    if ($admin->email !== $emailMoi) {
-        $admin->email = $emailMoi;
-        $daThayDoi = true;
-    }
-
-    // Nếu người dùng có nhập mật khẩu mới
-    if ($request->filled('password')) {
-        $matKhauMoi = $request->password;
-
-        // So sánh mật khẩu mới với mật khẩu cũ (đã mã hoá)
-        if (!Hash::check($matKhauMoi, $admin->password)) {
-            $admin->password = bcrypt($matKhauMoi);
-            $daThayDoi = true;
-            }
-        }
-
-        // Nếu có bất kỳ thay đổi nào thì mới lưu
-        if ($daThayDoi) {
-            $admin->save();
-            return redirect()->route('users.index')->with('success', 'Đã cập nhật tài khoản quản trị');
-        } else {
-            return redirect()->back()->with('info', 'Bạn chưa thay đổi thông tin nào');
-        }
-    }
-    public function delete(Request $request){
-        $id = $request->id;
-        if($id){
-            $account = AccountModel::where("id", $id)->first();
-            if($account){
-                $account->delete();
-            }else{
-                return redirect(route('users.index', ['id' => $id]));
-            }
-        }
-        return redirect(route('users.index', ['id' => $id]));
-    }
-    public function save(Request $request, $id = null){
-        # validate chung luôn
-        $request->validate([
-            "note" => "nullable|min:4|max:255"
-        ],[
-            "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
-            "note.min" => "Nhập ít nhất :min ký tự",
-            "note.max" => "Nhập tối đa :max ký tự",
+    // POST /admin/meal_types/store
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|max:100|unique:meal_type,name', // giữ đúng tên bảng bạn đang dùng
+        ], [
+            'name.required' => 'Không được bỏ trống',
+            'name.max'      => 'Không được vượt quá 100 ký tự',
+            'name.unique'   => 'Tên này đã tồn tại',
         ]);
 
-        $account = $id ? AccountModel::find($id) : new AccountModel();
+        MealTypeModel::create($data);
 
-        $account->username = $request->username;
-        $account->email = $request->email;
-        if ($request->password) {
-            $account->password = bcrypt($request->password);
-        }
-        $account->status = $request->status ?? 'inactive';
-        $account->note = $request->note; # lý do khoá
-        $account->save();
-
-        return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
-    }   
-
-    # mở khoá tk
-    public function status(Request $request){
-        $id = $request->id;
-        $accountStatus = '';
-        if($id){
-            $accountStatus = AccountModel::where('id', $id)->first();
-            if($accountStatus){
-                $accountStatus->status = $accountStatus->status === 'active' ? 'inactive' : 'active';
-                $accountStatus->save();
-            }
-        }
-        # redirect về trang trước
-        return redirect()->back()->with('success', 'Đã cập nhật trạng thái tài khoản');
+        return redirect()->route('admin.meal_types.index')
+            ->with('success', 'Tạo loại bữa ăn thành công.');
     }
 
+    // GET /admin/meal_types/{id}
+    public function show($id)
+    {
+        $item = MealTypeModel::withCount('meals')->findOrFail($id);
 
+        // Danh sách món thuộc loại này + phân trang
+        $relatedDishes = \App\Models\MealModel::where('meal_type_id', $item->id)
+            ->orderByDesc('id')
+            ->paginate(10);
 
-    
+        $relatedCount = $item->meals_count; // hoặc $relatedDishes->total()
+
+        return view('admin.meal_types.show', compact('item', 'relatedDishes', 'relatedCount'));
+    }
+
+    // GET /admin/meal_types/{id}/edit
+    public function edit($id)
+    {
+        $item = MealTypeModel::findOrFail($id);
+        return view('admin.meal_types.form', [
+            'mode' => 'edit',
+            'item' => $item,
+        ]);
+    }
+
+    // POST /admin/meal_types/{id}/update
+    public function update(Request $request, $id)
+    {
+        $item = MealTypeModel::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => 'required|max:100|unique:meal_type,name', // giữ nguyên rule theo bảng hiện tại
+        ], [
+            'name.required' => 'Không được bỏ trống',
+            'name.max'      => 'Không được vượt quá 100 ký tự',
+            'name.unique'   => 'Tên này đã tồn tại',
+        ]);
+
+        $item->update($data);
+
+        return redirect()->route('admin.meal_types.index')
+            ->with('success', 'Cập nhật thành công.');
+    }
+
+    // GET /admin/meal_types/{id}/delete
+    public function delete($id)
+    {
+        $item = MealTypeModel::findOrFail($id);
+        $item->delete();
+
+        return redirect()->route('admin.meal_types.index')
+            ->with('success', 'Đã xoá.');
+    }
 }
