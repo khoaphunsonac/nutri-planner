@@ -202,5 +202,5 @@ Route::view('/tdee', 'site.tdee')->name('tdee');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 //Feedback
-Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
-Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');
+Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create')->middleware('user');
+Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store')->middleware('user');
