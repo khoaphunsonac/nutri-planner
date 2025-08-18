@@ -29,8 +29,8 @@ use Illuminate\Support\Facades\View;
         if($keyword){
             $query->where("username", "like", "%{$keyword}%");
         }   
-        $accounts = $query->withCount('feedback')->where('role', 'user')->paginate(7); 
-        
+        $accounts = $query->withCount('feedback')->where('role', 'user')->orderBy('created_at', 'desc')->paginate(7); 
+
         # hiển thị mỗi admin
         $Admin = AccountModel::where('role', 'admin')->first(); 
 

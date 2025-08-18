@@ -115,18 +115,8 @@
     </table>
 
     {{-- bảng user --}}
-    <div class="table-responsive shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center bg-light px-4 py-3">
-        <h5 class="mb-0">Danh sách người dùng</h5>
-        <small class="text-muted" style="font-size: 20px">
-            @if ($accounts->count() > 0)
-                Tổng: <span style="color: blue">{{ $accounts->count() }}</span> tài khoản trang hiện tại<i></i>
-            @else
-                Không có người dùng nào
-            @endif
-        </small>
-    </div>
     <div class="card-body text-center">
+    <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle text-center mb-0">
             <thead>
                 <tr>
@@ -143,18 +133,13 @@
             </thead>
             <tbody class="table-light">
                 @forelse ($accounts as $item)
-                {{-- hiển thị riêng môi admin --}}
                     <tr style="cursor: pointer;" onclick="window.location='{{ route($shareUser . 'form', ['id' => $item->id]) }}'">
-                       <td class="fw-bold text-primary">
-                            <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
-                                style="width:50px">
+                        <td class="fw-bold text-primary">
+                            <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center" style="width:50px">
                                 {{ ($accounts->currentPage() - 1) * $accounts->perPage() + $loop->iteration }}
                             </span>
                         </td>
-
-                        <td class="text-center">
-                            <strong>{{ $item->username }}</strong>
-                        </td>
+                        <td class="text-center"><strong>{{ $item->username }}</strong></td>
                         <td>{{ $item->created_at->format('d/m/Y') }}</td>
                         <td>{{ $item->email }}</td>
                         <td>
@@ -171,17 +156,14 @@
                             {{ $item->status === 'active' ? 'Hoạt động' : 'Đã bị khoá' }}
                         </td>
                         @php
-                            $preview = $item->savemeal_preview; // mảng tối đa 3 meal
-                            $total = $item->savemeal_total;     // tổng số meal
+                            $preview = $item->savemeal_preview; 
+                            $total = $item->savemeal_total;
                         @endphp
-
                         <td>
                             @if ($total > 0)
                                 @foreach ($preview as $meal)
                                     <span class="badge bg-primary mb-1">{{ $meal->name }}</span>
                                 @endforeach
-
-                                {{-- Nếu nhiều hơn 3 thì thêm dấu ... --}}
                                 @if ($total > 3)
                                     <span class="badge bg-primary mb-1">...</span>
                                 @endif
@@ -190,16 +172,19 @@
                             @endif
                         </td>
                         <td class="text-center" onclick="event.stopPropagation();">
-                            <a href="{{ route($shareUser . 'form', ['id' => $item->id]) }}"
-                                class="btn btn-sm btn-warning rounded me-2" title="Chỉnh sửa">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a href="{{ route($shareUser . 'delete', ['id' => $item->id]) }}"
-                                class="btn btn-sm btn-outline-danger rounded" title="Xoá người dùng"
-                                onclick="return confirm('Xác nhận xoá?')">
-                                <i class="bi bi-trash3-fill"></i>
-                            </a>
+                            <div class="d-flex justify-content-center flex-wrap gap-2">
+                                <a href="{{ route($shareUser . 'form', ['id' => $item->id]) }}"
+                                    class="btn btn-sm btn-warning rounded" title="Chỉnh sửa">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a href="{{ route($shareUser . 'delete', ['id' => $item->id]) }}"
+                                    class="btn btn-sm btn-outline-danger rounded" title="Xoá người dùng"
+                                    onclick="return confirm('Xác nhận xoá?')">
+                                    <i class="bi bi-trash3-fill"></i>
+                                </a>
+                            </div>
                         </td>
+
                     </tr>
                 @empty
                     <tr>
@@ -208,12 +193,13 @@
                 @endforelse
             </tbody>
         </table>
+    </div>
 
-        {{-- Phân trang --}}
-        <div class="m-3">
-            {{ $accounts->links() }}
-        </div>
+    {{-- Phân trang --}}
+    <div class="m-3">
+        {{ $accounts->links() }}
     </div>
 </div>
+
 
 @endsection
