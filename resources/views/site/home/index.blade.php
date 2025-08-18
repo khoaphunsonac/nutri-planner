@@ -102,6 +102,11 @@
                         @php
                             $image = $latest->image_url ?? '';
                             $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                            $user = auth()->user();
+                            $liked = false;
+                            if ($user && $user->savemeal) {
+                                $liked = in_array($latest->id, explode('-', $user->savemeal));
+                            }
                         @endphp
                     
                 
@@ -124,7 +129,17 @@
                           
                         </div>
                     </a>
+                    {{-- Nút yêu thích --}}
+                    <div style="position: absolute; top: 5px; right: 5px; display: inline;"  class="favorite-form">
+                        @if(auth()->check())
+                            <button type="button" class="btn btn-favorite position-absolute top-0 end-0 m-2"
+                                    data-id="{{ $latest->id }}" style="background: rgba(0,0,0,0.1); border:none; cursor:pointer;">
+                                <i class="fas fa-heart" style="color: {{ $liked?'red':'rgba(255,255,255,0.7)' }}; font-size:30px;"></i>
+                            </button>
+                        @endif
+                    </div>
                 </div>
+                
             </div>
           @endforeach
       </div>
@@ -175,5 +190,52 @@ function showSlide() {
 }
 
 setInterval(showSlide, 3000); // 3 giây đổi 1 ảnh
+
+// like
+document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', async function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        const mealId = this.dataset.id;
+        const icon = this.querySelector('i');
+
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(response.status === 401){
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
+
+            const data = await response.json();
+
+            if(data.status === 'success'){
+                // 1. Thay đổi màu icon tim
+                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+
+                // 2. Update badge giỏ hàng (layout)
+                const badge = document.getElementById('favoriteCountBadge');
+                if(data.favoriteCount > 0){
+                    badge.textContent = data.favoriteCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+        } catch(err){
+            window.location.href = "{{ route('login') }}";
+        }
+    });
+});
+
 </script>
 @endsection

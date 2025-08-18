@@ -113,7 +113,7 @@ class MealsController extends BaseController
             $searchConditions[] = 'Calories (đơn vị Kcal) từ ' . $caloriesMin. ' đến ' . $caloriesMax;
         }
         // lay du lieu phan trang
-        $meals = $meals->paginate(9,'*','meals_page');
+        $meals = $meals->paginate(12,'*','meals_page');
 
         return view($this->pathViewController.'index',[
             'meals'=>$meals,
@@ -198,19 +198,21 @@ class MealsController extends BaseController
         }
         // nếu k có thì thêm vào 
         if(!$found){
-            // $savedMeals[] = $id;
-            array_unshift($savedMeals, $id); // Thêm vào đầu mảng
+            $savedMeals[] = $id;
+           
         }
 
         // Ghép mảng lại thành chuỗi 1-2-3
         $account->savemeal = implode('-', $savedMeals);
         $account->save();
+        // Lấy số lượng thực tế các meal còn tồn tại
+        $favoriteCount = MealModel::whereIn('id', $savedMeals)->count();
 
         return response()->json([
             'status'  => 'success',
             'saved'   => !$found, // true nếu vừa thêm, false nếu vừa gỡ
-            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới 'mealId' => $id // Thêm ID món ăn để frontend xử lý
-            'mealId' => $id
+            'favoriteCount' => $favoriteCount, // Đảm bảo chỉ tính meal còn tồn tại
+            'mealId' => $id,
         ]);
 
         

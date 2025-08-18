@@ -85,7 +85,9 @@
                     {{-- Submit button --}}
                     <div class="col-md-2 ">
                        <button type="button" class="btn btn-secondary w-100"
-                                onclick="document.querySelector('input[name=search]').value = '';">
+                                onclick="const form = this.closest('form'); 
+                            form.querySelectorAll('input, select').forEach(el => el.value=''); 
+                            form.submit();">
                             Xóa
                         </button>
                     </div>
@@ -223,7 +225,7 @@
                                                             <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
                                                             <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
                                                         </div>
-                                                        </div>
+                                                    </div>
                                                     {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                                             
                                                 </div>
@@ -289,70 +291,6 @@
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
     });
-
-    // document.addEventListener('DOMContentLoaded', function () {
-    // document.querySelectorAll('.favorite-form').forEach(function (form) {
-    //         form.addEventListener('click', function (event) {
-    //             event.stopPropagation(); // Ngăn click lan ra ngoài
-    //         });
-    //     });
-    // });
-
-    // function showLoginRegisterPopup(){
-    //     document.getElementById('loginRegisterPopup').style.display = 'block';
-    // }
-    // function closeLoginRegisterPopup(){
-    //     document.getElementById('loginRegisterPopup').style.display = 'none';
-    // }
-
-
-    // document.querySelectorAll('.btn-favorite').forEach(btn => {
-    //     btn.addEventListener('click', async function(e) {
-    //         e.preventDefault();
-    //         e.stopPropagation();
-            
-    //         const mealId = this.dataset.id;
-    //         const icon = this.querySelector('i');
-            
-    //         try {
-    //             const response = await fetch(`/meals/favorite/${mealId}`, {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
-    //                     'Accept': 'application/json',   //  ép Laravel trả JSON
-    //                     'Content-Type': 'application/json'
-    //                 }
-    //             });
-    //             // Nếu server redirect về login
-    //             if (response.redirected) {
-    //                 window.location.href = response.url;
-    //                 return;
-    //             }
-
-    //             const data = await response.json();
-                
-    //             if (data.status === 'success') {
-    //                 if (data.status === 'success') {
-    //                     // 1. Cập nhật icon tim
-    //                     icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
-                        
-    //                     // 2. Cập nhật số lượng trong giỏ hàng
-    //                     const badge = document.getElementById('favoriteCountBadge');
-    //                     if (data.favoriteCount > 0) {
-    //                         badge.textContent = data.favoriteCount;
-    //                         badge.style.display = 'inline-block';
-    //                     } else {
-    //                         badge.style.display = 'none';
-    //                     }
-                    
-    //                 }
-    //             } catch (error) {
-    //                 console.error('Error:', error);
-    //                 // fallback về login nếu lỗi
-    //                 window.location.href = "{{ route('login') }}";
-    //             }
-    //     });
-    // });
 
     document.querySelectorAll('.btn-favorite').forEach(btn => {
         btn.addEventListener('click', async function(e) {

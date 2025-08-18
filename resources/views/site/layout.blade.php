@@ -90,7 +90,7 @@
                     </a>
                 </li>
                 </ul>
-                <div class="right-menu">
+                <div class="right-menu d-flex align-items-center">
                     @if (Auth::check())
                         <div class="user-dropdown">
                             <span class="user-name-highlight">Xin chào {{ Auth::user()->username }}</span>
@@ -114,10 +114,10 @@
                     @endif
 
                     {{-- Nút giỏ hàng --}}
-                    <div class="cart-icon" style="cursor: pointer;">
+                    <div class="cart-icon " style="cursor: pointer;">
                         <a href="{{ route('meal.showsavemeals') }}" >
                             <!-- <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i> -->
-                            <img src="{{ asset('assets/admin/img/meal/cooking.png') }}" class="cart" alt="Logo" > 
+                            <img src="{{ asset('assets/admin/img/meal/cooking.png') }}" class="cart " alt="Logo" > 
                             
                              @php
                                 $favoriteCount = 0;
@@ -128,7 +128,7 @@
                                     }
                             @endphp
                             @if($favoriteCount > 0)
-                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
+                                <span id="favoriteCountBadge" class="ms-1 badge bg-danger ">{{ $favoriteCount }}</span>
                             @else
                                 <span id="favoriteCountBadge" class="ms-1 badge bg-danger" style="display:none;"></span>
                             @endif

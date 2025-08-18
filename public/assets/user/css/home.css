@@ -486,12 +486,18 @@ body {
 }
 
  
+.right-menu {
+    display: flex;
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 15px;
+}
 
 .cart-icon {
     position: relative; 
-    display: inline-block;
-    width: 40px;   /* kích thước icon */
-    height: 40px;
+    display: flex;          /* Thay đổi từ inline-block sang flex */
+    align-items: center;
+    justify-content: center;
+    width: 50px;   /* kích thước icon */
     cursor: pointer;
 }
 
@@ -499,15 +505,34 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    vertical-align: middle; /* Quan trọng */
+    margin-top: -10px; /* Điều chỉnh thủ công nếu cần */
+    margin-left: -5px; /* Điều chỉnh thủ công nếu cần */
 }
 
 .cart-icon .badge {
     position: absolute;
-    top: -5px;     /* điều chỉnh lên/xuống */
-    right: -5px;   /* điều chỉnh sang trái/phải */
-    font-size: 0.7rem;
-    padding: 3px 6px;
+    top: -2px;     /* điều chỉnh lên/xuống */
+    right: 15px;   /* điều chỉnh sang trái/phải */
+    font-size: 1.2rem;
     border-radius: 50%;
 }
+
+.nutrition-summary span {
+    display: inline-block; /* Giữ các phần tử trên cùng một hàng */
+    white-space: nowrap;    /* Ngăn nội dung xuống dòng */
+}
+
+.meal-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* nutrition-info luôn ở dưới */
+    min-height: 180px; /* chiều cao tối thiểu của card-body, tùy chỉnh */
+}
+.meal-card .card-text {
+    flex-grow: 1; /* chiếm khoảng trống còn lại */
+    min-height: 40px; /* giữ khung description khi text ngắn */
+}
+
 
 

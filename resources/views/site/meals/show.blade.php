@@ -153,9 +153,10 @@
 
                 <div class="nutrition-summary mb-4">
                     <h4>Thông tin dinh dưỡng (ước tính):</h4>
-                    <div class="total-nutrition mb-3">
-                        <strong class="text-primary">{{ $displayKcal }} kcal </strong> | P: {{ $displayPro }}g | C: {{ $displayCarbs }}g | F: {{ $displayFat }}g
-                    </div>
+                     <span>
+                       <strong class="text-primary total-nutrition mb-3">{{ $displayKcal }} kcal </strong> | P: {{ $displayPro }}g | C: {{ $displayCarbs }}g | F: {{ $displayFat }}g
+                     
+                    </span>   
                     
                 </div>
             </div>
@@ -194,12 +195,12 @@
         @endforeach
         {{-- Dòng tổng cộng --}}
         <tr class="table-warning">
-            <td><strong>TỔNG CỘNG </strong>(làm tròn số)</td>
+            <td><strong>TỔNG CỘNG </strong>(tròn số)</td>
             <td colspan="2">-</td>
             <td><strong>{{ $displayPro }}</strong></td>
             <td><strong>{{ $displayCarbs }}</strong></td>
             <td><strong>{{ $displayFat }}</strong></td>
-            <td><strong>{{ $displayKcal }}</strong></td>
+            <td><strong>{{ round($totalKcal) }}</strong></td>
         </tr>
     </tbody>
         </table>
@@ -342,50 +343,50 @@
 
 
  document.querySelectorAll('.btn-favorite').forEach(btn => {
-        btn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const mealId = this.dataset.id;
-            const icon = this.querySelector('i');
-            
-            try {
-                const response = await fetch(`/meals/favorite/${mealId}`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                // Nếu chưa đăng nhập → backend trả 401
-                if (response.status === 401) {
-                    window.location.href = "{{ route('login') }}";
-                    return;
+    btn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const mealId = this.dataset.id;
+        const icon = this.querySelector('i');
+        
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
+            });
 
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    // 1. Đổi màu icon tim
-                    icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
-
-                    // 2. Update badge số lượng
-                    const badge = document.getElementById('favoriteCountBadge');
-                    if (data.favoriteCount > 0) {
-                        badge.textContent = data.favoriteCount;
-                        badge.style.display = 'inline-block';
-                    } else {
-                        badge.style.display = 'none';
-                    }
-                }
-            } catch (error) {
-                
-                // fallback về login nếu có lỗi không mong muốn
+            // Nếu chưa đăng nhập → backend trả 401
+            if (response.status === 401) {
                 window.location.href = "{{ route('login') }}";
+                return;
             }
-        });
+
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                // 1. Đổi màu icon tim
+                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+
+                // 2. Update badge số lượng
+                const badge = document.getElementById('favoriteCountBadge');
+                if (data.favoriteCount > 0) {
+                    badge.textContent = data.favoriteCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        } catch (error) {
+            
+            // fallback về login nếu có lỗi không mong muốn
+            window.location.href = "{{ route('login') }}";
+        }
     });
+});
 </script>
 @endsection
