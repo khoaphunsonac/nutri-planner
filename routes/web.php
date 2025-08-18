@@ -69,6 +69,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('users')->as('users.')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('index');
         Route::get('/form/{id?}', [$controller, 'form'])->name('form');
+        Route::get('/detail/{id?}', [$controller, 'detail'])->name('detail');
         Route::get('/edit/{id?}', [$controller, 'edit'])->name('edit'); # sửa tk admin
         Route::post('/edit/{id?}', [$controller, 'update'])->name('update'); # bấm lưu
         Route::get('/delete/{id?}', [$controller, 'delete'])->name('delete');
