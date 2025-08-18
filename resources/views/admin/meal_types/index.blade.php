@@ -1,6 +1,6 @@
 @extends('admin.layout')
 @section('content')
-    <div class="container py-4">
+    <div class="container-fluid py-4">
 
         {{-- Breadcrumb --}}
         <nav aria-label="breadcrumb" class="mb-3">
@@ -77,7 +77,7 @@
             <form method="get" class="card border-0 shadow-sm rounded-4 mb-3" role="search" aria-label="Bộ lọc">
                 <div class="card-body">
                     <div class="row g-2 align-items-end">
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-10">
                             <label class="form-label mb-1">Tìm nội dung</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-0">
@@ -88,18 +88,10 @@
                             </div>
                         </div>
 
-                        <div class="col-6 col-md-3">
-                            <label class="form-label mb-1">Ngày tạo từ</label>
-                            <input type="date" name="from" class="form-control" value="{{ request('from') }}">
-                        </div>
-
-                        <div class="col-6 col-md-3">
-                            <label class="form-label mb-1">đến</label>
-                            <input type="date" name="to" class="form-control" value="{{ request('to') }}">
-                        </div>
+                       
 
                         {{-- Actions: Lọc giữ vị trí cũ, Reset ở dưới --}}
-                        <div class="col-12 col-md-1 d-flex align-items-end">
+                        <div class="col-12 col-md-2 d-flex align-items-end">
                             <div class="w-100 d-flex flex-column gap-2">
                                 <button class="btn btn-info text-white w-100" type="submit">
                                     <i class="bi bi-funnel me-1"></i> Lọc

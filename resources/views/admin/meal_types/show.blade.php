@@ -62,14 +62,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-3">
-                <div class="card shadow-sm rounded-4 h-100">
-                    <div class="card-body py-3">
-                        <div class="text-muted small">Tổng món được gán</div>
-                        <div class="fs-5 fw-semibold">{{ $relatedCount }}</div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         {{-- 3) Thông tin chi tiết (key–value rõ ràng) --}}
