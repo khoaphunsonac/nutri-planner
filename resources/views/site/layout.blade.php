@@ -117,17 +117,15 @@
                     <div class="cart-icon" style="cursor: pointer;">
                         <a href="{{ route('meal.showsavemeals') }}" >
                             <!-- <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i> -->
-                            <i class="fas fa-shopping-cart" style="font-size: 1.2rem;"></i>
+                            <img src="{{ asset('assets/admin/img/meal/cooking.png') }}" class="cart" alt="Logo" > 
                             
                              @php
                                 $favoriteCount = 0;
-                                if(auth()->check() && !empty(auth()->user()->savemeal)) {
-                                    $favorites = explode('-', auth()->user()->savemeal);
-                                    // Đếm số lượng ID hợp lệ (không rỗng)
-                                    foreach($favorites as $id) {
-                                        if(!empty($id)) $favoriteCount++;
+                                $favoriteCount = 0;
+                                    if(auth()->check() && !empty(auth()->user()->savemeal)) {
+                                        $savedIds = array_filter(explode('-', auth()->user()->savemeal));
+                                        $favoriteCount = App\Models\MealModel::whereIn('id', $savedIds)->count();
                                     }
-                                }
                             @endphp
                             @if($favoriteCount > 0)
                                 <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>

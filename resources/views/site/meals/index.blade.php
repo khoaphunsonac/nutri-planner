@@ -194,7 +194,7 @@
                                     
                                 @endphp
                             
-                                <div class="col-md-4 ">
+                                <div class="col-md-3 ">
                                     
                                         <div class="card meal-card shadow-sm h-100" data-url="{{ route('meal.show', $meal->id) }}" >
                                                 @php
@@ -209,7 +209,7 @@
                                             <a href="{{ route('meal.show', $meal->id) }}" class="text-decoration-none text-dark">
                                                 <div class="image-wrapper " style="position: relative; width: 100%; padding-top: 75%; /* 4:3 ratio */ overflow: hidden;">
                                                     <img src="{{ $imageURL }}" alt="{{ $meal->name }}" 
-                                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;border-radius: 10px;">
+                                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                                                 </div>
                                                 
 
