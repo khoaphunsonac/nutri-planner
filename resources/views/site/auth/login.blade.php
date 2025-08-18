@@ -38,7 +38,7 @@
 
                 <div class="d-flex justify-content-between mb-3">
                     <div><a href="{{ route('showRegister') }}" class="text-decoration-none text-secondary">Đăng ký</a></div>
-                    <div><a href="" class="text-decoration-none text-danger">Quên mật khẩu</a></div>
+                    <div><a href="{{route('password.request')}}" class="text-decoration-none text-danger">Quên mật khẩu</a></div>
                 </div>
 
                 <button type="submit" 

@@ -1,9 +1,8 @@
 @extends('site.layout')
 
-@section('title', 'liên hệ')
 
 {{-- Optional: style nhẹ nhàng cho trang liên hệ --}}
-@push('styles')
+
 <style>
     .contact-hero {
         background: radial-gradient(1000px 400px at 10% 0%, rgba(13,110,253,.12), transparent),
@@ -27,10 +26,9 @@
         color: #6c757d;
     }
 </style>
-@endpush
 
 @section('content')
-<div class="container py-5">
+<div class="container-fluid py-5">
 
     {{-- Hero --}}
     <div class="contacts-hero p-4 p-md-5 mb-4">
@@ -71,12 +69,12 @@
             <div class="card card-glass shadow-lg border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
 
-                    <form action="{{ route('contacts.store') }}" method="POST" novalidate>
+                    <form action="{{ route('site.store') }}" method="POST" novalidate>
                         @csrf
 
                         {{-- Họ tên --}}
                         <div class="mb-3">
-                            <label for="contacts-name" class="form-label contact-label">Họ tên</label>
+                            <label for="contact-name" class="form-label contact-label">Họ tên</label>
                             <div class="input-group">
                                 <input
                                     id="contact-name"
@@ -88,12 +86,12 @@
                                     autocomplete="name">
                                 @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             </div>
-                            <div class="tiny-muted mt-1">Cho cái tên đi</div>
+                            <div class="tiny-muted mt-1">Nhập họ và tên của bạn</div>
                         </div>
 
                         {{-- Email --}}
                         <div class="mb-3">
-                            <label for="contact-email" class="form-label contactslabel">Email</label>
+                            <label for="contact-email" class="form-label contact-label">Email</label>
                             <div class="input-group">
                                 <input
                                     id="contact-email"
@@ -111,7 +109,7 @@
 
                         {{-- Nội dung --}}
                         <div class="mb-3">
-                            <label for="contacts-message" class="form-label contact-label">Nội dung</label>
+                            <label for="contact-message" class="form-label contact-label">Nội dung</label>
                             <div class="position-relative">
                                 <textarea
                                     id="contact-message"
@@ -132,25 +130,18 @@
                             <button type="submit" class="btn btn-primary px-4">
                                 <i class="bi bi-send me-2"></i>Gửi
                             </button>
-                            <a href="#" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left me-2"></i>Về trang chủ
-                            </a>
+                           
                         </div>
-                    </form>
+                  </form>
 
                 </div>
             </div>
 
             {{-- Info box nhỏ (tùy chọn) --}}
-            <div class="text-center tiny-muted mt-3">
-                <i class="bi bi-shield-check me-1"></i>Thông tin của bạn được bảo mật theo chính sách riêng tư.
-            </div>
+          
         </div>
     </div>
 </div>
-@endsection
-
-@push('scripts')
 <script>
     (function () {
         const textarea = document.getElementById('contact-message');
@@ -162,4 +153,7 @@
         }
     })();
 </script>
-@endpush
+
+@endsection
+
+
