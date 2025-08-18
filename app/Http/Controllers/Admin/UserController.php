@@ -29,8 +29,8 @@ use Illuminate\Support\Facades\View;
         if($keyword){
             $query->where("username", "like", "%{$keyword}%");
         }   
-        $accounts = $query->withCount('feedback')->where('role', 'user')->paginate(7); 
-        
+        $accounts = $query->withCount('feedback')->where('role', 'user')->orderBy('created_at', 'desc')->paginate(7); 
+
         # hiển thị mỗi admin
         $Admin = AccountModel::where('role', 'admin')->first(); 
 
@@ -55,10 +55,19 @@ use Illuminate\Support\Facades\View;
         return view($this->viewPath.'detail', [
             "id" => $id,
             "item" => $item,
-            "btn" => $btn
+            "btn" => $btn,
         ]);
     }
+    public function detail(Request $request){
+        $id = $request->id;
 
+        $users = AccountModel::find($id);
+        // dd($meal);   
+        return view($this->viewPath.'detailMeal', [
+            'id' => $id,
+            'users' => $users,
+        ]);
+    }
     public function edit(Request $request){ # chỉnh sửa cho admin
         $id = $request->id;
         $adminAccount = AccountModel::where('role', 'admin')->first();
@@ -126,29 +135,60 @@ use Illuminate\Support\Facades\View;
         }
         return redirect(route('users.index', ['id' => $id]));
     }
-    public function save(Request $request, $id = null){
-        # validate chung luôn
-        $request->validate([
-            "note" => "nullable|min:4|max:255"
-        ],[
-            "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
-            "note.min" => "Nhập ít nhất :min ký tự",
-            "note.max" => "Nhập tối đa :max ký tự",
-        ]);
+    // public function save(Request $request, $id = null){
+    //     # validate chung luôn
+    //     $request->validate([
+    //         "note" => "nullable|min:4|max:255"
+    //     ],[
+    //         "note.nullable" => "Hãy ghi lý do khoá tài khoản này", # có thể có ghi chú hoặc không
+    //         "note.min" => "Nhập ít nhất :min ký tự",
+    //         "note.max" => "Nhập tối đa :max ký tự",
+    //     ]);
 
-        $account = $id ? AccountModel::find($id) : new AccountModel();
+    //     $account = $id ? AccountModel::find($id) : new AccountModel();
 
-        $account->username = $request->username;
-        $account->email = $request->email;
-        if ($request->password) {
-            $account->password = bcrypt($request->password);
-        }
-        $account->status = $request->status ?? 'inactive';
-        $account->note = $request->note; # lý do khoá
-        $account->save();
+    //     $account->username = $request->username;
+    //     $account->email = $request->email;
+    //     if ($request->password) {
+    //         $account->password = bcrypt($request->password);
+    //     }
+    //     $account->status = $request->status ?? 'inactive';
+    //     $account->note = $request->note; # lý do khoá
+    //     $account->save();
 
-        return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
-    }   
+    //     return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
+    // }   
+    public function save(Request $request, $id = null)
+{
+    // Validate lý do khoá nếu có
+    $request->validate([
+        "note" => "nullable|min:4|max:255"
+    ],[
+        "note.nullable" => "Hãy ghi lý do khoá tài khoản này",
+        "note.min" => "Nhập ít nhất :min ký tự",
+        "note.max" => "Nhập tối đa :max ký tự",
+    ]);
+
+    // Lấy account nếu $id có, nếu không thì tạo mới
+    $account = $id ? AccountModel::find($id) : new AccountModel();
+
+    // Cập nhật thông tin cơ bản (username/email)
+    $account->username = $request->username;
+    $account->email = $request->email;
+
+    // Chỉ cập nhật mật khẩu nếu người dùng nhập mới
+    if ($request->filled('password')) {
+        $account->password = bcrypt($request->password);
+    }
+
+    // Cập nhật trạng thái và note
+    $account->status = $request->status ?? 'inactive';
+    $account->note = $request->note;
+
+    $account->save();
+
+    return redirect()->route('users.index')->with('success', 'Đã lưu tài khoản');
+}
 
     # mở khoá tk
     public function status(Request $request){
@@ -164,8 +204,4 @@ use Illuminate\Support\Facades\View;
         # redirect về trang trước
         return redirect()->back()->with('success', 'Đã cập nhật trạng thái tài khoản');
     }
-
-
-
-    
 }

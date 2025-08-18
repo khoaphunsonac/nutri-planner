@@ -28,7 +28,9 @@ class AdminUserRequest extends FormRequest
                 'email',
                 'min:10',
                 'max:50',
-                'regex:/^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$/'
+                'regex:/^(?=.*[a-zA-Z])[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|vn)$/',
+                // kiểm tra trùng mail
+                Rule::unique('accounts', 'email')->ignore($this->id)
             ],
 
              'password' => [
@@ -53,7 +55,9 @@ class AdminUserRequest extends FormRequest
             'email.email' => 'Email không hợp lệ',
             'email.min' => 'Email phải có ít nhất :min ký tự',
             'email.max' => 'Email không được vượt quá :max ký tự',
-            'email.regex' => 'Email chứa ít nhất 1 chữ cái, 1 số và kết thúc bằng .com',
+            'email.regex' => 'Email phải chứa ít nhất 1 chữ cái và kết thúc bằng .com hoặc .vn',
+            // ---- báo trùng mail -----
+            'email.unique' => 'Email này đã tồn tại trong hệ thống',
 
             # password
             'password.min' => 'Mật khẩu phải có ít nhất :min ký tự',

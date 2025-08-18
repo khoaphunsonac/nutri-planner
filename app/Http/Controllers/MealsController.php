@@ -102,10 +102,10 @@ class MealsController extends BaseController
             [$caloriesMin,$caloriesMax] = explode('-', $caloriesRange) + [null,null];
 
             if($caloriesMin !== null){
-                $meals = $meals->having('total_calories','>=',(int)$caloriesMin);
+                $meals = $meals->havingRaw('COALESCE(total_calories, 0) >= ?',[(int)$caloriesMin]);
             }
             if($caloriesMax !== null){
-                $meals = $meals->having('total_calories','<=',(int)$caloriesMax);
+                $meals = $meals->havingRaw('COALESCE(total_calories, 0) <= ?',[(int)$caloriesMax]);
                 
             }
             $searchConditions[] = 'Calories (đơn vị Kcal) từ ' . $caloriesMin. ' đến ' . $caloriesMax;
@@ -152,10 +152,14 @@ class MealsController extends BaseController
     }
 
     public function favorite($id){
-        //lấy user hiện tại
-        $account = AccountModel::findOrFail(auth()->id());
-
+        // ktra dn
+        $user = auth()->user();
         
+        // lay tai khoan
+        $account = AccountModel::find($user->id); // lấy user đang đăng nhập
+        if (!$account) {
+            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
+        }
 
         //lấy danh sách hiện tại từ cột favorite
         $saveMeals = $account->savemeal ? explode('-',$account->savemeal) : [];
@@ -171,49 +175,42 @@ class MealsController extends BaseController
         }
         //nếu chưa có thì thêm vào
         if(!$found){
-           $saveMeals[] = $id;
+            $savedMeals[] = $id;
         }
 
         // chuyen mảng thành chuỗi va lưu lại
         $account->savemeal = implode('-',$saveMeals);
         $account->save();
 
-
-        // //lấy meal
-        // $meal =  MealModel::findOrFail($id);
-        // //lấy giá trị hiện tại từ cột savemeal(chuyển thành mảng)
-        // $saveMeals = $meal->savemeal ? explode('-',$meal->savemeal) : [];
-
-        // ktra id đã có chưa
-        // $found = false;
-        // foreach($saveMeals as $saveId){
-        //     if($saveId == $id){
-        //         $found = true;
-        //         break;
-        //     }
-        // }
-        // if($found){
-        //    // nếu id tồn tại thì xóa bằng cách tạo mảng mới k chứa $id
-        //    $newMeals = [];
-        //    foreach($saveMeals as $saveId){
-        //     if($saveId != $id){
-        //         $newMeals[] = $saveId;
-        //     }
-        //    }
-        //    $saveMeals = $newMeals;
-        // }else{
-        //     //chưa có thì thêm vào
-        //     $saveMeals[] = $id;
-        // }
-
-        // // chuyen mảng thành chuỗi
-        // $meal->savemeal = implode('-',$saveMeals);
-        // $meal->save();
-
-        return back()->with('success', 'Cập nhật món yêu thích thành công');
-
-        
+        return response()->json([
+            'status'  => 'success',
+            'saved'   => !$found, // true nếu vừa thêm, false nếu vừa gỡ
+            'message' => $found ? 'Đã bỏ thích món ăn' : 'Đã thích món ăn',
+            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới
+        ]);
+    
+    }
 
 
+    public function showsavemeals(){
+        $account = auth()->user(); // lấy user đang đăng nhập
+        if (!$account) {
+            return redirect()->route('home')->with('error', 'Tài khoản không tồn tại');
+        }
+        // tách chuỗi thành mảng
+        $savedMealIds = $account->savemeal ? explode('-', $account->savemeal) : [];
+
+        // lấy dữ liệu các meal theo ID
+        $meals = !empty($savedMealIds) 
+        ? MealModel::whereIn('id', $savedMealIds)->get() 
+        : [];
+
+        return view($this->pathViewController.'showsavemeals',[
+                'meals'=>$meals,
+                'favoriteCount' => count($savedMealIds),
+                "status"=>"success",
+                "saved"=>true, // hoặc false nếu bỏ like,
+                "message"=>"Thông báo thành công"
+            ]); 
     }
 }

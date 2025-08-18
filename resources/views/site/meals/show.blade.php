@@ -34,11 +34,35 @@
                     $image = $meal->image_url ?? '';
                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                 @endphp
-                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                 <div class="image-wrapper " style="position: relative; width: 100%; padding-top: 75%; /* 4:3 ratio */ overflow: hidden;">
+                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 80%; object-fit: cover;border-radius: 10px;">
+                </div>
             </div>
             
             {{-- Thông tin chính --}}
-            <div class="col-md-7">
+            <div class="col-md-7"> 
+                 {{-- Nút yêu thích --}}
+                <div style="position: absolute; top: 10px; right: 10px;">
+                     @php
+                        $user = auth()->user();
+                        $liked = false;
+                        if ($user && $user->savemeal) {
+                            $liked = in_array($meal->id, explode('-', $user->savemeal));
+                        }
+                    @endphp
+
+                        
+                    <button type="button" 
+                        class="btn btn-favorite " 
+                        data-id="{{ $meal->id }}" 
+                        aria-label="Yêu thích"
+                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        
+                        <i class="fas fa-heart" style="color:  {{$liked ? 'red' : 'rgba(255,255,255,0.7)'}} ; font-size: 20px;"></i>
+                    </button>
+                </div>
+                
                 <h2>{{ $meal->name }}</h2>
                 <p class="text-muted">{{ $meal->description }}</p>
 
@@ -191,4 +215,58 @@
         @endforeach
     </div>
 </div>
+
+
+<script>
+    
+
+
+
+ document.querySelectorAll('.btn-favorite').forEach(btn => {
+        btn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const mealId = this.dataset.id;
+            const icon = this.querySelector('i');
+            
+            try {
+                const response = await fetch(`/meals/favorite/${mealId}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                // Nếu chưa đăng nhập → backend trả 401
+                if (response.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    // 1. Đổi màu icon tim
+                    icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+
+                    // 2. Update badge số lượng
+                    const badge = document.getElementById('favoriteCountBadge');
+                    if (data.favoriteCount > 0) {
+                        badge.textContent = data.favoriteCount;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                
+                // fallback về login nếu có lỗi không mong muốn
+                window.location.href = "{{ route('login') }}";
+            }
+        });
+    });
+</script>
 @endsection
