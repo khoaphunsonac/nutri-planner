@@ -232,11 +232,11 @@ class MealsController extends BaseController
         : [];
 
         return view($this->pathViewController.'showsavemeals',[
-                'meals'=>$meals,
-                'favoriteCount' => count($savedMealIds),
-                "status"=>"success",
-                "saved"=>true, // hoặc false nếu bỏ like,
-                "message"=>"Thông báo thành công",
-            ]); 
+            'meals'=>$meals,
+            'favoriteCount' => count($savedMealIds),
+            "status"=>"success",
+            "saved"=>true, // hoặc false nếu bỏ like,
+            "message"=>"Thông báo thành công",
+        ]); 
     }
 }

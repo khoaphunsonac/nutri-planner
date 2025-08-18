@@ -116,7 +116,8 @@
                     {{-- Nút giỏ hàng --}}
                     <div class="cart-icon" style="cursor: pointer;">
                         <a href="{{ route('meal.showsavemeals') }}" >
-                            <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
+                            <!-- <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i> -->
+                            <i class="fas fa-shopping-cart" style="font-size: 1.2rem;"></i>
                             
                              @php
                                 $favoriteCount = 0;
