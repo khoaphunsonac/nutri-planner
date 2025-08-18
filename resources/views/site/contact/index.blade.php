@@ -1,9 +1,8 @@
 @extends('site.layout')
 
-@section('title', 'liên hệ')
 
 {{-- Optional: style nhẹ nhàng cho trang liên hệ --}}
-@push('styles')
+
 <style>
     .contact-hero {
         background: radial-gradient(1000px 400px at 10% 0%, rgba(13,110,253,.12), transparent),
@@ -27,10 +26,9 @@
         color: #6c757d;
     }
 </style>
-@endpush
 
 @section('content')
-<div class="container py-5">
+<div class="container-fluid py-5">
 
     {{-- Hero --}}
     <div class="contacts-hero p-4 p-md-5 mb-4">
@@ -144,9 +142,6 @@
         </div>
     </div>
 </div>
-@endsection
-
-@push('scripts')
 <script>
     (function () {
         const textarea = document.getElementById('contact-message');
@@ -158,4 +153,7 @@
         }
     })();
 </script>
-@endpush
+
+@endsection
+
+
