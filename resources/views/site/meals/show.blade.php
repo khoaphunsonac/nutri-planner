@@ -21,50 +21,35 @@
                     $image = $meal->image_url ?? '';
                     $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                 @endphp
-                <img src="{{ $imageURL }}" alt="{{ $meal->name }}"  class="card-img-top" style="height: 300px; object-fit: cover;">
+                 <div class="image-wrapper " style="position: relative; width: 100%; padding-top: 75%; /* 4:3 ratio */ overflow: hidden;">
+                    <img src="{{ $imageURL }}" alt="{{ $meal->name }}" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 80%; object-fit: cover;border-radius: 10px;">
+                </div>
             </div>
             
             {{-- Thông tin chính --}}
             <div class="col-md-7"> 
                  {{-- Nút yêu thích --}}
                 <div style="position: absolute; top: 10px; right: 10px;">
-                    @php
-                        $saved = auth()->check() && auth()->user()->savemeal && in_array($meal->id, explode('-', auth()->user()->savemeal));
+                     @php
+                        $user = auth()->user();
+                        $liked = false;
+                        if ($user && $user->savemeal) {
+                            $liked = in_array($meal->id, explode('-', $user->savemeal));
+                        }
                     @endphp
 
-                    @if(auth()->check())
-                        {{-- Đã đăng nhập → dùng form POST để lưu --}}
-                        <form action="{{ route('meal.favorite', $meal->id) }}" method="POST" class="favorite-form" style="display: inline;">
-                            @csrf
-                            <button type="submit" 
-                                class="btn btn-favorite"
-                                data-id="{{ $meal->id }}"
-                                aria-label="Yêu thích" 
-                                style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
-                                <i class="fas fa-heart" style="color: {{ $saved ? 'red' : 'rgba(255,255,255,0.7)' }};"></i>
-                            </button>
-                        </form>
-                    @else
-                        {{-- Chưa đăng nhập → hiện nút gọi cảnh báo --}}
-                        <button class="btn btn-favorite" 
-                            style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;"
-                            onclick="showLoginRegisterPopup()">
-                            <i class="fas fa-heart" style="color: rgba(255,255,255,0.7);"></i>
-                        </button>
-                    @endif
+                        
+                    <button type="button" 
+                        class="btn btn-favorite " 
+                        data-id="{{ $meal->id }}" 
+                        aria-label="Yêu thích"
+                        style="font-size: 20px; background: rgba(0,0,0,0.1); border: none; cursor: pointer;">
+                        
+                        <i class="fas fa-heart" style="color:  {{$liked ? 'red' : 'rgba(255,255,255,0.7)'}} ; font-size: 20px;"></i>
+                    </button>
                 </div>
-                {{-- Popup --}}
-                        <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
-                            <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
-                                <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
-                                <p>Hãy chọn một trong hai để tiếp tục</p>
-                                <div style="margin-top:15px;">
-                                    <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;"><i class="bi bi-lock"></i> Đăng nhập</a>
-                                    <a href="{{ route('register.submit') }}" class="btn btn-success"><i class="bi bi-person-plus-fill me-2"></i>Đăng ký</a>
-                                </div>
-                                <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
-                            </div>
-                        </div>
+                
                 <h2>{{ $meal->name }}</h2>
                 <p class="text-muted " style="font-size: 18px">{{ $meal->description }}</p>
 
@@ -354,38 +339,13 @@
 <script>
     
 
-    function showLoginRegisterPopup(){
-        document.getElementById('loginRegisterPopup').style.display = 'block';
-    }
-    function closeLoginRegisterPopup(){
-        document.getElementById('loginRegisterPopup').style.display = 'none';
-    }
 
 
- document.addEventListener('DOMContentLoaded', function() {
-    // Hàm cập nhật giỏ hàng
-    function updateCartCount(count) {
-        // Cập nhật badge số lượng
-        const badge = document.getElementById('favoriteCountBadge');
-        if (badge) {
-            badge.textContent = count;
-            badge.style.display = count > 0 ? 'inline-block' : 'none';
-        }
-    }
-
-    // Xử lý click nút tim
-    document.querySelectorAll('.btn-favorite').forEach(btn => {
+ document.querySelectorAll('.btn-favorite').forEach(btn => {
         btn.addEventListener('click', async function(e) {
             e.preventDefault();
             e.stopPropagation();
             
-            // Kiểm tra đăng nhập
-            const isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
-            if (!isLoggedIn) {
-                showLoginRegisterPopup();
-                return;
-            }
-
             const mealId = this.dataset.id;
             const icon = this.querySelector('i');
             
@@ -394,39 +354,38 @@
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
                     }
                 });
 
+                // Nếu chưa đăng nhập → backend trả 401
+                if (response.status === 401) {
+                    window.location.href = "{{ route('login') }}";
+                    return;
+                }
+
                 const data = await response.json();
-                
+
                 if (data.status === 'success') {
-                    // 1. Cập nhật icon tim
+                    // 1. Đổi màu icon tim
                     icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
-                    
-                    // 2. Cập nhật số lượng giỏ hàng
-                    updateCartCount(data.favoriteCount);
-                    
-                    // 3. Hiển thị thông báo
-                    showToast(data.message);
+
+                    // 2. Update badge số lượng
+                    const badge = document.getElementById('favoriteCountBadge');
+                    if (data.favoriteCount > 0) {
+                        badge.textContent = data.favoriteCount;
+                        badge.style.display = 'inline-block';
+                    } else {
+                        badge.style.display = 'none';
+                    }
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showToast('Có lỗi xảy ra', 'error');
+                
+                // fallback về login nếu có lỗi không mong muốn
+                window.location.href = "{{ route('login') }}";
             }
         });
     });
-
-    // Hàm hiển thị popup đăng nhập
-    // function showLoginRegisterPopup() {
-    //     document.getElementById('loginRegisterPopup').style.display = 'block';
-    // }
-    
-    // Hàm hiển thị thông báo
-    function showToast(message, type = 'success') {
-        // Sử dụng thư viện toast hoặc alert đơn giản
-        alert(message);
-    }
-});
 </script>
 @endsection

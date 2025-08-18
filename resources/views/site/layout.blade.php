@@ -120,27 +120,17 @@
 
                     {{-- Nút giỏ hàng --}}
                     <div class="cart-icon" style="cursor: pointer;">
-                        <a href="#" onclick="handleCartClick()">
-                            <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i>
-                            {{-- @php
-                                $favorites = [];
-                                if(auth()->check()) {
-                                    $favorites = array_filter(explode('-', auth()->user()->savemeal ?? ''));
-                                }
-                                $favoriteCount = count($favorites);
-                            @endphp
-                            @if($favoriteCount > 0)
-                                <span class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
-                            @endif --}}
+                        <a href="{{ route('meal.showsavemeals') }}" >
+                            <!-- <i class="bi bi-cart-fill" style="font-size: 1.5rem;"></i> -->
+                            <img src="{{ asset('assets/admin/img/meal/cooking.png') }}" class="cart" alt="Logo" > 
+                            
                              @php
                                 $favoriteCount = 0;
-                                if(auth()->check() && !empty(auth()->user()->savemeal)) {
-                                    $favorites = explode('-', auth()->user()->savemeal);
-                                    // Đếm số lượng ID hợp lệ (không rỗng)
-                                    foreach($favorites as $id) {
-                                        if(!empty($id)) $favoriteCount++;
+                                $favoriteCount = 0;
+                                    if(auth()->check() && !empty(auth()->user()->savemeal)) {
+                                        $savedIds = array_filter(explode('-', auth()->user()->savemeal));
+                                        $favoriteCount = App\Models\MealModel::whereIn('id', $savedIds)->count();
                                     }
-                                }
                             @endphp
                             @if($favoriteCount > 0)
                                 <span id="favoriteCountBadge" class="ms-1 badge bg-danger">{{ $favoriteCount }}</span>
@@ -149,22 +139,7 @@
                             @endif
                         </a>
                     </div>
-                    {{-- Popup --}}
-                    <div id="loginRegisterPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
-                        <div style="background:white; padding:20px; border-radius:8px; width:500px; margin:150px auto; text-align:center; position:relative;">
-                            <h4>Bạn cần đăng nhập hoặc đăng ký</h4>
-                            <p>Hãy chọn một trong hai để tiếp tục</p>
-                            <div style="margin-top:15px;">
-                                <a href="{{ route('login') }}" class="btn btn-primary" style="margin-right:5px;">
-                                    <i class="bi bi-lock"></i> Đăng nhập
-                                </a>
-                                <a href="{{ route('register.submit') }}" class="btn btn-success">
-                                    <i class="bi bi-person-plus-fill me-2"></i> Đăng ký
-                                </a>
-                            </div>
-                            <button onclick="closeLoginRegisterPopup()" style="position:absolute; top:5px; right:8px; background:none; border:none; font-size:18px; cursor:pointer;">×</button>
-                        </div>
-                    </div>
+                    
                 </div>
 
 
@@ -231,20 +206,7 @@
             });
         });
 
-        /* Script xử lý giỏ hàng */
-        function handleCartClick() {
-            @if(auth()->check())
-                // Nếu đã đăng nhập → chuyển đến trang giỏ hàng
-                window.location.href = "{{ route('meal.showsavemeals') }}";
-            @else
-                // Nếu chưa đăng nhập → hiện popup
-                document.getElementById('loginRegisterPopup').style.display = 'block';
-            @endif
-        }
-
-        function closeLoginRegisterPopup() {
-            document.getElementById('loginRegisterPopup').style.display = 'none';
-        }
+        
     </script>
 </body>
 

@@ -69,6 +69,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     Route::prefix('users')->as('users.')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('index');
         Route::get('/form/{id?}', [$controller, 'form'])->name('form');
+        Route::get('/detail/{id?}', [$controller, 'detail'])->name('detail');
         Route::get('/edit/{id?}', [$controller, 'edit'])->name('edit'); # sửa tk admin
         Route::post('/edit/{id?}', [$controller, 'update'])->name('update'); # bấm lưu
         Route::get('/delete/{id?}', [$controller, 'delete'])->name('delete');
@@ -181,8 +182,8 @@ Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
     Route::get('/show/{id}', [$mealController, 'show'])->name('show');
 
 
-    Route::post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite')->middleware('user');
-    Route::get('/favorites', [$mealController, 'showsavemeals'])->name('showsavemeals')->middleware('user');
+    Route::post('/favorite/{id}', [$mealController, 'favorite'])->middleware('user')->name('favorite');
+    Route::get('/favorites', [$mealController, 'showsavemeals'])->middleware('user')->name('showsavemeals');
 
     //chỉ user mới được like
     // Route::middleware('user')-> post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');

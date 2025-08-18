@@ -27,6 +27,7 @@ class AllergenController extends BaseController
         $meals = MealModel::with('allergens')->latest()->take(10)->get();
         $mealAllergens = MealAllergenModel::with(['meal','allergen'])->get();
         $allergen = AllergenModel::all();
+        $allMeals = MealModel::select('id','name')->get(); // Lấy tất cả meals cho modal
         
         $params = $request->all();
         $search = $params['search'] ?? '';
@@ -81,6 +82,9 @@ class AllergenController extends BaseController
         $perPage = $item->perPage();
         $currentPage = $item->currentPage();
         $startIndex = $total - ($currentPage - 1) * $perPage;
+
+        // Thêm phần lấy danh sách món ăn phân trang cho modal
+        $mealsForModal = MealModel::query()->paginate(10); // Phân trang 10 món ăn mỗi trang
         return view($this->pathViewController.'index',[
             'allergen'=> $allergen,
             'meals'=>$meals,
@@ -98,7 +102,8 @@ class AllergenController extends BaseController
             'mealSearch'=>$mealSearch,
             'allergenSearch'=>$allergenSearch,
             'startIndex'=>$startIndex,
-            'totalMeals'=>$totalMeals
+            'mealsForModal'=>$mealsForModal,
+            'allMeals'=>$allMeals,
         ]);
     }
 

@@ -104,10 +104,10 @@ class MealsController extends BaseController
             [$caloriesMin,$caloriesMax] = explode('-', $caloriesRange) + [null,null];
 
             if($caloriesMin !== null){
-                $meals = $meals->having('total_calories','>=',(int)$caloriesMin);
+                $meals = $meals->havingRaw('COALESCE(total_calories, 0) >= ?',[(int)$caloriesMin]);
             }
             if($caloriesMax !== null){
-                $meals = $meals->having('total_calories','<=',(int)$caloriesMax);
+                $meals = $meals->havingRaw('COALESCE(total_calories, 0) <= ?',[(int)$caloriesMax]);
                 
             }
             $searchConditions[] = 'Calories (đơn vị Kcal) từ ' . $caloriesMin. ' đến ' . $caloriesMax;
@@ -166,14 +166,12 @@ class MealsController extends BaseController
     
 
     public function favorite($id){
+    
         // ktra dn
         $user = auth()->user();
-        
         // lay tai khoan
         $account = AccountModel::find($user->id); // lấy user đang đăng nhập
-        if (!$account) {
-            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
-        }
+       
 
         // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
         $savedMeals  = [];
@@ -200,7 +198,8 @@ class MealsController extends BaseController
         }
         // nếu k có thì thêm vào 
         if(!$found){
-            $savedMeals[] = $id;
+            // $savedMeals[] = $id;
+            array_unshift($savedMeals, $id); // Thêm vào đầu mảng
         }
 
         // Ghép mảng lại thành chuỗi 1-2-3
@@ -210,9 +209,11 @@ class MealsController extends BaseController
         return response()->json([
             'status'  => 'success',
             'saved'   => !$found, // true nếu vừa thêm, false nếu vừa gỡ
-            'message' => $found ? 'Đã bỏ thích món ăn' : 'Đã thích món ăn',
-            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới
+            'favoriteCount' => count($savedMeals), // QUAN TRỌNG: trả về số lượng mới 'mealId' => $id // Thêm ID món ăn để frontend xử lý
+            'mealId' => $id
         ]);
+
+        
     
     }
 
@@ -229,13 +230,14 @@ class MealsController extends BaseController
         $meals = !empty($savedMealIds) 
         ? MealModel::whereIn('id', $savedMealIds)->get() 
         : [];
-
+        // Đếm số lượng thực tế (theo meal còn tồn tại)
+        $favoriteCount = $meals->count();
         return view($this->pathViewController.'showsavemeals',[
-                'meals'=>$meals,
-                'favoriteCount' => count($savedMealIds),
-                "status"=>"success",
-                "saved"=>true, // hoặc false nếu bỏ like,
-                "message"=>"Thông báo thành công"
-            ]); 
+            'meals'=>$meals,
+            'favoriteCount' => $favoriteCount,
+            "status"=>"success",
+            "saved"=>true, // hoặc false nếu bỏ like,
+            "message"=>"Thông báo thành công",
+        ]); 
     }
 }
