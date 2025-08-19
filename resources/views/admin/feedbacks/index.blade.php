@@ -35,18 +35,15 @@
 {{-- Bộ lọc --}}
 <div class="card mb-4 shadow-sm">
     <div class="card-body">
-        <form method="GET" action="{{ route('feedbacks.index') }}" id="filterForm" class="row g-3 align-items-end">
-
+        <form method="GET" action="{{ route('feedbacks.index') }}" class="row g-3 align-items-end">
             <div class="col-md-4">
                 <label class="form-label fw-semibold">Tìm nội dung</label>
-                <input type="text" name="search" placeholder="Tìm kiếm..." 
-                       class="form-control" value="{{ request('search') }}" 
-                       oninput="document.getElementById('filterForm').submit()">
+                <input type="text" name="search" placeholder="Tìm kiếm..." class="form-control" value="{{ request('search') }}">
             </div>
 
             <div class="col-md-2">
                 <label class="form-label fw-semibold">Rating</label>
-                <select name="rating" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                <select name="rating" class="form-select">
                     <option value="">Tất cả</option>
                     @for($i = 5; $i >= 1; $i--)
                         <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
@@ -56,29 +53,20 @@
                 </select>
             </div>
 
-            <div class="col-md-2">
-                <label class="form-label fw-semibold">Từ ngày</label>
-                <input type="date" name="date_from" class="form-control" 
-                       value="{{ request('date_from') }}" 
-                       onchange="document.getElementById('filterForm').submit()">
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Ngày gửi</label>
+                <input type="date" name="date" class="form-control" value="{{ request('date') }}">
             </div>
 
-            <div class="col-md-2">
-                <label class="form-label fw-semibold">Đến ngày</label>
-                <input type="date" name="date_to" class="form-control" 
-                       value="{{ request('date_to') }}" 
-                       onchange="document.getElementById('filterForm').submit()">
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-funnel-fill"></i> Lọc
+                </button>
+                <a href="{{ route('feedbacks.index') }}" class="btn btn-secondary mt-2">Reset</a>
             </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <a href="{{ route('feedbacks.index') }}" class="btn btn-secondary w-100">
-                    Reset
-                </a>
-            </div>
-
         </form>
     </div>
 </div>
-
 
 {{-- Bảng feedback --}}
 <div class="table-responsive shadow-sm rounded">
