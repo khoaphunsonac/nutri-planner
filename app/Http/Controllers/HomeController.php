@@ -21,6 +21,7 @@ class HomeController extends BaseController
                             ])->orderBy('created_at','desc')
                                 ->take(8)
                                 ->get();
+                                
         return view($this->viewPath.'index',[
             'latestMeals'=> $latestMeals
         ]);
