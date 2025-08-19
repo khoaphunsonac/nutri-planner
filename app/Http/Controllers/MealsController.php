@@ -20,6 +20,8 @@ class MealsController extends BaseController
     public $controllerName = "meals";
     public $pathViewController = "site.meals.";
 
+    
+
     public function index(SearchFillterRequest $request){
 
         $params = $request->all();
@@ -145,42 +147,63 @@ class MealsController extends BaseController
                                 ->take(8)
                                 ->get();
 
+        $saved = false;
+        $favoriteCount = 0;
+        if (auth()->check()) {
+            $savedMeals = auth()->user()->savemeal ? explode('-', auth()->user()->savemeal) : [];
+            $saved = in_array($meal->id, $savedMeals);
+            $favoriteCount = count($savedMeals);
+        }
+
         return view($this->pathViewController.'show',[
             'meal'=>$meal,
             'latestMeals'=>$latestMeals,
+            'saved'=>$saved,
+            'favoriteCount' => $favoriteCount,
         ]);
     }
 
+    
+
     public function favorite($id){
+    
         // ktra dn
         $user = auth()->user();
-        
         // lay tai khoan
         $account = AccountModel::find($user->id); // lấy user đang đăng nhập
-        if (!$account) {
-            return response()->json(['status' => 'error', 'message' => 'Tài khoản không tồn tại']);
-        }
+       
 
-        //lấy danh sách hiện tại từ cột favorite
-        $saveMeals = $account->savemeal ? explode('-',$account->savemeal) : [];
-        // nếu meal này đã có trong ds thì bỏ ra
-        // ktra id đã có chưa
+        // Lấy danh sách meal ID đã lưu (nếu rỗng thì mảng trống)
+        $savedMeals  = [];
+
+        if (!empty($account->savemeal)) {
+            $savedMeals = explode('-', $account->savemeal);
+            // loại bỏ phần tử rỗng nếu có = cách duyệt mảng
+            $cleanMeals = [];
+            foreach ($savedMeals as $meal) {
+                if ($meal !== '' && $meal !== null) {
+                    $cleanMeals[] = $meal;
+                }
+            }
+            $savedMeals  = $cleanMeals;
+        } 
+        // ktra meal co trong danh sach chua
         $found = false;
-        foreach($saveMeals as $key => $saveId){
-            if($saveId == $id){
-                // nếu đã có thì xóa đi
-                unset($saveMeals[$key]);
+        foreach($savedMeals as $key => $mealId){
+            if($mealId == $id){
+                unset($savedMeals[$key]);
                 $found = true;
+                break;
             }
         }
-        //nếu chưa có thì thêm vào
+        // nếu k có thì thêm vào 
         if(!$found){
             $savedMeals[] = $id;
            
         }
 
-        // chuyen mảng thành chuỗi va lưu lại
-        $account->savemeal = implode('-',$saveMeals);
+        // Ghép mảng lại thành chuỗi 1-2-3
+        $account->savemeal = implode('-', $savedMeals);
         $account->save();
         // Lấy số lượng thực tế các meal còn tồn tại
         $favoriteCount = MealModel::whereIn('id', $savedMeals)->count();
@@ -191,6 +214,8 @@ class MealsController extends BaseController
             'favoriteCount' => $favoriteCount, // Đảm bảo chỉ tính meal còn tồn tại
             'mealId' => $id,
         ]);
+
+        
     
     }
 
