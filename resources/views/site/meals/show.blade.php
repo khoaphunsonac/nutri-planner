@@ -263,8 +263,11 @@
 </div>
 
 {{-- hiển thị 8 món mới nhất --}}
-      <div class=" container new  "> 
-      
+      <div class=" container new  title"> 
+      <div class="mb-4">
+            <h4>Món mới nhất</h4>
+            <hr class="border-bottom border-danger border-5 mt-0" style="width: 180px; ">
+        </div>
         <div class="row g-4">
       
           @foreach ($latestMeals as $latest)
