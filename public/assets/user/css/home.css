@@ -48,11 +48,6 @@ body {
     line-height: 1.5;
 }
 
-.content-wrapper {
-    margin-top: 0;
-    padding-top: 0;
-}
-
 /* ----------- ảnh cắt chéo ------------- */
 
 .main-about {
@@ -208,21 +203,22 @@ body {
     text-align: center;
     color: #333;
 }
+
 .section-title-hr {
-        width: 300px;
-        height: 4px;
-        background-color: #ffffff;
-        border: none;
-        border-radius: 2px;
-        margin: 0 auto 70px; /* Giảm margin-top và tăng margin-bottom */
-        display: block;
-    }
+    width: 300px;
+    height: 4px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 2px;
+    margin: 0 auto 70px;
+    /* Giảm margin-top và tăng margin-bottom */
+    display: block;
+}
 
 .new-meals-container {
-        padding-top: 20px;
-        padding-bottom: 50px;
-        
-    }
+    padding-top: 20px;
+    padding-bottom: 50px;
+}
 
 .section-divider {
     width: 80px;
@@ -329,14 +325,15 @@ body {
 
 /* icon nhấn vào */
 
-
-
 /* home 8 món mới nhất*/
+
 .meal-header {
     width: 100%;
-    height: 40vh; /* Chiều cao theo viewport */
+    height: 40vh;
+    /* Chiều cao theo viewport */
     background-image: url(https://fitfood.vn/img/2160x900/uploads/menu-16952880378313.jpg);
-    background-size: cover; /* Hoặc 'contain' nếu muốn hiển thị toàn bộ ảnh */
+    background-size: cover;
+    /* Hoặc 'contain' nếu muốn hiển thị toàn bộ ảnh */
     background-position: center;
     background-repeat: no-repeat;
     display: flex;
@@ -347,6 +344,7 @@ body {
 }
 
 /* Lớp phủ màu tối để chữ trắng đọc rõ hơn */
+
 .meal-header::before {
     content: "";
     position: absolute;
@@ -359,6 +357,7 @@ body {
 }
 
 /* Đảm bảo nội dung nằm trên lớp phủ */
+
 .meal-header .container {
     position: relative;
     z-index: 1;
@@ -374,7 +373,11 @@ body {
 }
 
 @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
         transform: translateY(0);
     }
     40% {
@@ -386,60 +389,63 @@ body {
 }
 
 /* Responsive cho mobile */
+
 @media (max-width: 768px) {
     .meal-header {
         height: 50vh;
         min-height: 300px;
     }
-    
     .meal-header .display-5 {
         font-size: 2.5rem;
     }
 }
 
-.new{
+.new {
     margin-top: 80px;
-
 }
-
 
 .card.meal-card {
     transition: transform 0.3s;
 }
+
 .card.meal-card:hover {
     transform: translateY(-5px) !important;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
 }
+
 .card-img-top {
     border-bottom: 1px solid #eee;
 }
+
 .card.meal-card:hover img {
-    filter: brightness(70%) !important;;
+    filter: brightness(70%) !important;
 }
 
-  .object-fit-cover {
+.object-fit-cover {
     object-fit: cover;
-  }
-  
-  .nutrition-info .badge {
+}
+
+.nutrition-info .badge {
     font-size: 0.75rem;
     padding: 0.35em 0.65em;
-  }
-  
-  @media (max-width: 768px) {
+}
+
+@media (max-width: 768px) {
     .card-title {
-      font-size: 1rem !important;
+        font-size: 1rem !important;
     }
     .nutrition-info .badge {
-      font-size: 0.65rem;
+        font-size: 0.65rem;
     }
-  }
+}
 
 /* step preparation */
+
 .steps-container {
     border: 1px solid #dee2e6;
     margin-bottom: 20px;
 }
+
 .step-card {
     border-left: 10px solid #0d6efd;
 }
@@ -447,6 +453,7 @@ body {
 .step-badge {
     min-width: 50px;
 }
+
 .step-number {
     width: 50px;
     height: 50px;
@@ -455,14 +462,17 @@ body {
     padding: 0.75rem;
     text-align: center;
 }
-.text-p{
+
+.text-p {
     font-size: 1.2rem;
 }
 
 /* container của show meal */
+
 .wide-container {
     width: 95%;
-    width: 1900px; /* Adjust this value as needed */
+    width: 1900px;
+    /* Adjust this value as needed */
     margin-right: auto;
     margin-left: auto;
     padding-right: 15px;
@@ -473,7 +483,8 @@ body {
 @media (min-width: 1000px) {
     .wide-container {
         width: 90%;
-        max-width: 1800px; /* Even wider on larger screens */
+        max-width: 1800px;
+        /* Even wider on larger screens */
     }
 }
 

@@ -1,6 +1,25 @@
 @extends('admin.layout')
 
 @section('content')
+{{-- Breadcrumb --}}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb breadcrumb-compact">
+        <li class="breadcrumb-item">
+            <a href="{{ url('/admin') }}">
+                <i class="bi bi-house-door"></i>
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('contact.index') }}">
+                <i class="bi bi-envelope me-1"></i>Liên hệ
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="bi bi-chat-dots me-1"></i>Chi tiết
+        </li>
+    </ol>
+</nav>
+
 <div class="container mt-4">
     <h2 class="mb-4">Chi tiết liên hệ</h2>
 

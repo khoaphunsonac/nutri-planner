@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\NutriController;
+use App\Http\Controllers\PasswordResetLinkController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminAuthController;
-use App\Http\Admin\Controllers\ContactController as ControllersContactController;
 use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\IngredientController;
 use App\Http\Controllers\Admin\DietTypeController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MealTypeController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MealsController;
 use App\Http\Controllers\FeedbackController as SiteFeedbackController;
@@ -200,8 +202,14 @@ Route::get('/nutri-calc', [NutriController::class, 'index'])->name('nutri-calc')
 Route::view('/tdee', 'site.tdee')->name('tdee');
 
 //Contact
-Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/contacts', [ContactsController::class, 'index'])->name('site.index');
+Route::post('/contacts', [ContactsController::class, 'store'])->name('site.store');
 //Feedback
 Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
 Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');
+
+//Forget Password
+Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');

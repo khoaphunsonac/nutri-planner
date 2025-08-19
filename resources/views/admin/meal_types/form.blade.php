@@ -1,5 +1,28 @@
 @extends('admin.layout')
 @section('content')
+{{-- Breadcrumb --}}
+{{-- Breadcrumb --}}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb breadcrumb-compact">
+        <li class="breadcrumb-item">
+            <a href="{{ url('/admin') }}"><i class="bi bi-house-door"></i></a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.meal_types.index') }}">
+                <i class="bi bi-collection me-1"></i>Loại bữa ăn
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            @if ($mode === 'create')
+                <i class="bi bi-plus-circle me-1"></i>Thêm mới
+            @else
+                <i class="bi bi-pencil-square me-1"></i>Sửa
+            @endif
+        </li>
+    </ol>
+</nav>
+
+
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h4 class="mb-0">
