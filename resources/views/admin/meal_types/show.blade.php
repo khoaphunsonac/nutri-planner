@@ -1,6 +1,23 @@
 @extends('admin.layout')
 @section('content')
     <div class="container py-4">
+        {{-- Breadcrumb --}}
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb breadcrumb-compact">
+        <li class="breadcrumb-item">
+            <a href="{{ url('/admin') }}"><i class="bi bi-house-door"></i></a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="{{ route('admin.meal_types.index') }}">
+                <i class="bi bi-collection me-1"></i>Loại bữa ăn
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="bi bi-chat-dots me-1"></i>Chi tiết
+        </li>
+    </ol>
+</nav>
+
 
         {{-- 1) Header + Actions --}}
         <div class="d-flex justify-content-between align-items-start mb-3">
