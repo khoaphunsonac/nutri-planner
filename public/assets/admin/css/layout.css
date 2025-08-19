@@ -61,7 +61,6 @@ body {
     padding: 2px 5px;
 }
 
-
 /* icon giỏ hàng */
 
 .cart-icon img {
@@ -87,7 +86,6 @@ body {
     border-radius: 50%;
 }
 
-
 /* icon message */
 
 .message-icon {
@@ -111,7 +109,6 @@ body {
     transform: scale(1.1);
 }
 
-
 /* đt */
 
 @media (max-width: 992px) {
@@ -119,7 +116,6 @@ body {
         padding: 10px;
     }
 }
-
 
 /* MAIN CONTENT */
 
@@ -130,7 +126,6 @@ body {
 .sliders .content {
     position: absolute;
 }
-
 
 /* montserrat cho tiêu đề, menu, heading, nút lớn */
 
@@ -145,7 +140,6 @@ h6,
 .btn-lg {
     font-family: "Montserrat", sans-serif;
 }
-
 
 /* Noto Sans cho nội dung chính, mô tả, form, feedback */
 
