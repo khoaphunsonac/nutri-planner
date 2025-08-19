@@ -263,51 +263,56 @@
 </div>
 
 {{-- hiển thị 8 món mới nhất --}}
-<div class="container new ">
-    <h4 class="mb-4" style="border-bottom:3px solid red; display: inline-block; padding-bottom: 4px;">Món ăn mới nhất</h4>
-    <div class="row">
-       
-            @foreach ($latestMeals as $latest)
+      <div class=" container new  "> 
+      
+        <div class="row g-4">
+      
+          @foreach ($latestMeals as $latest)
             @php
                 
                 //tính toán dinh dưỡng
                 
-                    $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $recipeIngredient){
-                        $ingredient = $recipeIngredient->ingredient;
-                        if($ingredient){
-                            $quantity = $recipeIngredient->quantity ?? 1; // Lấy quantity từ recipe_ingredients
-                           
-                            // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
-                            $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
-                            
-                            $totalPro += $pro;
-                            $totalCarbs += $carb;
-                            $totalFat += $fat;
-                            $totalKcal += $recipeIngredient->total_calo ?? 0;
-                        }
-                    }
-                    // Làm tròn
-                    $displayPro = round($totalPro, 1);
-                    $displayCarbs = round($totalCarbs, 1);
-                    $displayFat = round($totalFat, 1);
-                    $displayKcal = round($totalKcal, 1);
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
+                      }
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';
                 $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
                                               
             @endphp
-            <div class="col-md-3 mb-4" >
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" >
                 <div class="card meal-card shadow-sm h-100" >
                         @php
                             $image = $latest->image_url ?? '';
                             $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                            $user = auth()->user();
+                            $liked = false;
+                            if ($user && $user->savemeal) {
+                                $liked = in_array($latest->id, explode('-', $user->savemeal));
+                            }
                         @endphp
                     
                 
@@ -330,11 +335,20 @@
                           
                         </div>
                     </a>
+                    {{-- Nút yêu thích --}}
+                    <div style="position: absolute; top: 5px; right: 5px; display: inline;"  class="favorite-form">
+                        @if(auth()->check())
+                            <button type="button" class="btn btn-favorite position-absolute top-0 end-0 m-2"
+                                    data-id="{{ $latest->id }}" style="background: rgba(0,0,0,0.1); border:none; cursor:pointer;">
+                                <i class="fas fa-heart" style="color: {{ $liked?'red':'rgba(255,255,255,0.7)' }}; font-size:25px;"></i>
+                            </button>
+                        @endif
+                    </div>
                 </div>
+                
             </div>
-        @endforeach
-    </div>
-</div>
+          @endforeach
+      </div>
 
 
 <script>
