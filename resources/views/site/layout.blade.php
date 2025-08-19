@@ -89,6 +89,11 @@
                         PHẢN HỒI
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('site.index') ? 'active' : '' }}" href="{{ route('site.index') }}">
+                        LIÊN HỆ
+                    </a>
+                </li>
                 </ul>
                 <div class="right-menu d-flex align-items-center">
                     @if (Auth::check())

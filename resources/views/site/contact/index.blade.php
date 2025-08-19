@@ -1,8 +1,8 @@
 @extends('site.layout')
 
-@section('title','Liên hệ')
+{{-- @section('title','Liên hệ') --}}
 
-@push('styles')
+{{-- @push('styles') --}}
 <style>
   /* Hero & nền nhẹ */
   .contact-hero{
@@ -26,7 +26,7 @@
   .tiny-muted{font-size:.875rem;color:#6c757d;}
   .btn-rounded{border-radius:.75rem;}
 </style>
-@endpush
+{{-- @endpush --}}
 
 @section('content')
 <div class="container-fluid py-5">
@@ -136,7 +136,7 @@
   </div>
 </div>
 
-@push('scripts')
+{{-- @push('scripts') --}}
 <script>
   (function(){
     // đếm ký tự
@@ -157,5 +157,5 @@
     }
   })();
 </script>
-@endpush
+{{-- @endpush --}}
 @endsection
