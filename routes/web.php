@@ -205,8 +205,8 @@ Route::view('/tdee', 'site.tdee')->name('tdee');
 Route::get('/contacts', [ContactsController::class, 'index'])->name('site.index');
 Route::post('/contacts', [ContactsController::class, 'store'])->name('site.store');
 //Feedback
-Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create');
-Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store');
+Route::get('/feedback', [SiteFeedbackController::class, 'create'])->name('feedbacks.create')->middleware('user');
+Route::post('/feedback', [SiteFeedbackController::class, 'store'])->name('feedbacks.store')->middleware('user');
 
 //Forget Password
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
