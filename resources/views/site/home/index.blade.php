@@ -55,79 +55,9 @@
           <h2 class="section-title " style="color: rgb(236, 236, 236);">Món ăn mới nhất</h2>
           <hr class="section-title-hr" >
       </div>
-      <!-- <div class="content-meal">
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-        <a href="">
-          <div class="meal-item">
-            <img src="https://fitfood.vn/static/sizes/260x200-fitfood-goi-fit3-healthy-2-17521258413949.jpg" alt="meal">
-            <h3>Gói Fit 3</h3>
-            <p>Trưa - Tối. Best seller</p>
-          </div>
-        </a>
-      </div> -->
 
       {{-- hiển thị 8 món mới nhất --}}
       <div class=" container new  "> 
-        {{-- <div class="section-header my-5" style=" color: white;">
-          <h3 class="mb-0 d-block" >Món ăn mới nhất</h3>
-          <hr style="
-              display: inline-block;
-              width: 19%; 
-              height: 4px; 
-              background-color: #ffffff; 
-              border: none; 
-              border-radius: 2px; 
-              vertical-align: middle;
-          ">
-        </div> --}}
       
         <div class="row g-4">
       
@@ -136,20 +66,31 @@
                 
                 //tính toán dinh dưỡng
                 
-                    $totalPro = 0;
-                    $totalCarbs= 0;
-                    $totalFat= 0;
-                    $totalKcal= 0;
-                    foreach($latest->recipeIngredients as $pri){
-                        $ingredient = $pri->ingredient;
-                        if($ingredient){
-                            $totalPro += $ingredient->protein;
-                            $totalCarbs += $ingredient->carb;
-                            $totalFat += $ingredient->fat;
-                            $totalKcal += ($ingredient->protein*4) + ($ingredient->carb*4) + ($ingredient->fat*9);
-                        }
-                    }
-                
+                 $totalPro = 0;
+                  $totalCarbs= 0;
+                  $totalFat= 0;
+                  $totalKcal= 0;
+                  foreach($latest->recipeIngredients as $pri){
+                      $ingredient = $pri->ingredient;
+                      if($ingredient){
+                          $quantity = $pri->quantity ?? 1; // Lấy quantity từ recipe_ingredients
+                          // Tính P/C/F = (giá trị trong ingredient) * (quantity / 100) 
+                          // Tính toán P/C/F: nếu có quantity thì chia 10, không thì lấy giá trị gốc
+                          $pro = ($ingredient->protein ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $carb = ($ingredient->carb ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+                          $fat = ($ingredient->fat ?? 0) * ($quantity > 1 ? ($quantity/100) : 1);
+
+                          $totalPro += $pro;
+                          $totalCarbs += $carb;
+                          $totalFat += $fat;
+                          $totalKcal += $pri->total_calo ?? 0;
+                      }
+                  }
+                  
+                  $displayPro = round($totalPro);
+                  $displayCarbs = round($totalCarbs);
+                  $displayFat = round($totalFat);
+                  $displayKcal = round($totalKcal, 1);
 
                 // hiển thị ảnh
                 $image = $meal->image_url ?? '';
@@ -161,6 +102,11 @@
                         @php
                             $image = $latest->image_url ?? '';
                             $imageURL = $image ? url("uploads/meals/{$image}") : "https://placehold.co/300x400?text=No+Image";
+                            $user = auth()->user();
+                            $liked = false;
+                            if ($user && $user->savemeal) {
+                                $liked = in_array($latest->id, explode('-', $user->savemeal));
+                            }
                         @endphp
                     
                 
@@ -173,17 +119,27 @@
                             <p class="card-text text-muted ">{{ Str::limit($latest->description, 80) }}</p>
                             <div class="nutrition-info mt-auto pt-2">
                               <div class="d-flex flex-wrap gap-1">
-                                <span class="badge bg-primary rounded-pill">{{ round($totalKcal) }} kcal</span>
-                                <span class="badge bg-success rounded-pill">P: {{ round($totalPro) }}g</span>
-                                <span class="badge bg-warning text-dark rounded-pill">C: {{ round($totalCarbs) }}g</span>
-                                <span class="badge bg-danger rounded-pill">F: {{ round($totalFat) }}g</span>
+                                <span class="badge bg-primary rounded-pill">{{ $displayKcal }} kcal</span>
+                                <span class="badge bg-success rounded-pill">P: {{ $displayPro }}g</span>
+                                <span class="badge bg-warning text-dark rounded-pill">C: {{ $displayCarbs }}g</span>
+                                <span class="badge bg-danger rounded-pill">F: {{ $displayFat }}g</span>
                               </div>
                             </div>
                             {{-- <a href="{{route('meal.show',$meal->id)}}" class="btn btn-primary">Chi tiết</a> --}}
                           
                         </div>
                     </a>
+                    {{-- Nút yêu thích --}}
+                    <div style="position: absolute; top: 5px; right: 5px; display: inline;"  class="favorite-form">
+                        @if(auth()->check())
+                            <button type="button" class="btn btn-favorite position-absolute top-0 end-0 m-2"
+                                    data-id="{{ $latest->id }}" style="background: rgba(0,0,0,0.1); border:none; cursor:pointer;">
+                                <i class="fas fa-heart" style="color: {{ $liked?'red':'rgba(255,255,255,0.7)' }}; font-size:25px;"></i>
+                            </button>
+                        @endif
+                    </div>
                 </div>
+                
             </div>
           @endforeach
       </div>
@@ -234,5 +190,52 @@ function showSlide() {
 }
 
 setInterval(showSlide, 3000); // 3 giây đổi 1 ảnh
+
+// like
+document.querySelectorAll('.btn-favorite').forEach(btn => {
+    btn.addEventListener('click', async function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        const mealId = this.dataset.id;
+        const icon = this.querySelector('i');
+
+        try {
+            const response = await fetch(`/meals/favorite/${mealId}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if(response.status === 401){
+                window.location.href = "{{ route('login') }}";
+                return;
+            }
+
+            const data = await response.json();
+
+            if(data.status === 'success'){
+                // 1. Thay đổi màu icon tim
+                icon.style.color = data.saved ? 'red' : 'rgba(255,255,255,0.7)';
+
+                // 2. Update badge giỏ hàng (layout)
+                const badge = document.getElementById('favoriteCountBadge');
+                if(data.favoriteCount > 0){
+                    badge.textContent = data.favoriteCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+        } catch(err){
+            window.location.href = "{{ route('login') }}";
+        }
+    });
+});
+
 </script>
 @endsection

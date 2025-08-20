@@ -23,11 +23,11 @@ class FeedbackController extends Controller
     {
 
         FeedbackModel::create([
-            'account_id' => Auth::id(),
+            'account_id' => Auth::user()->id,
             'rating'     => $request->rating,
             'comment'    => $request->comment,
         ]);
 
-        return redirect()->route('feedbacks.create')->with('success', 'Cảm ơn bạn đã gửi phản hồi!');
+        return redirect()->route('home')->with('success', 'Cảm ơn bạn đã gửi phản hồi!');
     }
 }
