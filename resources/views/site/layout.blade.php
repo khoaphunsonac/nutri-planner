@@ -91,7 +91,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->routeIs('site.index') ? 'active' : '' }}" href="{{ route('site.index') }}">
+                    <a class="nav-link {{ request()->routeIs('contacts.index') ? 'active' : '' }}" href="{{ route('contacts.index') }}">
                         LIÊN HỆ
                     </a>
                 </li>
