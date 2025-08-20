@@ -29,7 +29,7 @@
 {{-- @endpush --}}
 
 @section('content')
-<div class="container-fluid py-5" style="height: 100vh">
+<div class="container-fluid py-5">
 
   {{-- Hero --}}
   <div class="contact-hero p-4 p-md-5 mb-4">
