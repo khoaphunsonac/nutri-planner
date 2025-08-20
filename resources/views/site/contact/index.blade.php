@@ -29,7 +29,7 @@
 {{-- @endpush --}}
 
 @section('content')
-<div class="container-fluid py-5">
+<div class="container-fluid py-5" style="height: 100vh">
 
   {{-- Hero --}}
   <div class="contact-hero p-4 p-md-5 mb-4">
@@ -71,7 +71,7 @@
         <div class="card-body p-4 p-md-5">
 
           {{-- giữ nguyên logic: route + fields + csrf --}}
-          <form action="{{ route('site.store') }}" method="POST" id="contactForm" novalidate>
+          <form action="{{ route('contacts.store') }}" method="POST" id="contactForm" novalidate>
             @csrf
 
             {{-- Họ tên --}}
