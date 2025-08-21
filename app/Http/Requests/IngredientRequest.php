@@ -29,7 +29,7 @@ class IngredientRequest extends FormRequest
                 'max:255',
                 Rule::unique('ingredients', 'name')->ignore($this->input('id'))
             ],
-            'unit' => 'required|string|in:g,ml,kg,l,piece,tbsp,tsp,cup,slice,pack',
+            'unit' => 'required|string|in:gram,ml,kg,l,piece,tbsp,tsp,cup,slice,pack',
             'protein' => 'required|numeric|min:0|max:100',
             'carb' => 'required|numeric|min:0|max:100',
             'fat' => 'required|numeric|min:0|max:100',

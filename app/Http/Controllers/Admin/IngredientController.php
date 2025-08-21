@@ -15,7 +15,7 @@ class IngredientController extends Controller
     private function getUnitOptions()
     {
         return [
-            'g' => 'Gram (g)',
+            'gram' => 'Gram (g)',
             'ml' => 'Milliliter (ml)',
             'kg' => 'Kilogram (kg)',
             'l' => 'Liter (l)',

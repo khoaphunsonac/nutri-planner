@@ -31,7 +31,7 @@
             </a>
         </div>
 
-        {{-- @if (session('success'))
+        {{-- @if (session('suc  cess'))
             <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
                 <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
@@ -106,7 +106,8 @@
                     </thead>
                     <tbody>
                         @forelse ($meals as $meal)
-                            <tr class="meal-row" onclick="window.location='{{ route('meals.show', $meal->id) }}'" style="cursor: pointer;">
+                            <tr class="meal-row" onclick="window.location='{{ route('meals.show', $meal->id) }}'"
+                                style="cursor: pointer;">
                                 <td class="text-muted small">
                                     {{ $loop->iteration + ($meals->currentPage() - 1) * $meals->perPage() }}
                                 </td>
@@ -129,9 +130,10 @@
                                     <span class="badge bg-warning text-dark">{{ $meal->recipeIngredients->count() }}</span>
                                 </td>
                                 <td class="text-center">
-                                    <strong class="text-primary small">{{ number_format($meal->total_calories ?? 0, 0) }}</strong>
+                                    <strong
+                                        class="text-primary small">{{ number_format($meal->total_calories ?? 0, 0) }}</strong>
                                 </td>
-                                <td class="text-center" onclick="event.stopPropagation();">
+                                <td class="text-center" onclick="event.stopPropagation()">
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ route('meals.show', $meal->id) }}"
                                             class="btn btn-outline-info btn-sm px-2" title="Xem chi tiết">
