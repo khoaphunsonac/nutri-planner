@@ -61,19 +61,16 @@
                             <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
                             <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
                             <td>
-                                <a href="{{ route('contact.show', $item->id) }}" 
-                                    class="btn btn-sm btn-info" 
+                                <a href="{{ route('contact.show', $item->id) }}" class="btn btn-sm btn-info"
                                     title="Chi tiết" aria-label="Chi tiết">
-                                     <i class="bi bi-eye"></i>
-                                 </a>
-                                 
-                                 <a href="{{ route('contact.delete', $item->id) }}" 
-                                    class="btn btn-sm btn-danger" 
-                                    onclick="return confirm('Xác nhận xoá?')" 
-                                    title="Xoá" aria-label="Xoá">
-                                     <i class="bi bi-trash"></i>
-                                 </a>
-                                 
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a href="{{ route('contact.delete', $item->id) }}" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Xác nhận xoá?')" title="Xoá" aria-label="Xoá">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
                             </td>
                         </tr>
                     @empty
@@ -86,7 +83,7 @@
         </div>
 
         {{-- ===== Pagination (thêm mới) ===== --}}
-        @if($items instanceof \Illuminate\Contracts\Pagination\Paginator && $items->hasPages())
+        @if ($items instanceof \Illuminate\Contracts\Pagination\Paginator && $items->hasPages())
             <div class="d-flex justify-content-between align-items-center mt-3">
                 <div class="small text-muted">
                     Hiển thị {{ $items->firstItem() }}–{{ $items->lastItem() }} / {{ $items->total() }}
@@ -114,7 +111,7 @@
 
             <div id="emailEdit" class="d-none">
                 <input type="email" id="emailInput" class="form-control w-auto d-inline-block" style="width: 300px;"
-                       value="support@yourcenter.com" />
+                    value="support@yourcenter.com" />
                 <button class="btn btn-sm btn-success ms-2" onclick="saveEmail()">
                     <i class="bi bi-check-lg"></i> Lưu
                 </button>
@@ -130,7 +127,7 @@
 
             <div id="addressEdit" class="d-none">
                 <input type="text" id="mapAddress" class="form-control"
-                       value="778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam" />
+                    value="778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam" />
                 <button class="btn btn-sm btn-success mt-2" onclick="updateMap()">
                     <i class="bi bi-check-lg"></i> Cập nhật
                 </button>
@@ -139,9 +136,9 @@
             <!-- Bản đồ -->
             <div class="ratio ratio-16x9 mt-3 shadow-sm">
                 <iframe id="mapFrame"
-                        src="https://www.google.com/maps?q=778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam&output=embed"
-                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade">
+                    src="https://www.google.com/maps?q=778/10 Đ. Nguyễn Kiệm, Phường 3, Phú Nhuận, Hồ Chí Minh 700990, Vietnam&output=embed"
+                    width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
             </div>
         </div>
