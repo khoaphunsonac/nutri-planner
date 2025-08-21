@@ -31,12 +31,12 @@
             </a>
         </div>
 
-        @if (session('success'))
+        {{-- @if (session('suc  cess'))
             <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
                 <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
             </div>
-        @endif
+        @endif --}}
 
         {{-- Dashboard summary --}}
         <div class="row g-3 mb-4">
@@ -106,7 +106,8 @@
                     </thead>
                     <tbody>
                         @forelse ($meals as $meal)
-                            <tr class="meal-row" style="cursor: pointer;" data-url="{{ route('meals.show', $meal->id) }}">
+                            <tr class="meal-row" onclick="window.location='{{ route('meals.show', $meal->id) }}'"
+                                style="cursor: pointer;">
                                 <td class="text-muted small">
                                     {{ $loop->iteration + ($meals->currentPage() - 1) * $meals->perPage() }}
                                 </td>
@@ -132,7 +133,7 @@
                                     <strong
                                         class="text-primary small">{{ number_format($meal->total_calories ?? 0, 0) }}</strong>
                                 </td>
-                                <td class="text-center" onclick="event.stopPropagation();">
+                                <td class="text-center" onclick="event.stopPropagation()">
                                     <div class="btn-group btn-group-sm">
                                         <a href="{{ route('meals.show', $meal->id) }}"
                                             class="btn btn-outline-info btn-sm px-2" title="Xem chi tiết">
@@ -195,9 +196,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             const mealRows = document.querySelectorAll('.meal-row');
             mealRows.forEach(row => {
-                row.addEventListener('click', function() {
-                    window.location.href = this.dataset.url;
-                });
+                // row.addEventListener('click', function() {
+                //     window.location.href = this.dataset.url;
+                // });
 
                 // Add hover effect
                 row.addEventListener('mouseenter', function() {

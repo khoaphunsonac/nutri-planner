@@ -21,9 +21,9 @@
     </div>
 
 
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="alert alert-success mt-2 text-center" style="width: 350px;">{{ session('success') }}</div>
-    @endif
+    @endif --}}
     {{-- Dashboard summary --}}
     <div class="row g-3 mb-4">
         <div class="col-md-4">
@@ -93,8 +93,9 @@
                 <tbody class="text-center">
                     @if (count($ingredients) > 0)
                         @foreach ($ingredients as $ingredient)
-                            <tr style="cursor: pointer;"
-                                onclick="window.location='{{ route('ingredients.show', ['id' => $ingredient->id]) }}'">
+                            <tr class="ingredient-row"
+                                onclick="window.location='{{ route('ingredients.show', ['id' => $ingredient->id]) }}'"
+                                style="cursor: pointer;">
                                 <td class="align-middle text-center">
                                     <span class="d-inline-block px-2 py-1 border rounded bg-light sort-order text-center"
                                         style="width:50px">{{ $ingredient->id }} </span>
@@ -117,7 +118,7 @@
                                 <td>
                                     <span class="text-primary">{{ $ingredient->calo }} kcal</span>
                                 </td>
-                                <td class="text-center">
+                                <td class="text-center" onclick="event.stopPropagation()">
                                     <div class="btn-group" role="group">
                                         <a href="{{ route('ingredients.show', ['id' => $ingredient->id]) }}"
                                             class="btn btn-sm btn-info rounded me-3" title="Chi tiết"><i
@@ -148,5 +149,25 @@
             {{ $ingredients->links('pagination::bootstrap-5') }}
         </div>
     </div>
+    {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle row clicks for navigation
+            const ingredientRows = document.querySelectorAll('.ingredient-row');
+            ingredientRows.forEach(row => {
+                row.addEventListener('click', function(e) {
+                    // Don't navigate if clicking on action buttons
+                    if (e.target.closest('.action-cell')) {
+                        return;
+                    }
+                    window.location.href = this.dataset.url;
+                });
+            });
+        });
 
+        // Prevent row click when submitting delete form
+        function confirmDelete(event, message) {
+            event.stopPropagation(); // Ngăn event bubbling lên tr
+            return confirm(message);
+        }
+    </script> --}}
 @endsection

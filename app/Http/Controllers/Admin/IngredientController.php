@@ -15,7 +15,7 @@ class IngredientController extends Controller
     private function getUnitOptions()
     {
         return [
-            'g' => 'Gram (g)',
+            'gram' => 'Gram (g)',
             'ml' => 'Milliliter (ml)',
             'kg' => 'Kilogram (kg)',
             'l' => 'Liter (l)',
@@ -51,7 +51,6 @@ class IngredientController extends Controller
         $totalIngredients = IngredientModel::count();
         $activeIngredients = IngredientModel::whereNull('deleted_at')->count();
         $usageRate = $totalIngredients > 0 ? round(($activeIngredients / $totalIngredients) * 100) : 0;
-
         return view('admin.ingredients.index', [
             'ingredients' => $ingredients,
             'search' => $search,
