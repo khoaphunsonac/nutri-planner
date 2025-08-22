@@ -5,7 +5,7 @@
 <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb breadcrumb-compact">
         <li class="breadcrumb-item">
-            <a href="{{ url('/admin') }}"><i class="bi bi-house-door"></i></a>
+            <a href="#"><i class="bi bi-house-door"></i></a>
         </li>
         <li class="breadcrumb-item">
             <a href="{{ route('admin.meal_types.index') }}">

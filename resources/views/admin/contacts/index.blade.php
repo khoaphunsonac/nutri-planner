@@ -60,18 +60,21 @@
                             <td>{{ $item->email }}</td>
                             <td>{{ \Illuminate\Support\Str::limit($item->message, 50) }}</td>
                             <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                            <td>
-                                <a href="{{ route('contact.show', $item->id) }}" class="btn btn-sm btn-info"
-                                    title="Chi tiết" aria-label="Chi tiết">
+                            <td onclick="event.stopPropagation();">
+                                <a href="{{ route('contact.show', $item->id) }}" 
+                                   class="btn btn-sm btn-info"
+                                   title="Chi tiết" aria-label="Chi tiết">
                                     <i class="bi bi-eye"></i>
                                 </a>
-
-                                <a href="{{ route('contact.delete', $item->id) }}" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Xác nhận xoá?')" title="Xoá" aria-label="Xoá">
+                            
+                                <a href="{{ route('contact.delete', $item->id) }}" 
+                                   class="btn btn-sm btn-danger"
+                                   onclick="event.stopPropagation(); return confirm('Xác nhận xoá?');"
+                                   title="Xoá" aria-label="Xoá">
                                     <i class="bi bi-trash"></i>
                                 </a>
-
                             </td>
+                            
                         </tr>
                     @empty
                         <tr>
