@@ -5,7 +5,7 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb breadcrumb-compact">
             <li class="breadcrumb-item">
-                <a href="#"><i class="bi bi-house-door"></i></a>
+                <a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a>
             </li>
             <li class="breadcrumb-item active">
                 <i class="bi bi-nut-fill me-1"></i>Loại chế độ ăn
@@ -28,12 +28,12 @@
     </div>
 
     {{-- Thông báo thành công --}}
-    @if (session('success'))
+    {{-- @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
             <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
             <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
         </div>
-    @endif
+    @endif --}}
 
     {{-- Form lọc tìm kiếm --}}
     <form action="" method="GET" class="row g-2 align-items-center mb-4">

@@ -6,7 +6,7 @@
         <nav aria-label="breadcrumb" class="mb-3">
             <ol class="breadcrumb breadcrumb-compact">
                 <li class="breadcrumb-item">
-                    <a href="{{ url('/') }}"><i class="bi bi-house-door"></i></a>
+                    <a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a>
                 </li>
                 <li class="breadcrumb-item active">
                     <i class="bi bi-collection me-1"></i>Loại bữa ăn
@@ -31,12 +31,12 @@
         </div>
 
         {{-- Alerts --}}
-        @if (session('success'))
+        {{-- @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
                 <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size:.7rem"></button>
             </div>
-        @endif
+        @endif --}}
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
                 <i class="bi bi-exclamation-triangle me-2"></i>{{ $errors->first() }}

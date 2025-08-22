@@ -3,7 +3,7 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb breadcrumb-compact">
             <li class="breadcrumb-item">
-                <a href="#"><i class="bi bi-house-door"></i></a>
+                <a href="{{ route('dashboard') }}"><i class="bi bi-house-door"></i></a>
             </li>
             <li class="breadcrumb-item">
                 <a href="{{ route('ingredients.index') }}">Nguyên liệu</a>

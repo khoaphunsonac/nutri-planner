@@ -25,12 +25,12 @@
         </div>
 
         <!-- Alerts -->
-        @if (session('success'))
+        {{-- @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show py-2" role="alert">
                 <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close pb-1" data-bs-dismiss="alert" style="font-size: 0.7rem;"></button>
             </div>
-        @endif
+        @endif --}}
 
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show py-2" role="alert">
