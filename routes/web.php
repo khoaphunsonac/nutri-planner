@@ -56,7 +56,6 @@ Route::prefix('admin')->middleware('admin')->group(function () {
     });
 
     // DIET TYPE MODULE
-
     Route::prefix('diet-types')->name('diettypes.')->group(function () {
         Route::get('/', [DietTypeController::class, 'index'])->name('index');
         Route::get('/create', [DietTypeController::class, 'create'])->name('create');
@@ -66,6 +65,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::put('/{id}', [DietTypeController::class, 'update'])->name('update');
         Route::get('/{id}/delete', [DietTypeController::class, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
     });
+
     # USER MODULE
     $controller = UserController::class;
     Route::prefix('users')->as('users.')->group(function () use ($controller) {
@@ -118,6 +118,7 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/{id}/mapmeals', [$controller, 'mapMeals'])->name('mapMeals')->where('id', '[0-9]+');
     });
 
+    // ALLERGEN MODULE
     $controller = AllergenController::class;
     Route::prefix('allergens')->as('allergens.')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('index');                // Danh sách
@@ -141,8 +142,8 @@ Route::prefix('admin')->middleware('admin')->group(function () {
         Route::post('/{id}', [$controller, 'update'])->name('update');
         Route::get('/{id}/delete', [$controller, 'destroy'])->name('destroy'); // dùng GET thay vì DELETE
     });
-    // CONTACT MODULE
 
+    // CONTACT MODULE
     $controller = ContactController::class;
     Route::prefix('contacts')->group(function () use ($controller) {
         Route::get('/', [$controller, 'index'])->name('contact.index');
@@ -186,9 +187,6 @@ Route::prefix('meals')->as('meal.')->group(function () use ($mealController) {
 
     Route::post('/favorite/{id}', [$mealController, 'favorite'])->middleware('user')->name('favorite');
     Route::get('/favorites', [$mealController, 'showsavemeals'])->middleware('user')->name('showsavemeals');
-
-    //chỉ user mới được like
-    // Route::middleware('user')-> post('/favorite/{id}', [$mealController, 'favorite'])->name('favorite');
 
 });
 
